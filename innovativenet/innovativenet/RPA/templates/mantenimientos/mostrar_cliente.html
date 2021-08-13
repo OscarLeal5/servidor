@@ -1,0 +1,24 @@
+{% extends 'mantenimientos/base.html'%}
+{% load static %}
+
+{% block body %}
+        <center>
+        <h1>{{ cliente }}</h1>
+        </center>
+                <br/>
+                Nombre del encargado: {{ cliente.encargado }}<br/>
+                Puesto: {{ cliente.puesto_encargado }}<br/>
+                Numero de contacto: {{ cliente.numero_contacto }}<br/>
+                Correo de contacto: {{ cliente.correo_contacto }}<br/>
+                Lugar donde se realiza el mantenimiento: {{ cliente.lugar_de_mantenimiento }}<br/>
+                Descripcion del mantenimiento: {{ cliente.descripcion_cotizacion }}<br/>
+                Fecha programada: {{ cliente.fecha }}<br/>
+                <br/>
+        <center>
+                <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                        <button type="button">Descargar cotización</button>
+                </a>
+        </center>
+
+                <br/>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'mantenimientos/base.html'%}
+{% load static %}
+
+{% block body %}
+        <center>
+            <h1>Agregar cliente...</h1>
+            <br/>
+            <br/>
+            {% if submitted %}
+                El cliente fue agregado exitosamente!
+
+            {% else %}
+                <form action="" method="POST">
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <input type="submit" value="Enviar" class="btn btn-secondary">
+                </form>
+            <br/>
+            {% endif %}
+        </center>
+
+
+{% endblock %}

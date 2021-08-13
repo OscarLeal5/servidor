@@ -36,11 +36,12 @@ def agregar_cliente(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/agregar_cliente?submitted=True')
+
     else:
         form = ClienteForm()
         if 'submitted' in request.GET:
             submitted = True
-            messages.info(request,'El cliente ha sido agregado exitosamente')
+            messages.success(request, 'El cliente ha sido agregado exitosamente')
             return redirect('lista_clientes')
 
     return render(request,'mantenimientos/agregar_cliente.html',{'form':form,'submitted':submitted})

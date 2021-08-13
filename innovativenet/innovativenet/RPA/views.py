@@ -15,11 +15,18 @@ import pandas as pd
 from django.db import connection
 import dataframe_image as dfi
 
+def eliminar_cliente(request,cliente_id):
+    cliente = Cliente.objects.get(pk=cliente_id)
+    cliente.delete()
+    messages.error(request, 'El cliente ha sido eliminado exitosamente')
+    return redirect('lista_clientes')
+
 def modificar_cliente(request,cliente_id):
     cliente = Cliente.objects.get(pk=cliente_id)
     form = ClienteForm(request.POST or None, instance=cliente)
     if form.is_valid():
         form.save()
+        messages.info(request, 'El cliente ha sido modificado exitosamente')
         return redirect('lista_clientes')
 
     return render(request,'mantenimientos/modificar_cliente.html',

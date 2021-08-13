@@ -15,8 +15,15 @@
                 Fecha programada: {{ cliente.fecha }}<br/>
                 <br/>
         <center>
+                <a href="{% url 'modificar_cliente' cliente.id %}">
+                        <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar</button>
+                </a>
+                <a href="{% url 'eliminar_cliente' cliente.id %}">
+                        <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar</button>
+                </a>
+                <br>
                 <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
-                        <button type="button">Descargar cotización</button>
+                        <button type="button" class="btn btn-primary" style="margin:10px">Descargar cotización</button>
                 </a>
         </center>
 

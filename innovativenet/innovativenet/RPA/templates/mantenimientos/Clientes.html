@@ -13,9 +13,12 @@
                               <a href="{% url 'mostrar_cliente' cliente.id %}"
                               >{{ cliente }}</a>
                                 </td>
-                        <td>
-                                <a align="right" href="{% url 'modificar_cliente' cliente.id %}">
-                                        <button type="button" style="float: right">Modificar</button>
+                        <td align="right">
+                                <a href="{% url 'modificar_cliente' cliente.id %}">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                </a>
+                                <a href="{% url 'eliminar_cliente' cliente.id%}">
+                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar cliente</button>
                                 </a>
                         </td>
                 </tr>
@@ -23,7 +26,7 @@
         {% endfor %}
         </table>
         <a href="{% url 'agregar_cliente' %}">
-                        <button type="button" style="float: right">Agregar cliente</button>
+                        <button type="button" class="btn btn-secondary"style="float: right">Agregar cliente</button>
         </a>
         <br/>
         <br/>

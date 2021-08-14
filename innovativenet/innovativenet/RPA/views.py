@@ -7,13 +7,15 @@ from django.contrib import messages
 #PDF
 from django.http import FileResponse
 import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch,cm
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.rl_config import defaultPageSize
+from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Table, Frame,Image
-import pandas as pd
-from django.db import connection
-import dataframe_image as dfi
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+from reportlab.lib import colors
+
+from datetime import datetime
 
 def eliminar_cliente(request,cliente_id):
     cliente = Cliente.objects.get(pk=cliente_id)
@@ -57,11 +59,7 @@ def agregar_cliente(request):
 def cotizacion_pdf(request, cliente_id):
 
     cliente = Cliente.objects.get(pk=cliente_id)
-
-    qs = cliente.dispositivo.values()
-    data = pd.DataFrame.from_records(qs)
-    dfi.export(data,'datagrame.png')
-
+    buf = io.BytesIO()
 
     nombre=cliente.nombre
     encargado=cliente.encargado
@@ -74,52 +72,74 @@ def cotizacion_pdf(request, cliente_id):
 
 
 
-    #Create bytestream buffer
-    buf = io.BytesIO()
-    #Create a canvas
-    pdf = canvas.Canvas(buf, pagesize=letter,bottomup = 0)
+    dateTimeObj = datetime.now()
+    dateObj = dateTimeObj.date()
+    dateStr = dateObj.strftime("%b %d , %Y")
 
-    width, height = letter
-    heightList = [
-        height * 0.1,
-        height * 0.8,
-        height * 0.1,
-    ]
-    mainTable = Table([
-        ['header'],
-        ['body'],
-        ['footer']],
-    colWidths=width,
-    rowHeights=heightList
-    )
+    PAGE_HEIGHT = defaultPageSize[1];
+    PAGE_WIDTH = defaultPageSize[0]
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='Normal_R',
+                              parent=styles['Normal'],
+                              wordWrap='LTR',
+                              alignment=TA_RIGHT,
+                              fontSize=12,
+                              textColor=colors.black,
+                              ))
+    Title = "Hello world"
 
-    mainTable.wrapOn(pdf,0,0)
-    mainTable.drawOn(pdf,0,0)
+    def myFirstPage(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Times-Bold', 16)
+        canvas.setFont('Times-Roman', 14)
+        header = []
+        canvas.drawImage('RPA/logo.png', 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage('RPA/lenellogo.png', 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage('RPA/footer.png', inch, 1, width=460, height=80)
+        canvas.restoreState()
 
-    #create text object
-    textob = pdf.beginText()
-    textob.setTextOrigin(inch,inch)
-    textob.setFont("Helvetica",14)
-    im_data = Image('dataframe.png')
-    lines = [
-        "linea 1"+nombre,
-        "linea 2",
-        "linea 3",
-    ]
-    # mainTable = Table([
-    #     ['some text']
-    # ])
+    def myLaterPages(canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Times-Roman', 9)
+        canvas.drawImage('logo.png', 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage('lenellogo.png', 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage('footer.png', inch, 1, width=460, height=80)
+        canvas.restoreState()
 
-    for line in lines:
-        textob.textLine(line)
+    def go():
+        cliente = Cliente.objects.get(pk=cliente_id)
+        doc = SimpleDocTemplate(buf, pagesize=letter,
+                                rightMargin=inch, leftMargin=inch,
+                                topMargin=2 * inch, bottomMargin=inch)
+        encargado = cliente.encargado
+        puesto = cliente.puesto_encargado
+        cliente = cliente.nombre
 
+        Story = []
 
-    pdf.drawText(textob)
-    pdf.drawImage('datagrame.png',10,10)
-    pdf.showPage()
-    pdf.save()
+        styleN = styles["Normal"]
+        styleH4 = styles["Heading4"]
+        styleH2 = styles["Heading2"]
+
+        styleRight = styles["Normal_R"]
+
+        texto_fecha = ("Tijuana, B.C. a " + dateStr)
+        texto_encargado = ("Attn. " + encargado)
+
+        p0 = Paragraph(texto_fecha, styleRight)
+        p1 = Paragraph(texto_encargado, styleH4)
+        p2 = Paragraph(puesto, styleN)
+        p3 = Paragraph(cliente, styleH2)
+
+        Story.append(p0)
+        Story.append(p1)
+        Story.append(p2)
+        Story.append(p3)
+
+        doc.build(Story, onFirstPage=myFirstPage, onLaterPages=myLaterPages)
+        # doc.build(Story)
+    go()
     buf.seek(0)
-
     return FileResponse(buf, as_attachment=True,  filename='cotizacion_'+nombre+'.pdf')
 
 

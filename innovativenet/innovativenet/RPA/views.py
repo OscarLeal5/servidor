@@ -107,6 +107,13 @@ def cotizacion_pdf(request, cliente_id):
                               fontSize=12,
                               textColor=colors.HexColor("#3498DB"),
                               ))
+    styles.add(ParagraphStyle(name='Heading1_BC',
+                              parent=styles['Heading1'],
+                              wordWrap='LTR',
+                              alignment=TA_CENTER,
+                              fontSize=12,
+                              textColor=colors.HexColor("#3498DB"),
+                              ))
 
     styles.add(ParagraphStyle(name='Normal_CB',
                               parent=styles['Normal'],
@@ -162,6 +169,7 @@ def cotizacion_pdf(request, cliente_id):
         styleCB = styles[("Normal_CB")]
         styleB = styles[("Normal_B")]
         styleHB = styles[("Heading1_B")]
+        styleHBC = styles[("Heading1_BC")]
         styleNC = styles[("Normal_C")]
 
         texto_fecha = ("Tijuana, B.C. a " + dateStr)
@@ -201,6 +209,13 @@ def cotizacion_pdf(request, cliente_id):
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
         table.setStyle(ts)
 
+        p21 = Paragraph("3.0 Resumen de la propuesta económica",styleHB)
+        p22 = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual",styleB)
+
+        tdprecio=[]
+
+        p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
+
         ptitulotermino = Paragraph("4.0 Términos y condiciones",styleHB)
         pterminos1 = Paragraph("Los precios cotizados se expresan en dólares americanos.",styleN,bulletText="-")
         pterminos2 = Paragraph("El IVA del 16% no está incluido.",styleN,bulletText="-")
@@ -235,24 +250,47 @@ def cotizacion_pdf(request, cliente_id):
         Story.append(p11)
         Story.append(p12)
         Story.append(PageBreak())
+
+        #Segunda pagina
         Story.append(p13)
         Story.append(p14)
         Story.append(pblank)
         Story.append(pblank)
         Story.append(table)
         Story.append(PageBreak())
+
+        #Tercera pagina
         Story.append(p15)
         Story.append(p16)
         Story.append(p17)
         Story.append(PageBreak())
+
+        #Cuarta pagina
         Story.append(p18)
         Story.append(p19)
         Story.append(pblank)
         Story.append(pblank)
         Story.append(pblank)
         Story.append(PageBreak())
+
+        #Quinta pagina
         Story.append(p20)
         Story.append(PageBreak())
+
+        #Sexta pagina
+        Story.append(p21)
+        Story.append(pblank)
+        Story.append(pblank)
+        Story.append(pblank)
+        Story.append(p22)
+        #Agregar tabla aqui
+        Story.append(pblank)
+        Story.append(pblank)
+        Story.append(p23)
+
+        Story.append(PageBreak())
+
+        #Septima pagina
         Story.append(ptitulotermino)
         Story.append(pterminos1)
         Story.append(pterminos2)

@@ -188,11 +188,11 @@ def cotizacion_pdf(request, cliente_id):
         p8 = Paragraph("Índice de propuesta:, ", styleN)
         p9 = Paragraph("1.0 Fondo", styleN)
         p10 = Paragraph("2.0 Alcance de la descripción del trabajo", styleN)
-        p11= Paragraph("3.0 Resumen de propuestas económicas", styleN)
-        p12= Paragraph("4.0 Términos y condiciones", styleN)
-        p13= Paragraph("1.0 Fondo", styleHB)
+        p11 = Paragraph("3.0 Resumen de propuestas económicas", styleN)
+        p12 = Paragraph("4.0 Términos y condiciones", styleN)
+        p13 = Paragraph("1.0 Fondo", styleHB)
         p14 = Paragraph("A continuación, se muestra una visión general de los equipos y condiciones actuales. Se presenta una lista de equipos instalados actualmente en el lugar.",styleN)
-        p15 =Paragraph("1.1 Politica de mantenimiento preventivo",styleHB)
+        p15 = Paragraph("1.1 Politica de mantenimiento preventivo",styleHB)
         p16 = Paragraph("Para aplicar el mantenimiento preventivo se entenderá que el sistema de detección de incendios debe estar en operación al 100%, si esto no se cumpliera así deberá realizarse primero el mantenimiento correctivo",styleN)
         p17 = Paragraph("Una politica de mantenimiento preventivo se considera valida para ",styleN)
         p18 = Paragraph("Vigencia **"+actyear+"-"+sigyear+"**",styleB)
@@ -217,19 +217,30 @@ def cotizacion_pdf(request, cliente_id):
         table_man = Table(td_mantenimientos)
         table_man.setStyle(ts)
 
-        td_total = [["Total de HRS de servicio de soporte técnico de poliza","Horas"]]
-        mantenimientos = cliente.mantenimiento.all()
+        td_total = [["Total de HRS de servicio de soporte técnico de poliza",""]]
+        suma_horas = 0
         for mantenimiento in mantenimientos:
-            data_mantenimientos = [mantenimiento.title, mantenimiento.periodisidadactividades,
-                                   mantenimiento.periodisidadadicional, mantenimiento.tiempoejecucion]
-            td_mantenimientos.append(data_mantenimientos)
-        table_man = Table(td_mantenimientos)
-        table_man.setStyle(ts)
+            suma_horas = +mantenimiento.tiempoejecucion
+
+        data_mantenimientos = ["", suma_horas]
+        td_total.append(data_mantenimientos)
+        table_tot = Table(td_total)
+        ts_tot = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
+                             ("BACKGROUND",(0,0),(-1,-1),colors.yellow)])
+        table_tot.setStyle(ts_tot)
+
+        ##Insertar variable de cliente precio aqui##
+
+        td_precio = [["Description","QTY","Unit","Amount"]]
+        data_precio = ["Cuota anual del contrato dde  mantenimiento", "1","Lot","$9713.98"]
+        td_precio.append(data_precio)
+        table_pre = Table(td_precio)
+        ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
+                             ("BACKGROUND",(0,0),(-1,0),colors.lightsteelblue)])
+        table_pre.setStyle(ts_pre)
 
         p21 = Paragraph("3.0 Resumen de la propuesta económica",styleHB)
         p22 = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual",styleB)
-
-        tdprecio=[]
 
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
 
@@ -287,6 +298,7 @@ def cotizacion_pdf(request, cliente_id):
         Story.append(p19)
         Story.append(pblank)
         Story.append(table_man)
+        Story.append(table_tot)
         Story.append(pblank)
         Story.append(PageBreak())
 
@@ -300,7 +312,8 @@ def cotizacion_pdf(request, cliente_id):
         Story.append(pblank)
         Story.append(pblank)
         Story.append(p22)
-        #Agregar tabla aqui
+        Story.append(pblank)
+        Story.append(table_pre)
         Story.append(pblank)
         Story.append(pblank)
         Story.append(p23)

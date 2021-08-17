@@ -232,7 +232,7 @@ def cotizacion_pdf(request, cliente_id):
         ##Insertar variable de cliente precio aqui##
 
         td_precio = [["Description","QTY","Unit","Amount"]]
-        data_precio = ["Cuota anual del contrato dde  mantenimiento", "1","Lot","$9713.98"]
+        data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","$9713.98"]
         td_precio.append(data_precio)
         table_pre = Table(td_precio)
         ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),

@@ -6,13 +6,23 @@
         <h1>{{ cliente }}</h1>
         </center>
                 <br/>
-                Nombre del encargado: {{ cliente.encargado }}<br/>
-                Puesto: {{ cliente.puesto_encargado }}<br/>
-                Numero de contacto: {{ cliente.numero_contacto }}<br/>
-                Correo de contacto: {{ cliente.correo_contacto }}<br/>
-                Lugar donde se realiza el mantenimiento: {{ cliente.lugar_de_mantenimiento }}<br/>
-                Descripcion del mantenimiento: {{ cliente.descripcion_cotizacion }}<br/>
-                Fecha programada: {{ cliente.fecha }}<br/>
+                <b>Nombre del encargado: </b>{{ cliente.encargado }}<br/>
+                <b>Puesto: </b>{{ cliente.puesto_encargado }}<br/>
+                <b>Numero de contacto: </b>{{ cliente.numero_contacto }}<br/>
+                <b>Correo de contacto: </b>{{ cliente.correo_contacto }}<br/>
+                <b>Lugar donde se realiza el mantenimiento: </b>{{ cliente.lugar_de_mantenimiento }}<br/>
+                <b>Descripcion del mantenimiento: </b>{{ cliente.descripcion_cotizacion }}<br/>
+                <b>Fecha programada: </b>{{ cliente.fecha }}<br/>
+                <b>Dispositivos:</b><br/>
+                {% for dispositivo in cliente.dispositivo.all %}
+                        {{ dispositivo }}
+                        <br>
+                {% endfor %}
+                <b>Mantenimientos:</b><br/>
+                {% for mantenimiento in cliente.mantenimiento.all %}
+                        {{ mantenimiento }}
+                        <br>
+                {% endfor %}
                 <br/>
         <center>
                 <a href="{% url 'modificar_cliente' cliente.id %}">

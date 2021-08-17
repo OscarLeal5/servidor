@@ -200,14 +200,31 @@ def cotizacion_pdf(request, cliente_id):
         p20 = Paragraph("2.0 Alcance de la descripción del trabajo",styleHB)
 
 
-        td =[["Marca","Nombre","Cantidad","Actvidad","Plan"]]
+        td_dispositivos =[["Marca","Nombre","Cantidad","Actvidad","Plan"]]
         dispositivos = cliente.dispositivo.all()
         for dispositivo in dispositivos:
-            data = [dispositivo.marca,dispositivo.titulo,dispositivo.cantidad,dispositivo.actividad,dispositivo.plan]
-            td.append(data)
-        table = Table(td)
+            data_dispositivos = [dispositivo.marca,dispositivo.titulo,dispositivo.cantidad,dispositivo.actividad,dispositivo.plan]
+            td_dispositivos.append(data_dispositivos)
+        table_dis = Table(td_dispositivos)
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
-        table.setStyle(ts)
+        table_dis.setStyle(ts)
+
+        td_mantenimientos = [["Mantenimiento","Acts. de mmnto por año","Acts. adicionales/Renta de equipo","Tiempo de ejecucion"]]
+        mantenimientos = cliente.mantenimiento.all()
+        for mantenimiento in mantenimientos:
+            data_mantenimientos = [mantenimiento.title,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
+            td_mantenimientos.append(data_mantenimientos)
+        table_man = Table(td_mantenimientos)
+        table_man.setStyle(ts)
+
+        td_total = [["Total de HRS de servicio de soporte técnico de poliza","Horas"]]
+        mantenimientos = cliente.mantenimiento.all()
+        for mantenimiento in mantenimientos:
+            data_mantenimientos = [mantenimiento.title, mantenimiento.periodisidadactividades,
+                                   mantenimiento.periodisidadadicional, mantenimiento.tiempoejecucion]
+            td_mantenimientos.append(data_mantenimientos)
+        table_man = Table(td_mantenimientos)
+        table_man.setStyle(ts)
 
         p21 = Paragraph("3.0 Resumen de la propuesta económica",styleHB)
         p22 = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual",styleB)
@@ -256,7 +273,7 @@ def cotizacion_pdf(request, cliente_id):
         Story.append(p14)
         Story.append(pblank)
         Story.append(pblank)
-        Story.append(table)
+        Story.append(table_dis)
         Story.append(PageBreak())
 
         #Tercera pagina
@@ -269,7 +286,7 @@ def cotizacion_pdf(request, cliente_id):
         Story.append(p18)
         Story.append(p19)
         Story.append(pblank)
-        Story.append(pblank)
+        Story.append(table_man)
         Story.append(pblank)
         Story.append(PageBreak())
 

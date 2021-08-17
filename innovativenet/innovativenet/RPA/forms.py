@@ -5,8 +5,7 @@ from .models import Cliente
 class ClienteForm(ModelForm):
     class Meta:
         model = Cliente
-        fields = "__all__"
-        #('nombre','encargado','puesto_encargado','numero_contacto','correo_contacto','lugar_de_mantenimiento','descripcion_cotizacion','fecha','mantenimiento','dispositivo')
+        fields = ('nombre','encargado','puesto_encargado','numero_contacto','correo_contacto','lugar_de_mantenimiento','descripcion_cotizacion','fecha','mantenimiento','dispositivo')
         labels = {
             'nombre':'',
             'encargado': '',
@@ -15,7 +14,7 @@ class ClienteForm(ModelForm):
             'correo_contacto': '',
             'lugar_de_mantenimiento': '',
             'descripcion_cotizacion': '',
-            'fecha': '',
+            'fecha': 'Fecha inicial programada',
             'mantenimiento': 'Servicios de mantenimiento requeridos',
             'dispositivo': 'Dispositivos a los que se realizara mantenimiento',
         }
@@ -27,8 +26,7 @@ class ClienteForm(ModelForm):
             'correo_contacto': forms.EmailInput(attrs={'class':'form-control','placeholder':'Correo de contacto'}),
             'lugar_de_mantenimiento': forms.TextInput(attrs={'class':'form-control','placeholder':'Lugar donde se realizara el mantenimiento'}),
             'descripcion_cotizacion': forms.Textarea(attrs={'class':'form-control','placeholder':'Descripcion del mantenimiento a realizarse'}),
-            'fecha': forms.DateInput(attrs={'class':'form-control','placeholder':'Fecha programada para el mantenimiento'}),
+            'fecha': forms.SelectDateWidget(attrs={'class':'form-control'}),
             'mantenimiento': forms.SelectMultiple(attrs={'class':'form-control','placeholder':'Servicios de mantenimiento necesarios'}),
             'dispositivo': forms.SelectMultiple(attrs={'class':'form-control','placeholder':'Dispositivos a los que se realizara mantenimiento'}),
-
         }

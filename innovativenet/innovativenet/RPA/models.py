@@ -41,7 +41,7 @@ class Cliente(models.Model):
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
-    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True,auto_now_add=True)
+    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True)
 
     mantenimiento = models.ManyToManyField(Mantenimiento, blank=True, related_name='cliente')
     dispositivo = models.ManyToManyField(Dispositivo, blank=True, related_name="cliente")

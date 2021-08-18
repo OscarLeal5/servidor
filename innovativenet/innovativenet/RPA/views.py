@@ -44,6 +44,36 @@ class Mantenimientos(LoginRequiredMixin, ListView):
         #context['count'] = context['mantenimientos'].filter(complete=False).count()
         return context
 
+class Agregar_Cliente(LoginRequiredMixin, CreateView):
+    model = Cliente
+    fields = ['nombre', 'encargado', 'puesto_encargado', 
+            'numero_contacto', 'correo_contacto',
+            'lugar_de_mantenimiento', 'descripcion_cotizacion', 
+            'fecha', 'mantenimiento', 'dispositivo']
+    success_url = reverse_lazy('mantenimientos')
+    template_name = 'mantenimientos/agregar_cliente.html'
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        return super(Agregar_Cliente, self).form_valid(form)
+
+# def agregar_cliente(request):
+#     submitted = False
+#     if request.method == "POST":
+#         form = ClienteForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponseRedirect('/agregar_cliente?submitted=True')
+
+#     else:
+#         form = ClienteForm()
+#         if 'submitted' in request.GET:
+#             submitted = True
+#             messages.success(request, 'El cliente ha sido agregado exitosamente')
+#             return redirect('lista_clientes')
+
+#     return render(request,'mantenimientos/agregar_cliente.html',{'form':form,'submitted':submitted})
+
 
 def todos_clientes(request):
     lista_clientes = Cliente.objects.all()
@@ -72,23 +102,6 @@ def modificar_cliente(request,cliente_id):
 def mostrar_cliente(request, cliente_id):
     cliente = Cliente.objects.get(pk=cliente_id)
     return render(request,'mantenimientos/mostrar_cliente.html',{'cliente':cliente})
-
-def agregar_cliente(request):
-    submitted = False
-    if request.method == "POST":
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/agregar_cliente?submitted=True')
-
-    else:
-        form = ClienteForm()
-        if 'submitted' in request.GET:
-            submitted = True
-            messages.success(request, 'El cliente ha sido agregado exitosamente')
-            return redirect('lista_clientes')
-
-    return render(request,'mantenimientos/agregar_cliente.html',{'form':form,'submitted':submitted})
 
 
 def cotizacion_pdf(request, cliente_id):

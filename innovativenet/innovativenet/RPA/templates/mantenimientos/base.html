@@ -40,6 +40,7 @@
 <style>
 input[type=text],
 input[type=number],
+input[type=email],
 textarea {
   border: 1px solid #2a83a3;
   border-radius: 5px;
@@ -68,7 +69,7 @@ label{
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a class="nav-link scrollto active" href="https://www.innovative-net.mx/">Home</a></li>
+          <li><a class="nav-link scrollto active" href="{% url 'home' %}">Home</a></li>
           <li><a class="nav-link scrollto active" href="{% url 'agregar_cliente' %}">Agregar cliente</a></li>
           <li><a class="nav-link scrollto active" href="{% url 'lista_clientes' %}">Lista de clientes activos</a></li>
           {% if request.user.is_authenticated %}

@@ -19,6 +19,7 @@ from reportlab.lib import colors
 
 from datetime import datetime
 from datetime import date
+from num2words import num2words
 
 def eliminar_cliente(request,cliente_id):
     cliente = Cliente.objects.get(pk=cliente_id)
@@ -99,6 +100,14 @@ def cotizacion_pdf(request, cliente_id):
                               fontSize=12,
                               textColor=colors.black,
                               ))
+    styles.add(ParagraphStyle(name='Normal_Right',
+                              parent=styles['Normal'],
+                              wordWrap='LTR',
+                              alignment=TA_RIGHT,
+                              fontSize=12,
+                              textColor=colors.black,
+                              fontName="Helvetica-bold",
+                              ))
 
     styles.add(ParagraphStyle(name='Heading1_B',
                               parent=styles['Heading1'],
@@ -139,6 +148,16 @@ def cotizacion_pdf(request, cliente_id):
                               textColor=colors.red,
                               fontName="Helvetica-bold",
                               ))
+    styles.add(ParagraphStyle(name='Normal_Ye',
+                              parent=styles['Normal'],
+                              wordWrap='CJK',
+                              alignment=TA_CENTER,
+                              fontSize=12,
+                              textColor=colors.black,
+                              fontName="Helvetica-bold",
+                              backColor = colors.yellow,
+                              ))
+
 
     def myFirstPage(canvas, doc):
         canvas.saveState()
@@ -180,6 +199,8 @@ def cotizacion_pdf(request, cliente_id):
         styleHBC = styles[("Heading1_BC")]
         styleNC = styles[("Normal_C")]
         styleNR = styles[("Normal_Red")]
+        styleNY = styles[("Normal_Ye")]
+        styleNRight = styles[("Normal_Right")]
 
         texto_fecha = ("Tijuana, B.C. a " + dateStr)
         texto_encargado = ("Attn. " + encargado)
@@ -276,19 +297,25 @@ def cotizacion_pdf(request, cliente_id):
         table_tot.setStyle(ts_tot)
 
         ##Insertar variable de cliente precio aqui##
+        preciofinal = 9713.98
+        preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
 
         td_precio = [["Description","QTY","Unit","Amount"]]
-        data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","$9713.98"]
+        data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","${}".format(preciofinal)]
         td_precio.append(data_precio)
         table_pre = Table(td_precio)
         ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,0),colors.lightsteelblue)])
         table_pre.setStyle(ts_pre)
-
+        ppreciotexto = Paragraph(preciofinal1+" USD + IVA",styleNRight)
         p21 = Paragraph("3.0 Resumen de la propuesta económica",styleHB)
         p22 = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual",styleB)
 
+
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
+        p24 = Paragraph("Mmto.....................................................{}".format(preciofinal),styleNY)
+        p25 = Paragraph(preciofinal1+" USD + IVA",styleNY)
+        p26 = Paragraph("**Incluye maquinaria de elevacion**",styleCB)
 
         ptitulotermino = Paragraph("4.0 Términos y condiciones",styleHB)
         pterminos1 = Paragraph("Los precios cotizados se expresan en dólares americanos.",styleN,bulletText="-")
@@ -406,9 +433,14 @@ def cotizacion_pdf(request, cliente_id):
         Story.append(p22)
         Story.append(pblank)
         Story.append(table_pre)
+        Story.append(ppreciotexto)
         Story.append(pblank)
         Story.append(pblank)
         Story.append(p23)
+        Story.append(p24)
+        Story.append(p25)
+        Story.append(p26)
+
 
         Story.append(PageBreak())
 

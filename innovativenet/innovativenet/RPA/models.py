@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Mantenimiento(models.Model):
     title = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
@@ -30,6 +31,7 @@ class Dispositivo(models.Model):
         ordering = ['titulo']
 
 class Cliente(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     nombre = models.CharField('Nombre de la compañia cliente',max_length=200)
     encargado = models.CharField('Nombre del contacto dentro de la empresa',max_length
     =120)

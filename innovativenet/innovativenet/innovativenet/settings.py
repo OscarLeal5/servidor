@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'RPA',
 ]
 
@@ -120,6 +121,9 @@ USE_I18N = True
 USE_L10N = False
 
 USE_TZ = True
+
+# Se encarga de redireccionar a la persona cuando no esta registrada
+LOGIN_URL = 'login'
 
 
 # Static files (CSS, JavaScript, Images)

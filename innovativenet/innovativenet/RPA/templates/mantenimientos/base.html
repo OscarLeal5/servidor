@@ -71,7 +71,12 @@ label{
           <li><a class="nav-link scrollto active" href="https://www.innovative-net.mx/">Home</a></li>
           <li><a class="nav-link scrollto active" href="{% url 'agregar_cliente' %}">Agregar cliente</a></li>
           <li><a class="nav-link scrollto active" href="{% url 'lista_clientes' %}">Lista de clientes activos</a></li>
-
+          {% if request.user.is_authenticated %}
+          <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
+          <li><a class="getstarted scrollto" href="" >{{request.user}}</a></li>
+          {% else %}
+          <li><a class="getstarted scrollto" href="{% url 'login'  %}" >Login</a></li>
+          {% endif %}
           <!-- <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li>
           <li><a class="nav-link scrollto" href="#faq">F.A.Q</a></li>
           <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>

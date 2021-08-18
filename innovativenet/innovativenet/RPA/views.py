@@ -1,24 +1,56 @@
-from django.shortcuts import render, redirect
-from reportlab.pdfgen import canvas
-
-from .models import Cliente
-from django.http import HttpResponseRedirect
-from django.http import  HttpResponse
-from .forms import ClienteForm
-from django.contrib import messages
-#PDF
-from django.http import FileResponse
-import io
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table,TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.rl_config import defaultPageSize
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+from reportlab.rl_config import defaultPageSize
+from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from django.contrib import messages
 from reportlab.lib import colors
-
+from .forms import ClienteForm
 from datetime import datetime
+from .models import Cliente, Mantenimiento
 from datetime import date
+import io
+from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+
+class CustomLoginView(LoginView):
+    # Esta clase se encarga de verificar que el usuario este autenticado antes de poder
+    # entrar a cualquier parte de la pagina.
+    template_name = 'mantenimientos/login.html'
+    fields = '__all__'
+    redirect_authenticated_user = True
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('home')
+
+class Mantenimientos(LoginRequiredMixin, ListView):
+    model = Cliente
+    context_object_name = 'Cliente'
+    template_name = 'mantenimientos/home.html'
+    # Se encarga de manejar los datos observables por el usuario
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # compara los usuarios con su informacion y projecta solo informacion de usuario
+        context['Cliente'] = context['Cliente'].filter(usuario=self.request.user)
+        #context['count'] = context['mantenimientos'].filter(complete=False).count()
+        return context
+
+
+def todos_clientes(request):
+    lista_clientes = Cliente.objects.all()
+    return render(request,'mantenimientos/Clientes.html',{'lista_clientes':lista_clientes})
+
+# def home(request):
+#     return render(request, 'mantenimientos/home.html',{})
 
 def eliminar_cliente(request,cliente_id):
     cliente = Cliente.objects.get(pk=cliente_id)
@@ -350,10 +382,5 @@ def cotizacion_pdf(request, cliente_id):
     return FileResponse(buf, as_attachment=True,  filename='cotizacion_'+nombre+'.pdf')
 
 
-def todos_clientes(request):
-    lista_clientes = Cliente.objects.all()
-    return render(request,'mantenimientos/Clientes.html',{'lista_clientes':lista_clientes})
 
-def home(request):
-    return render(request, 'mantenimientos/home.html',{})
 # Create your views here.

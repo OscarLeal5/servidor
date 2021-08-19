@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import Mantenimientos, CustomLoginView, Agregar_Cliente
+from .views import Mantenimientos, CustomLoginView, Agregar_Cliente, Modificar_Cliente
 from django.contrib.auth.views import LogoutView
 
 
@@ -17,7 +17,8 @@ urlpatterns = [
 
     path('mostrar_cliente/<cliente_id>', views.mostrar_cliente, name='mostrar_cliente'),
 
-    path('modificar_cliente/<cliente_id>', views.modificar_cliente, name='modificar_cliente'),
+    path('modificar_cliente/<int:pk>/', Modificar_Cliente.as_view(), name='modificar_cliente'),
+    # path('modificar_cliente/<cliente_id>', views.modificar_cliente, name='modificar_cliente'),
 
     path('agregar_cliente', Agregar_Cliente.as_view(), name='agregar_cliente'),
     # path('agregar_cliente', views.agregar_cliente, name='agregar_cliente'),

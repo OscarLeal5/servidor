@@ -74,6 +74,25 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
 
 #     return render(request,'mantenimientos/agregar_cliente.html',{'form':form,'submitted':submitted})
 
+class Modificar_Cliente (LoginRequiredMixin, UpdateView):
+    model = Cliente
+    fields = ['nombre', 'encargado', 'puesto_encargado', 
+            'numero_contacto', 'correo_contacto',
+            'lugar_de_mantenimiento', 'descripcion_cotizacion', 
+            'fecha', 'mantenimiento', 'dispositivo']
+    success_url = reverse_lazy('home')
+    template_name = 'mantenimientos/agregar_cliente.html'
+
+# def modificar_cliente(request,cliente_id):
+#     cliente = Cliente.objects.get(pk=cliente_id)
+#     form = ClienteForm(request.POST or None, instance=cliente)
+#     if form.is_valid():
+#         form.save()
+#         messages.info(request, 'El cliente ha sido modificado exitosamente')
+#         return redirect('lista_clientes')
+
+#     return render(request,'mantenimientos/modificar_cliente.html',
+#         {'cliente':cliente,'form':form})
 
 def todos_clientes(request):
     lista_clientes = Cliente.objects.all()
@@ -88,16 +107,6 @@ def eliminar_cliente(request,cliente_id):
     messages.error(request, 'El cliente ha sido eliminado exitosamente')
     return redirect('lista_clientes')
 
-def modificar_cliente(request,cliente_id):
-    cliente = Cliente.objects.get(pk=cliente_id)
-    form = ClienteForm(request.POST or None, instance=cliente)
-    if form.is_valid():
-        form.save()
-        messages.info(request, 'El cliente ha sido modificado exitosamente')
-        return redirect('lista_clientes')
-
-    return render(request,'mantenimientos/modificar_cliente.html',
-        {'cliente':cliente,'form':form})
 
 def mostrar_cliente(request, cliente_id):
     cliente = Cliente.objects.get(pk=cliente_id)

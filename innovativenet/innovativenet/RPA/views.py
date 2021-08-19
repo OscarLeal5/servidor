@@ -21,6 +21,17 @@ from datetime import datetime
 from datetime import date
 from num2words import num2words
 
+def buscar_clientes(request):
+    if request.method == "POST":
+        searched = request.POST["searched"]
+        clientes = Cliente.objects.filter(nombre__contains=searched)
+        return render(request,
+                      'mantenimientos/buscar_clientes.html',
+                      {'searched':searched,
+                       'clientes':clientes,
+                       })
+    else:
+        return render(request, 'mantenimientos/buscar_clientes.html',{})
 def eliminar_cliente(request,cliente_id):
     cliente = Cliente.objects.get(pk=cliente_id)
     cliente.delete()

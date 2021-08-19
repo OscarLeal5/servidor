@@ -1,0 +1,33 @@
+{% extends 'mantenimientos/base.html'%}
+{% load static %}
+
+{% block body %}
+        <center>
+            {% if searched %}
+                <h1>Busqueda de {{ searched }}: </h1>
+                <br/>
+                <table class="table table-striped table-hover table bordered">
+                    {% for cliente in clientes %}
+                    <tr>
+                        <td>
+                              <a href="{% url 'mostrar_cliente' cliente.id %}"
+                              >{{ cliente }}</a>
+                                </td>
+                        <td align="right">
+                                <a href="{% url 'modificar_cliente' cliente.id %}">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                </a>
+                                <a href="{% url 'eliminar_cliente' cliente.id%}">
+                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar cliente</button>
+                                </a>
+                        </td>
+                </tr>
+                    {% endfor %}
+        </table>
+
+            {% else %}
+                <h1>No ingresaste ningun dato a buscar, vuelve a intentarlo.</h1>
+            {% endif %}
+        </center>
+
+{% endblock %}

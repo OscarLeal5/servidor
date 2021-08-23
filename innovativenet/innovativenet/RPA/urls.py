@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import Mantenimientos, CustomLoginView, Agregar_Cliente, Modificar_Cliente
+from .views import Home, CustomLoginView, Agregar_Cliente, Modificar_Cliente
 from django.contrib.auth.views import LogoutView
 
 
@@ -9,7 +9,7 @@ urlpatterns = [
     
     path("logout/", LogoutView.as_view(next_page='login'), name='logout'),
 
-    path('', Mantenimientos.as_view(),name="home"),
+    path('', Home.as_view(),name="home"),
 
     path('clientes',views.todos_clientes, name='lista_clientes'),
 

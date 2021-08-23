@@ -32,7 +32,7 @@ class CustomLoginView(LoginView):
     def get_success_url(self) -> str:
         return reverse_lazy('home')
 
-class Mantenimientos(LoginRequiredMixin, ListView):
+class Home(LoginRequiredMixin, ListView):
     model = Cliente
     context_object_name = 'Cliente'
     template_name = 'mantenimientos/home.html'
@@ -50,7 +50,7 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion', 
             'fecha', 'mantenimiento', 'dispositivo']
-    success_url = reverse_lazy('mantenimientos')
+    success_url = reverse_lazy('home')
     template_name = 'mantenimientos/agregar_cliente.html'
 
     def form_valid(self, form):

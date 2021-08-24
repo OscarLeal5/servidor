@@ -116,7 +116,7 @@ def todos_clientes(request):
 class Mostrar_Cliente(LoginRequiredMixin, DetailView):
     model = Cliente
     object = "cliente"
-    template_name = "mantenimientos/mostrar_cliente.html"
+    template_name = "mantenimientos/detalle_cliente.html"
 
 # def mostrar_cliente(request, cliente_id):
 #     cliente = Cliente.objects.get(pk=cliente_id)

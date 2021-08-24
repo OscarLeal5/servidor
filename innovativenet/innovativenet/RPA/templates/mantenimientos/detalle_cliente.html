@@ -1,17 +1,17 @@
 
-{% extends "mantenimiento/template.html" %}
+{% extends "mantenimientos/base.html" %}
 {% block body %}
 
 
-<div class="container-fluid">
-    <h1> Servicios de Mantenimiento {{mantenimiento}}</h1>
+<div class="container-fluid p-4">
+    <h1> Servicios de Mantenimiento {{cliente}}</h1>
 </div>
 
 <div class="container">
 
     <div class="container">
         <div class="row">
-          <div class="col-5">
+          <div class="col">
 
             <ul>Nombre del encargado: </ul>
 
@@ -28,7 +28,7 @@
             <ul>Fecha programada: </ul>
 
           </div>
-          <div class="col-4">
+          <div class="col-5">
 
             <ul>{{ cliente.encargado }}</ul>
 

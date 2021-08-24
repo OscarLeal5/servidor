@@ -94,6 +94,18 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
 #     return render(request,'mantenimientos/modificar_cliente.html',
 #         {'cliente':cliente,'form':form})
 
+class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
+    model = Cliente
+    context_object_name = "cliente"
+    success_url = reverse_lazy("home")
+    template_name = "mantenimientos/confirm_delete.html"
+
+# def eliminar_cliente(request,cliente_id):
+#     cliente = Cliente.objects.get(pk=cliente_id)
+#     cliente.delete()
+#     messages.error(request, 'El cliente ha sido eliminado exitosamente')
+#     return redirect('lista_clientes')
+
 def todos_clientes(request):
     lista_clientes = Cliente.objects.all()
     return render(request,'mantenimientos/Clientes.html',{'lista_clientes':lista_clientes})
@@ -101,16 +113,14 @@ def todos_clientes(request):
 # def home(request):
 #     return render(request, 'mantenimientos/home.html',{})
 
-def eliminar_cliente(request,cliente_id):
-    cliente = Cliente.objects.get(pk=cliente_id)
-    cliente.delete()
-    messages.error(request, 'El cliente ha sido eliminado exitosamente')
-    return redirect('lista_clientes')
+class Mostrar_Cliente(LoginRequiredMixin, DetailView):
+    model = Cliente
+    object = "cliente"
+    template_name = "mantenimientos/mostrar_cliente.html"
 
-
-def mostrar_cliente(request, cliente_id):
-    cliente = Cliente.objects.get(pk=cliente_id)
-    return render(request,'mantenimientos/mostrar_cliente.html',{'cliente':cliente})
+# def mostrar_cliente(request, cliente_id):
+#     cliente = Cliente.objects.get(pk=cliente_id)
+#     return render(request,'mantenimientos/mostrar_cliente.html',{'cliente':cliente})
 
 
 def cotizacion_pdf(request, cliente_id):

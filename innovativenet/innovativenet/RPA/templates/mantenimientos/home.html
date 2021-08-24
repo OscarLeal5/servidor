@@ -18,18 +18,42 @@
 
                         <div class="col-6 text-center">
 
-                                <h3> Ir a Lista de Clientes </h3>
-                                <div class="d-flex justify-content-start m-4 ">
+                                <h3> Ir a Lista de Clientes Activos </h3>
+                                <div class="d-flex justify-content-center m-4 ">
                                         <a class="btn btn-primary" role="button" href="{% url 'lista_clientes' %}">Lista Clientes</a> 
                                 </div>
                         </div>
 
                         <div class="col">
 
-                                
+                                 
 
                         </div>
                 </div>
         </div>
+
+    <div class="container-fluid">
+        <h1> SERVICIOS CLIENTES </h1>
+
+        <table class="table">
+            <tr>
+                <th scope="col"> Clientes </th>
+                <th scope="col"> </th>
+                <th scope="col"> </th>
+            </tr>
+            {% for c in Cliente %}
+            <tr>
+                <td>{{c.nombre}}</td>
+                <td><a href="{% url 'mostrar_cliente' c.id %}"> Ver mas </a></td>
+                <td><a href="{% url 'modificar_cliente' c.id %}"> Editar </a></td>
+                <td><a href="{% url 'eliminar_cliente' c.id %}"> Eliminar </a></td>
+            </tr>
+            {% empty %}
+
+            <h3>No hay ningun mantenimiento</h3>
+            {% endfor %}
+        </table>
+    </div>
+
 
 {% endblock %}

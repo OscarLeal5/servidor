@@ -1,0 +1,67 @@
+
+{% extends "mantenimiento/template.html" %}
+{% block body %}
+
+
+<div class="container-fluid">
+    <h1> Servicios de Mantenimiento {{mantenimiento}}</h1>
+</div>
+
+<div class="container">
+
+    <div class="container">
+        <div class="row">
+          <div class="col-5">
+
+            <ul>Nombre del encargado: </ul>
+
+            <ul>Puesto: </ul>
+        
+            <ul>Numero de contacto: </ul>
+        
+            <ul>Correo de contacto: </ul>
+
+            <ul>Lugar donde se realiza el mantenimiento: </ul>
+
+            <ul>Descripcion del mantenimiento: </ul>
+
+            <ul>Fecha programada: </ul>
+
+          </div>
+          <div class="col-4">
+
+            <ul>{{ cliente.encargado }}</ul>
+
+            <ul>{{ cliente.puesto_encargado }}</ul>
+        
+            <ul>{{ cliente.numero_contacto }}</ul>
+        
+            <ul>{{ cliente.correo_contacto }}</ul>
+
+            <ul>{{ cliente.lugar_de_mantenimiento }}</ul>
+            
+            <ul>{{ cliente.descripcion_cotizacion }}</ul>
+
+            <ul>{{ cliente.fecha }}</ul>
+
+          </div>
+          <div class="col">
+
+          </div>
+        </div>
+      </div>
+          <center>
+                <a href="{% url 'modificar_cliente' cliente.id %}">
+                        <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar</button>
+                </a>
+                <a href="{% url 'eliminar_cliente' cliente.id %}">
+                        <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar</button>
+                </a>
+                <br>
+                <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                        <button type="button" class="btn btn-primary" style="margin:10px">Descargar cotización</button>
+                </a>
+        </center>
+</div>
+
+{% endblock %}

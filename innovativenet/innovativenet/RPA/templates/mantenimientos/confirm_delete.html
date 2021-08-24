@@ -1,0 +1,24 @@
+{% extends "mantenimientos/base.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="container m-4">
+
+    <form method="POST">
+
+        {% csrf_token %}
+        <p> 
+            Estas seguro que quieres eliminar este Mantenimiento: 
+            <br><br><dfn><abbr> {{c}}</abbr></dfn>
+        </p>
+         
+        <input class="button" type="submit" value="Delete" />
+
+    </form>
+
+</div>
+
+
+
+{% endblock %}

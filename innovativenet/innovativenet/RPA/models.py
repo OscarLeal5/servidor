@@ -7,8 +7,64 @@ class Mantenimiento(models.Model):
     tiempoejecucion = models.IntegerField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)
     cantidaddispositivos = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True)
     horasactividad = models.IntegerField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
-    costomantenimientoadicional = models.IntegerField(verbose_name="horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
-    costomantenimientoregular = models.IntegerField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
+    costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
+    costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True)
+
+    Tecnico = 'Tecnico'
+    precioTecnico = 23.68
+    ProjectManager = 'Project Manager'
+    precioProject = 78.95
+    Engineering = 'Ingeniero'
+    precioEngineering = 71.05
+    Team = 'Equipo de tecnicos'
+    precioTeam = 47.36
+    Electrical = 'Electrico'
+    precioElectrical = 23.68
+    Trainer = 'Trainer'
+    precioTrainer = 78.95
+    tipoDeTrabajo=[(Tecnico,'Tecnico'),
+                   (ProjectManager,'Project Manager'),
+                   (Engineering,'Ingeniero'),
+                   (Team,'Equipo de Tecnicos'),
+                   (Electrical,'Electrico'),
+                   (Trainer,'Trainer'),
+                   ]
+
+    encargadoTrabajo = models.CharField(max_length=30,choices=tipoDeTrabajo,default=Tecnico)
+
+    # if encargadoTrabajo =='Tecnico':
+    #     costomantenimientoregular = precioTecnico * horasactividad
+    #     Mantenimiento.save()
+    # elif encargadoTrabajo == 'Trainer':
+    #     costomantenimientoregular = precioTrainer * horasactividad
+    # elif encargadoTrabajo == 'Electrico':
+    #     costomantenimientoregular = precioElectrical * horasactividad
+    # elif encargadoTrabajo == 'Equipo de tecnicos':
+    #     costomantenimientoregular = precioTeam * horasactividad
+    # elif encargadoTrabajo == 'Ingeniero':
+    #     costomantenimientoregular = precioEngineering * horasactividad
+    # elif encargadoTrabajo == 'Project Manager':
+    #     costomantenimientoregular = precioProject * horasactividad
+
+    def update_costo(self):
+        if self.encargadoTrabajo == 'Tecnico':
+            self.costomantenimientoregular = self.precioTecnico * self.horasactividad
+            Mantenimiento.save(self)
+        elif self.encargadoTrabajo == 'Trainer':
+            self.costomantenimientoregular = self.precioTrainer * self.horasactividad
+            Mantenimiento.save(self)
+        elif self.encargadoTrabajo == 'Electrico':
+            self.costomantenimientoregular = self.precioElectrical * self.horasactividad
+            Mantenimiento.save(self)
+        elif self.encargadoTrabajo == 'Equipo de tecnicos':
+            self.costomantenimientoregular = self.precioTeam * self.horasactividad
+            Mantenimiento.save(self)
+        elif self.encargadoTrabajo == 'Ingeniero':
+            self.costomantenimientoregular = self.precioEngineering * self.horasactividad
+            Mantenimiento.save(self)
+        elif self.encargadoTrabajo == 'Project Manager':
+            self.costomantenimientoregular = self.precioProject * self.horasactividad
+            Mantenimiento.save(self)
 
     def __str__(self):
         return self.title

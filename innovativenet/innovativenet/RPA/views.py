@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from reportlab.pdfgen import canvas
 
-from .models import Cliente
+from .models import Cliente, Mantenimiento
 from django.http import HttpResponseRedirect
 from django.http import  HttpResponse
 from .forms import ClienteForm
@@ -74,6 +74,7 @@ def agregar_cliente(request):
 def cotizacion_pdf(request, cliente_id):
 
     cliente = Cliente.objects.get(pk=cliente_id)
+    # mantenimientos = Cliente.mantenimiento.through.objects.
     buf = io.BytesIO()
 
     nombre=cliente.nombre
@@ -84,6 +85,20 @@ def cotizacion_pdf(request, cliente_id):
     lugar_de_mantenimiento=cliente.lugar_de_mantenimiento
     descripcion_cotizacion=cliente.descripcion_cotizacion
     fecha=cliente.fecha
+
+    # if mantenimientos.encargadoTrabajo =='Tecnico':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTecnico * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Trainer':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTrainer * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Electrico':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioElectrical * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Equipo de tecnicos':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTeam * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Ingeniero':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioEngineering * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Project Manager':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioProject * mantenimientos.horasactividad
+
 
 
 
@@ -298,7 +313,7 @@ def cotizacion_pdf(request, cliente_id):
         td_total = [["Total de HRS de servicio de soporte técnico de poliza",""]]
         suma_horas = 0
         for mantenimiento in mantenimientos:
-            suma_horas = +mantenimiento.tiempoejecucion
+            suma_horas = +mantenimiento.horasactividad
 
         data_mantenimientos = ["", suma_horas]
         td_total.append(data_mantenimientos)
@@ -308,7 +323,10 @@ def cotizacion_pdf(request, cliente_id):
         table_tot.setStyle(ts_tot)
 
         ##Insertar variable de cliente precio aqui##
-        preciofinal = 9713.98
+        preciofinal = 0
+        for mantenimiento in mantenimientos:
+            Mantenimiento.update_costo(self=mantenimiento)
+            preciofinal = +mantenimiento.costomantenimientoregular
         preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
 
         td_precio = [["Description","QTY","Unit","Amount"]]

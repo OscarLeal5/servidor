@@ -99,6 +99,16 @@ label{
           </li> -->
 
         </ul>
+        <form class="d-flex" method="POST" action="{% url 'buscar_clientes' %}">
+          {% csrf_token %}
+
+          <input class="form-control me-2" type="search" placeholder="Buscar cliente"
+                 aria-label="Buscar cliente" name="searched">
+          <button class="btn btn-outline-success" type="submit">
+            Buscar
+          </button>
+
+        </form>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 

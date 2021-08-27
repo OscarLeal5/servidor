@@ -21,6 +21,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from num2words import num2words
+
 
 class CustomLoginView(LoginView):
     # Esta clase se encarga de verificar que el usuario este autenticado antes de poder
@@ -110,6 +112,20 @@ def todos_clientes(request):
     lista_clientes = Cliente.objects.all()
     return render(request,'mantenimientos/Clientes.html',{'lista_clientes':lista_clientes})
 
+
+def buscar_clientes(request):
+    if request.method == "POST":
+        searched = request.POST["searched"]
+        clientes = Cliente.objects.filter(nombre__contains=searched)
+        return render(request,
+                      'mantenimientos/buscar_clientes.html',
+                      {'searched':searched,
+                       'clientes':clientes,
+                       })
+    else:
+        return render(request, 'mantenimientos/buscar_clientes.html',{})
+
+
 # def home(request):
 #     return render(request, 'mantenimientos/home.html',{})
 
@@ -126,6 +142,7 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
 def cotizacion_pdf(request, cliente_id):
 
     cliente = Cliente.objects.get(pk=cliente_id)
+    # mantenimientos = Cliente.mantenimiento.through.objects.
     buf = io.BytesIO()
 
     nombre=cliente.nombre
@@ -136,6 +153,20 @@ def cotizacion_pdf(request, cliente_id):
     lugar_de_mantenimiento=cliente.lugar_de_mantenimiento
     descripcion_cotizacion=cliente.descripcion_cotizacion
     fecha=cliente.fecha
+
+    # if mantenimientos.encargadoTrabajo =='Tecnico':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTecnico * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Trainer':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTrainer * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Electrico':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioElectrical * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Equipo de tecnicos':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTeam * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Ingeniero':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioEngineering * mantenimientos.horasactividad
+    # elif mantenimientos.encargadoTrabajo == 'Project Manager':
+    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioProject * mantenimientos.horasactividad
+
 
 
 
@@ -162,6 +193,14 @@ def cotizacion_pdf(request, cliente_id):
                               alignment=TA_CENTER,
                               fontSize=12,
                               textColor=colors.black,
+                              ))
+    styles.add(ParagraphStyle(name='Normal_Right',
+                              parent=styles['Normal'],
+                              wordWrap='LTR',
+                              alignment=TA_RIGHT,
+                              fontSize=12,
+                              textColor=colors.black,
+                              fontName="Helvetica-bold",
                               ))
 
     styles.add(ParagraphStyle(name='Heading1_B',
@@ -195,6 +234,24 @@ def cotizacion_pdf(request, cliente_id):
                               textColor=colors.black,
                               fontName="Helvetica-bold",
                               ))
+    styles.add(ParagraphStyle(name='Normal_Red',
+                              parent=styles['Normal'],
+                              wordWrap='CJK',
+                              alignment=TA_LEFT,
+                              fontSize=12,
+                              textColor=colors.red,
+                              fontName="Helvetica-bold",
+                              ))
+    styles.add(ParagraphStyle(name='Normal_Ye',
+                              parent=styles['Normal'],
+                              wordWrap='CJK',
+                              alignment=TA_CENTER,
+                              fontSize=12,
+                              textColor=colors.black,
+                              fontName="Helvetica-bold",
+                              backColor = colors.yellow,
+                              ))
+
 
     def myFirstPage(canvas, doc):
         canvas.saveState()
@@ -235,6 +292,9 @@ def cotizacion_pdf(request, cliente_id):
         styleHB = styles[("Heading1_B")]
         styleHBC = styles[("Heading1_BC")]
         styleNC = styles[("Normal_C")]
+        styleNR = styles[("Normal_Red")]
+        styleNY = styles[("Normal_Ye")]
+        styleNRight = styles[("Normal_Right")]
 
         texto_fecha = ("Tijuana, B.C. a " + dateStr)
         texto_encargado = ("Attn. " + encargado)
@@ -262,6 +322,43 @@ def cotizacion_pdf(request, cliente_id):
         p18 = Paragraph("Vigencia **"+actyear+"-"+sigyear+"**",styleB)
         p19 = Paragraph("En la siguiente tabla se muestran las actividades que se consideran.",styleB)
         p20 = Paragraph("2.0 Alcance de la descripción del trabajo",styleHB)
+        palcances1 = Paragraph("Cada actividad de servicio de 1 año",styleNR)
+        palcances2 = Paragraph("Limpieza de dispositivos 12-20 pies de altura.",styleN,bulletText="•")
+        palcances3 = Paragraph("Limpieza de Panel (Pantallas lcd, conectores, terminales de cableado, limpieza,sellos silicón, limpiezageneral del Panel en sus partes de funcionalidad revisión de conectividad a panel o y actividad en lazo)",styleN,bulletText="•")
+        palcances4 = Paragraph("Limpieza del sistema de gestión de energía exterior (filtros de aire, CSI· C., sellos de silicona de gabinete, conectores de conducto de ajuste, fuente de alimentación, baterías, cables de alimentación y conectores).",styleN,bulletText="•")
+        palcances5 = Paragraph("Revisión de la comunicación de dispositivos con el PANEL",styleN,bulletText="•")
+        palcances6 = Paragraph("Comprobar el funcionamiento de las fuentes de alimentación",styleN,bulletText="•")
+        palcances7 = Paragraph("Verificar la prueba del lazo",styleN,bulletText="•")
+        palcances8 = Paragraph("De forma programada, cada 1er día laborable de cada mes se limpiará el equipo antes mencionado.",styleN,bulletText="•")
+
+        palcances9 = Paragraph("Monitoreo de revisiones de los puntos anteriores.",styleN,bulletText="•")
+        palcances10 = Paragraph("Servicio profesional para aplicar los conocimientos de ingeniería especializada en Detección de incendios",styleN,bulletText="•")
+        palcances11= Paragraph("De forma programada, una vez al año el equipo mencionado anteriormente se realizará el mmtto Preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
+        palcances12= Paragraph("El alcance es sólo para el sistema de detección de incendios, Panel y equipos instalados previamente en sitio mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
+        palcances13= Paragraph("Una vez completado el mantenimiento, el informe se entrega con la información resultante, el formato que especifica el estado actual de cada equipo.",styleN,bulletText="•")
+        palcances14= Paragraph("El informe hará la recomendación de corrección, reparación o sustitución de cualquiera de los equipos.",styleN,bulletText="•")
+        palcances15= Paragraph("El pago del mantenimiento es anual, debe ser pagado antes de ser realizado.",styleN,bulletText="•")
+        palcances16= Paragraph("Incluye Maquinaria de elevacion.",styleN,bulletText="•")
+
+        ppolitica = Paragraph("2.1 Política de apoyo técnico y diagnóstico",styleHB)
+        ppolitica1 = Paragraph("Teléfono móvil disponible para emergencias durante las horas contratadas.",styleN,bulletText="•")
+        ppolitica2 = Paragraph("Soporte técnico telefónico con un tiempo de respuesta de 4 horas.",styleN,bulletText="•")
+        ppolitica3 = Paragraph("Soporte técnico in situ 4 horas de tiempo de respuesta, 5 días a la semana (de lunes a viernes de 8:00am a 5:00pm).",styleN,bulletText="•")
+        ppolitica4 = Paragraph("30 (treinta) horas de servicio técnico incluyen por un período de 12 meses, Si el cliente hace uso de las 30 hrs de servicio, deberá renovarse la Póliza en una nueva cotización",styleN,bulletText="•")
+        ppolitica5 = Paragraph("El alcance es sólo para el sistema de detección de incendios, hardware de DCI mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
+        ppolitica6 = Paragraph("Para la atención de:",styleN,bulletText="•")
+        ppolitica7 = Paragraph("Fallos y diagnóstico",styleN,bulletText="-")
+        ppolitica8 = Paragraph("Ajustes",styleN,bulletText="-")
+        ppolitica9 = Paragraph("Actualizaciones",styleN,bulletText="-")
+        ppolitica10 = Paragraph("Panel, configuraciones de equipo de detección",styleN,bulletText="-")
+        ppolitica11 = Paragraph("Soporte técnico para problemas con el Panel",styleN,bulletText="-")
+        ppolitica12 = Paragraph("Soporte técnico para problemas con los dispositivos",styleN,bulletText="-")
+        ppolitica13 = Paragraph("Tarjetas loops, panel, estrobos, sensores fotoeléctricos, fuentes de poder, módulos de control. Monitores de flujo, resistencias de fin de línea.",styleN,bulletText="-")
+        ppolitica14 = Paragraph("Emergencias del sistemas (1 hora)",styleN,bulletText="-")
+        ppolitica15 = Paragraph("Si se detecta un dispositivo dañado durante el diagnóstico, se notificará en el relleno de informe para su posterior mmtto correctivo. ",styleN,bulletText="•")
+        ppolitica16 = Paragraph("""<u>Sistema base web para mejorar sus servicios y registros de mantenimiento</u>""",styleN,bulletText="•")
+
+
 
 
         td_dispositivos =[["Marca","Nombre","Cantidad","Actvidad","Plan"]]
@@ -284,7 +381,7 @@ def cotizacion_pdf(request, cliente_id):
         td_total = [["Total de HRS de servicio de soporte técnico de poliza",""]]
         suma_horas = 0
         for mantenimiento in mantenimientos:
-            suma_horas = +mantenimiento.tiempoejecucion
+            suma_horas = +mantenimiento.horasactividad
 
         data_mantenimientos = ["", suma_horas]
         td_total.append(data_mantenimientos)
@@ -294,19 +391,28 @@ def cotizacion_pdf(request, cliente_id):
         table_tot.setStyle(ts_tot)
 
         ##Insertar variable de cliente precio aqui##
+        preciofinal = 0
+        for mantenimiento in mantenimientos:
+            Mantenimiento.update_costo(self=mantenimiento)
+            preciofinal = +mantenimiento.costomantenimientoregular
+        preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
 
         td_precio = [["Description","QTY","Unit","Amount"]]
-        data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","$9713.98"]
+        data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","${}".format(preciofinal)]
         td_precio.append(data_precio)
         table_pre = Table(td_precio)
         ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,0),colors.lightsteelblue)])
         table_pre.setStyle(ts_pre)
-
+        ppreciotexto = Paragraph(preciofinal1+" USD + IVA",styleNRight)
         p21 = Paragraph("3.0 Resumen de la propuesta económica",styleHB)
         p22 = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual",styleB)
 
+
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
+        p24 = Paragraph("Mmto.....................................................{}".format(preciofinal),styleNY)
+        p25 = Paragraph(preciofinal1+" USD + IVA",styleNY)
+        p26 = Paragraph("**Incluye maquinaria de elevacion**",styleCB)
 
         ptitulotermino = Paragraph("4.0 Términos y condiciones",styleHB)
         pterminos1 = Paragraph("Los precios cotizados se expresan en dólares americanos.",styleN,bulletText="-")
@@ -368,6 +474,52 @@ def cotizacion_pdf(request, cliente_id):
 
         #Quinta pagina
         Story.append(p20)
+        Story.append(pblank)
+        Story.append(palcances1)
+        Story.append(pblank)
+        Story.append(palcances2)
+        Story.append(palcances3)
+        Story.append(palcances4)
+        Story.append(palcances5)
+        Story.append(palcances6)
+        Story.append(palcances7)
+        Story.append(palcances8)
+        Story.append(pblank)
+        Story.append(pblank)
+        Story.append(palcances1)
+        Story.append(pblank)
+        Story.append(palcances9)
+        Story.append(palcances10)
+        Story.append(palcances11)
+        Story.append(palcances12)
+        Story.append(palcances13)
+        Story.append(palcances14)
+        Story.append(palcances15)
+        Story.append(palcances16)
+        Story.append(pblank)
+
+        Story.append(PageBreak())
+
+
+        Story.append(ppolitica)
+        Story.append(ppolitica1)
+        Story.append(ppolitica2)
+        Story.append(ppolitica3)
+        Story.append(ppolitica4)
+        Story.append(ppolitica5)
+        Story.append(ppolitica6)
+        Story.append(ppolitica7)
+        Story.append(ppolitica8)
+        Story.append(ppolitica9)
+        Story.append(ppolitica10)
+        Story.append(ppolitica11)
+        Story.append(ppolitica12)
+        Story.append(ppolitica13)
+        Story.append(ppolitica14)
+        Story.append(ppolitica15)
+        Story.append(ppolitica16)
+
+
         Story.append(PageBreak())
 
         #Sexta pagina
@@ -378,9 +530,14 @@ def cotizacion_pdf(request, cliente_id):
         Story.append(p22)
         Story.append(pblank)
         Story.append(table_pre)
+        Story.append(ppreciotexto)
         Story.append(pblank)
         Story.append(pblank)
         Story.append(p23)
+        Story.append(p24)
+        Story.append(p25)
+        Story.append(p26)
+
 
         Story.append(PageBreak())
 

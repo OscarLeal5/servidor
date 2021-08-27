@@ -11,39 +11,55 @@
 
     <div class="container">
         <div class="row">
-          <div class="col">
+          <div class="col-5">
 
-            <ul>Nombre del encargado: </ul>
+                <ul>Nombre del encargado: </ul>
 
-            <ul>Puesto: </ul>
-        
-            <ul>Numero de contacto: </ul>
-        
-            <ul>Correo de contacto: </ul>
+                <ul>Puesto: </ul>
+                
+                <ul>Numero de contacto: </ul>
+                
+                <ul>Correo de contacto: </ul>
 
-            <ul>Lugar donde se realiza el mantenimiento: </ul>
+                <ul>Lugar donde se realiza el mantenimiento: </ul>
 
-            <ul>Descripcion del mantenimiento: </ul>
+                <ul>Descripcion del mantenimiento: </ul>
 
-            <ul>Fecha programada: </ul>
+                <ul>Fecha programada: </ul>
+
+                <ul>Dispositivos:</ul>
+                {% for dispositivo in cliente.dispositivo.all %}
+                        <br></br>d
+                {% endfor %}
+                <ul>Mantenimientos:</ul>
+                {% for mantenimiento in cliente.mantenimiento.all %}
+                        <br><br>
+                {% endfor %}
 
           </div>
           <div class="col-5">
 
-            <ul>{{ cliente.encargado }}</ul>
+                <ul>{{ cliente.encargado }}</ul>
 
-            <ul>{{ cliente.puesto_encargado }}</ul>
-        
-            <ul>{{ cliente.numero_contacto }}</ul>
-        
-            <ul>{{ cliente.correo_contacto }}</ul>
+                <ul>{{ cliente.puesto_encargado }}</ul>
+                
+                <ul>{{ cliente.numero_contacto }}</ul>
+                
+                <ul>{{ cliente.correo_contacto }}</ul>
 
-            <ul>{{ cliente.lugar_de_mantenimiento }}</ul>
-            
-            <ul>{{ cliente.descripcion_cotizacion }}</ul>
+                <ul>{{ cliente.lugar_de_mantenimiento }}</ul>
+                
+                <ul>{{ cliente.descripcion_cotizacion }}</ul>
 
-            <ul>{{ cliente.fecha }}</ul>
+                <ul>{{ cliente.fecha }}</ul>
 
+                {% for dispositivo in cliente.dispositivo.all %}
+                        <ul>{{ dispositivo }}</ul>
+                {% endfor %}
+                {% for mantenimiento in cliente.mantenimiento.all %}
+                        <ul>{{ mantenimiento }}</ul>
+
+                {% endfor %}
           </div>
           <div class="col">
 

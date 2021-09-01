@@ -257,18 +257,17 @@ def cotizacion_pdf(request, cliente_id):
         canvas.saveState()
         canvas.setFont('Times-Bold', 16)
         canvas.setFont('Times-Roman', 14)
-        header = []
-        canvas.drawImage('RPA/logo.png', 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage('RPA/lenellogo.png', 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage('RPA/footer.png', inch, 1, width=460, height=80)
+        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\logo.png', 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\lenellogo.png', 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\footer.png', inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def myLaterPages(canvas, doc):
         canvas.saveState()
         canvas.setFont('Times-Roman', 9)
-        canvas.drawImage('RPA/logo.png', 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage('RPA/lenellogo.png', 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage('RPA/footer.png', inch, 1, width=460, height=80)
+        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\logo.png', 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\lenellogo.png', 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\footer.png', inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def go():
@@ -381,7 +380,7 @@ def cotizacion_pdf(request, cliente_id):
         td_total = [["Total de HRS de servicio de soporte técnico de poliza",""]]
         suma_horas = 0
         for mantenimiento in mantenimientos:
-            suma_horas = +mantenimiento.horasactividad
+            suma_horas = suma_horas + mantenimiento.horasactividad
 
         data_mantenimientos = ["", suma_horas]
         td_total.append(data_mantenimientos)
@@ -394,7 +393,7 @@ def cotizacion_pdf(request, cliente_id):
         preciofinal = 0
         for mantenimiento in mantenimientos:
             Mantenimiento.update_costo(self=mantenimiento)
-            preciofinal = +mantenimiento.costomantenimientoregular
+            preciofinal = preciofinal + mantenimiento.costomantenimientoregular
         preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
 
         td_precio = [["Description","QTY","Unit","Amount"]]

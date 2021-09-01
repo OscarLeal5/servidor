@@ -27,5 +27,7 @@ urlpatterns = [
     path('eliminar_cliente/<int:pk>', Eliminar_Cliente.as_view(), name='eliminar_cliente'),
     # path('eliminar_cliente/<cliente_id>', views.eliminar_cliente, name='eliminar_cliente'),
 
+    path('buscar_clientes', views.buscar_clientes, name='buscar_clientes'),
+
 
 ]

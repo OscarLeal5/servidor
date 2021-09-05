@@ -33,7 +33,11 @@
                 {% endfor %}
                 <ul>Mantenimientos:</ul>
                 {% for mantenimiento in cliente.mantenimiento.all %}
-                        <br><br>
+                        {% a = 0%}
+                        {% a = a + 1%}
+                        {%if a > 1 %}
+                                <br><br>
+                        {% endif %}
                 {% endfor %}
 
           </div>

@@ -23,6 +23,21 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 
+# ------ VIEWS SERVICIOS ------ #
+
+class Agregar_Servicio(LoginRequiredMixin, CreateView):
+    model = Mantenimiento
+    fields = ['title','periodisidadactividades', 'periodisidadadicional',
+     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad',
+      'costomantenimientoadicional', 'costomantenimientoregular']
+    success_url = reverse_lazy('mantenimientos')
+    template_name = 'mantenimiento/Form.html'
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        return super(Agregar_Servicio, self).form_valid(form)
+
+# ------ VIEWS CLIENTE ------ #
 
 class CustomLoginView(LoginView):
     # Esta clase se encarga de verificar que el usuario este autenticado antes de poder

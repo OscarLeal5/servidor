@@ -66,7 +66,7 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
     fields = ['nombre', 'encargado', 'puesto_encargado', 
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion', 
-            'fecha', 'mantenimiento', 'dispositivo']
+            'mantenimiento', 'dispositivo']
     success_url = reverse_lazy('home')
     template_name = 'mantenimientos/agregar_cliente.html'
 

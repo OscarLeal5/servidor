@@ -1,14 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+import dateutil.utils
 
-# class Precio(models.Model):
-#     encargado = models.CharField(max_length=50, verbose_name='Encargado del trabajo')
-#     precio = models.DecimalField("Precio por hora",max_digits=5,decimal_places=2)
+class Precio(models.Model):
+    encargado = models.CharField(max_length=50, verbose_name='Encargado del trabajo',blank=True, null=True)
+    precio = models.DecimalField("Precio por hora",max_digits=5,decimal_places=2,blank=True, null=True)
 
-#     def _str_(self):
-#         return self.encargado
-#     class Meta:
-#         ordering = ['encargado']
+    def __str__(self):
+        return self.encargado
+    class Meta:
+        ordering = ['encargado']
 
 class Mantenimiento(models.Model):
     #title = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
@@ -45,7 +46,7 @@ class Mantenimiento(models.Model):
     cantidaddispositivos = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True)
     horasactividad = models.IntegerField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
-    costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True)
+    costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
 
     Tecnico = 'Tecnico'
     precioTecnico = 23.68
@@ -67,48 +68,18 @@ class Mantenimiento(models.Model):
                    (Trainer,'Trainer'),
                    ]
 
-    encargadoTrabajo = models.CharField(max_length=30,choices=tipoDeTrabajo,default=Tecnico)
 
-    # if encargadoTrabajo =='Tecnico':
-    #     costomantenimientoregular = precioTecnico * horasactividad
-    #     Mantenimiento.save()
-    # elif encargadoTrabajo == 'Trainer':
-    #     costomantenimientoregular = precioTrainer * horasactividad
-    # elif encargadoTrabajo == 'Electrico':
-    #     costomantenimientoregular = precioElectrical * horasactividad
-    # elif encargadoTrabajo == 'Equipo de tecnicos':
-    #     costomantenimientoregular = precioTeam * horasactividad
-    # elif encargadoTrabajo == 'Ingeniero':
-    #     costomantenimientoregular = precioEngineering * horasactividad
-    # elif encargadoTrabajo == 'Project Manager':
-    #     costomantenimientoregular = precioProject * horasactividad
+    encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE, default=1)
 
-    def update_costo(self):
-        if self.encargadoTrabajo == 'Tecnico':
-            self.costomantenimientoregular = self.precioTecnico * self.horasactividad
-            Mantenimiento.save(self)
-        elif self.encargadoTrabajo == 'Trainer':
-            self.costomantenimientoregular = self.precioTrainer * self.horasactividad
-            Mantenimiento.save(self)
-        elif self.encargadoTrabajo == 'Electrico':
-            self.costomantenimientoregular = self.precioElectrical * self.horasactividad
-            Mantenimiento.save(self)
-        elif self.encargadoTrabajo == 'Equipo de tecnicos':
-            self.costomantenimientoregular = self.precioTeam * self.horasactividad
-            Mantenimiento.save(self)
-        elif self.encargadoTrabajo == 'Ingeniero':
-            self.costomantenimientoregular = self.precioEngineering * self.horasactividad
-            Mantenimiento.save(self)
-        elif self.encargadoTrabajo == 'Project Manager':
-            self.costomantenimientoregular = self.precioProject * self.horasactividad
-            Mantenimiento.save(self)
+    def save(self, *args, **kwargs):
+            self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
+            super(Mantenimiento, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.Titulo
 
     class Meta:
         ordering = ['Titulo']
-
 
 class Dispositivo(models.Model):
     marca = models.CharField(max_length=200, verbose_name="Marca del dispositivo", null=True, blank=True)
@@ -135,7 +106,7 @@ class Cliente(models.Model):
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
-    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True)
+    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
 
     mantenimiento = models.ManyToManyField(Mantenimiento, blank=True, related_name='cliente')
     dispositivo = models.ManyToManyField(Dispositivo, blank=True, related_name="cliente")
@@ -145,3 +116,4 @@ class Cliente(models.Model):
 
     class Meta:
         ordering = ['nombre']
+

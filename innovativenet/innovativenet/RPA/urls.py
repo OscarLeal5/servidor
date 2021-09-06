@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import Home, CustomLoginView, Agregar_Cliente, Modificar_Cliente, Eliminar_Cliente, Mostrar_Cliente, Agregar_Servicio
+from .views import Home, CustomLoginView, Agregar_Cliente, Modificar_Cliente, Eliminar_Cliente, Mostrar_Cliente, Agregar_Servicio,Todos_Clientes
 from django.contrib.auth.views import LogoutView
 
 
@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('', Home.as_view(),name="home"),
 
-    path('clientes',views.todos_clientes, name='lista_clientes'),
+    path('clientes',Todos_Clientes.as_view(), name='lista_clientes'),
 
     path('cotizacion_pdf/<cliente_id>', views.cotizacion_pdf, name='cotizacion_pdf'),
 

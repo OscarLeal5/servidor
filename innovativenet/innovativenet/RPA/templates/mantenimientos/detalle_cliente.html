@@ -58,8 +58,8 @@
                         <ul>{{ dispositivo }}</ul>
                 {% endfor %}
                 <br> </br>
-                {% for mantenimiento in cliente.mantenimiento.all %}
-                        <ul>{{ mantenimiento }}</ul>
+                {% for servicio in mantenimiento %} %}
+                        <ul>{{ servicio }}</ul>
 
                 {% endfor %}
           </div>
@@ -69,17 +69,22 @@
         </div>
       </div>
           <center>
-                <a href="{% url 'modificar_cliente' cliente.id %}">
-                        <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar</button>
-                </a>
-                <a href="{% url 'eliminar_cliente' cliente.id %}">
-                        <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar</button>
-                </a>
-                <br>
-                <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
-                        <button type="button" class="btn btn-primary" style="margin:10px">Descargar cotización</button>
-                </a>
+                <div>
+                        <a href="{% url 'modificar_cliente' cliente.id %}">
+                                <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar</button>
+                        </a>
+                        <a href="{% url 'eliminar_cliente' cliente.id %}">
+                                <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar</button>
+                        </a>
+                        <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                                <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
+                        </a>
+                        <a href="{% url 'crear_servicio' %}">
+                                <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
+                        </a>
+                </div>
         </center>
+        
 </div>
 
 {% endblock %}

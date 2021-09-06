@@ -2,16 +2,16 @@
 {% load static %}
 
 {% block body %}
-
-        <h1>Modificar cliente...</h1>
-        <br/>
-        <form action="" method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
+        <center>
+                <h1>Modificar cliente...</h1>
                 <br/>
-                <input type="submit" value="Actualizar" class="btn btn-secondary">
+                <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <br/>
+                        <input type="submit" value="Actualizar" class="btn btn-secondary">
 
-        </form>
-        <br/>
-
+                </form>
+                <br/>
+        </center>
 {% endblock %}

@@ -2,33 +2,35 @@
 {% load static %}
 
 {% block body %}
+        <center>
+                <div class="container m-2">
+                        <h1>Clientes</h1>
 
-        <h1>Clientes</h1>
+                        <br/>
+                        <table class="table table-striped table-hover table bordered">
+                        {% for cliente in lista_clientes %}
+                                <tr>
+                                        <td>
+                                        <a href="{% url 'mostrar_cliente' cliente.id %}"
+                                        >{{ cliente }}</a>
+                                                </td>
+                                        <td align="right">
+                                                <a href="{% url 'modificar_cliente' cliente.id %}">
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                                </a>
+                                                <a href="{% url 'eliminar_cliente' cliente.id%}">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar cliente</button>
+                                                </a>
+                                        </td>
+                                </tr>
 
-        <br/>
-        <table class="table table-striped table-hover table bordered">
-        {% for cliente in lista_clientes %}
-                <tr>
-                        <td>
-                              <a href="{% url 'mostrar_cliente' cliente.id %}"
-                              >{{ cliente }}</a>
-                                </td>
-                        <td align="right">
-                                <a href="{% url 'modificar_cliente' cliente.id %}">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
-                                </a>
-                                <a href="{% url 'eliminar_cliente' cliente.id%}">
-                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar cliente</button>
-                                </a>
-                        </td>
-                </tr>
-
-        {% endfor %}
-        </table>
-        <a href="{% url 'agregar_cliente' %}">
-                        <button type="button" class="btn btn-secondary"style="float: right">Agregar cliente</button>
-        </a>
-        <br/>
-        <br/>
-
+                        {% endfor %}
+                        </table>
+                        <a href="{% url 'agregar_cliente' %}">
+                                        <button type="button" class="btn btn-secondary"style="float: right">Agregar cliente</button>
+                        </a>
+                        <br/>
+                        <br/>
+                </div>
+        </center>
 {% endblock %}

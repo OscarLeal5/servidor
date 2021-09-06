@@ -1,6 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# class Precio(models.Model):
+#     encargado = models.CharField(max_length=50, verbose_name='Encargado del trabajo')
+#     precio = models.DecimalField("Precio por hora",max_digits=5,decimal_places=2)
+
+#     def _str_(self):
+#         return self.encargado
+#     class Meta:
+#         ordering = ['encargado']
+
 class Mantenimiento(models.Model):
     #title = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     limpieza_panel_alarmas = 'Revision y limpieza de panel de alarmas / Remoto'
@@ -95,10 +104,10 @@ class Mantenimiento(models.Model):
             Mantenimiento.save(self)
 
     def __str__(self):
-        return self.title
+        return self.Titulo
 
     class Meta:
-        ordering = ['title']
+        ordering = ['Titulo']
 
 
 class Dispositivo(models.Model):

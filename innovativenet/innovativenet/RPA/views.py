@@ -30,8 +30,8 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
     fields = ['title','periodisidadactividades', 'periodisidadadicional',
      'tiempoejecucion', 'cantidaddispositivos', 'horasactividad',
       'costomantenimientoadicional', 'costomantenimientoregular']
-    success_url = reverse_lazy('mantenimientos')
-    template_name = 'mantenimiento/Form.html'
+    success_url = reverse_lazy('home')
+    template_name = 'mantenimientos/agregar_servicio.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user

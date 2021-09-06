@@ -2,7 +2,34 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Mantenimiento(models.Model):
-    title = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
+    #title = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
+    limpieza_panel_alarmas = 'Revision y limpieza de panel de alarmas / Remoto'
+    revision_limpieza_sensor_humo = 'Revision y limpieza de sensores de humo'
+    rev_limp_estrobos = ' Revision y limpieza de estrobos -cornetas - campanas-mixtos'
+    rev_limp_fuentespoder = 'Revision y limpieza de Fuentes de poder'
+    rev_limp_placasactivacion = 'Revision y limpieza Palancas  de activacion'
+    rev_limp_monitoresflujo = 'Revision y limpieza Modulos monitores de Flujo'
+    rev_limp_sensoresductos = 'Revision y limpieza sensores de ductos de aire'
+    rev_limp_humobeam = 'Revision y limpieza Sensor de humo tipo Beam'
+    rev_limp_modulodecontrol = 'Revision y limpieza de modulos de Control'
+    rev_limp_modconttrct1ct2 = 'Revision y limpieza de modulo de control CT1 o CT2'
+    MANTENIMIENTOS_LISTA = [
+        (limpieza_panel_alarmas, 'Revision y limpieza de panel de alarmas / Remoto'),
+        (revision_limpieza_sensor_humo, 'Revision y limpieza de sensores de humo'),
+        (rev_limp_estrobos, 'Revision y limpieza de estrobos -cornetas - campanas-mixtos'),
+        (rev_limp_fuentespoder, 'Revision y limpieza de Fuentes de poder'),
+        (rev_limp_placasactivacion, 'Revision y limpieza Palancas  de activacion'),
+        (rev_limp_monitoresflujo, 'Revision y limpieza Modulos monitores de Flujo'),
+        (rev_limp_sensoresductos, 'Revision y limpieza sensores de ductos de aire'),
+        (rev_limp_humobeam, 'Revision y limpieza Sensor de humo tipo Beam'),
+        (rev_limp_modulodecontrol, 'Revision y limpieza de modulos de Control'),
+        (rev_limp_modconttrct1ct2, 'Revision y limpieza de modulo de control CT1 o CT2'),
+    ]
+    Titulo = models.CharField(
+        max_length=200,
+        choices=MANTENIMIENTOS_LISTA,
+        blank=True
+    )
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
     periodisidadadicional = models.IntegerField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
     tiempoejecucion = models.IntegerField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)

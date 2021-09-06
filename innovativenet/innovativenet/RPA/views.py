@@ -74,22 +74,6 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         return super(Agregar_Cliente, self).form_valid(form)
 
-# def agregar_cliente(request):
-#     submitted = False
-#     if request.method == "POST":
-#         form = ClienteForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect('/agregar_cliente?submitted=True')
-
-#     else:
-#         form = ClienteForm()
-#         if 'submitted' in request.GET:
-#             submitted = True
-#             messages.success(request, 'El cliente ha sido agregado exitosamente')
-#             return redirect('lista_clientes')
-
-#     return render(request,'mantenimientos/agregar_cliente.html',{'form':form,'submitted':submitted})
 
 class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     model = Cliente
@@ -100,28 +84,12 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('home')
     template_name = 'mantenimientos/agregar_cliente.html'
 
-# def modificar_cliente(request,cliente_id):
-#     cliente = Cliente.objects.get(pk=cliente_id)
-#     form = ClienteForm(request.POST or None, instance=cliente)
-#     if form.is_valid():
-#         form.save()
-#         messages.info(request, 'El cliente ha sido modificado exitosamente')
-#         return redirect('lista_clientes')
-
-#     return render(request,'mantenimientos/modificar_cliente.html',
-#         {'cliente':cliente,'form':form})
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente
     context_object_name = "cliente"
     success_url = reverse_lazy("home")
     template_name = "mantenimientos/confirm_delete.html"
-
-# def eliminar_cliente(request,cliente_id):
-#     cliente = Cliente.objects.get(pk=cliente_id)
-#     cliente.delete()
-#     messages.error(request, 'El cliente ha sido eliminado exitosamente')
-#     return redirect('lista_clientes')
 
 def todos_clientes(request):
     lista_clientes = Cliente.objects.all()

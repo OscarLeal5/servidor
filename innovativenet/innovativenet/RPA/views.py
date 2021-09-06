@@ -34,6 +34,10 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
     template_name = 'mantenimientos/agregar_servicio.html'
 
     def form_valid(self, form):
+        form.instance.cliente = Cliente.objects.get(id)
+        return super(Agregar_Servicio, self).form_valid(form)
+
+    def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super(Agregar_Servicio, self).form_valid(form)
 
@@ -82,7 +86,7 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
             'lugar_de_mantenimiento', 'descripcion_cotizacion', 
             'fecha', 'mantenimiento', 'dispositivo']
     success_url = reverse_lazy('home')
-    template_name = 'mantenimientos/agregar_cliente.html'
+    template_name = 'mantenimientos/modificar_cliente.html'
 
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
@@ -91,9 +95,18 @@ class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("home")
     template_name = "mantenimientos/confirm_delete.html"
 
-def todos_clientes(request):
-    lista_clientes = Cliente.objects.all()
-    return render(request,'mantenimientos/Clientes.html',{'lista_clientes':lista_clientes})
+class Todos_Clientes(LoginRequiredMixin, ListView):
+    model = Cliente
+    context_object_name = 'lista_clientes'
+    template_name = 'mantenimientos/Clientes.html'
+    # Se encarga de manejar los datos observables por el usuario
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # compara los usuarios con su informacion y projecta solo informacion de usuario
+        context['lista_clientes'] = context['lista_clientes'].filter(usuario=self.request.user)
+        #context['count'] = context['mantenimientos'].filter(complete=False).count()
+        return context
+
 
 
 def buscar_clientes(request):
@@ -116,7 +129,11 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
     model = Cliente
     object = "cliente"
     template_name = "mantenimientos/detalle_cliente.html"
-
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['cliente'] = Cliente.objects.get()  # or whatever
+    #     context['servicio'] = Mantenimiento.objects.get()  # or whatever
+    #     return context
 # def mostrar_cliente(request, cliente_id):
 #     cliente = Cliente.objects.get(pk=cliente_id)
 #     return render(request,'mantenimientos/mostrar_cliente.html',{'cliente':cliente})

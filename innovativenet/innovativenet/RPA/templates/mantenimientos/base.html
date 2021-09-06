@@ -99,7 +99,7 @@ label{
           </li> -->
 
         </ul>
-        <form class="d-flex" method="POST" action="{% url 'buscar_clientes' %}">
+        <form class="d-flex m-3" method="POST" action="{% url 'buscar_clientes' %}">
           {% csrf_token %}
 
           <input class="form-control me-2" type="search" placeholder="Buscar cliente"
@@ -116,7 +116,7 @@ label{
   </header><!-- End Header -->
 
 
-    <div class="container-sm">
+    <div class="container-fluid m-3">
       {% block body %}
 
       {% endblock %}

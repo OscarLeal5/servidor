@@ -29,15 +29,11 @@
 
                 <ul>Dispositivos:</ul>
                 {% for dispositivo in cliente.dispositivo.all %}
-                        <br></br>d
+                        <br></br>
                 {% endfor %}
                 <ul>Mantenimientos:</ul>
                 {% for mantenimiento in cliente.mantenimiento.all %}
-                        {% a = 0%}
-                        {% a = a + 1%}
-                        {%if a > 1 %}
                                 <br><br>
-                        {% endif %}
                 {% endfor %}
 
           </div>
@@ -57,9 +53,11 @@
 
                 <ul>{{ cliente.fecha }}</ul>
 
+
                 {% for dispositivo in cliente.dispositivo.all %}
                         <ul>{{ dispositivo }}</ul>
                 {% endfor %}
+                <br> </br>
                 {% for mantenimiento in cliente.mantenimiento.all %}
                         <ul>{{ mantenimiento }}</ul>
 

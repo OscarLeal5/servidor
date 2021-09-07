@@ -27,10 +27,14 @@ from num2words import num2words
 # ------ VIEWS SERVICIOS ------ #
 
 class Agregar_Servicio(LoginRequiredMixin, CreateView):
+    # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
+    # Hace la eleccion de que inputs del Modelo tomar en cuenta
     fields = ['Titulo','cliente','periodisidadactividades', 'periodisidadadicional',
      'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
+    # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
     success_url = reverse_lazy('home')
+    # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
     def form_valid(self, form):
@@ -138,10 +142,6 @@ def buscar_clientes(request):
                        })
     else:
         return render(request, 'mantenimientos/buscar_clientes.html',{})
-
-
-# def home(request):
-#     return render(request, 'mantenimientos/home.html',{})
 
 
 class Mostrar_Cliente(LoginRequiredMixin, DetailView):

@@ -1,0 +1,42 @@
+{% comment %} {% extends 'mantenimientos/base.html' %} {% endcomment %}
+{% load static %}
+{% comment %} {% block body %} {% endcomment %}
+    <div class='container-fluid m-2'>
+        <center>
+                <div class="container m-2">
+                        <h1>Servicios</h1>
+
+                        <br/>
+                        <table class="table table-striped table-hover table bordered">
+                        {% for servicio in detalle_serviciocliente %}
+                                <tr>
+                                    
+                                        <td>
+                                        {% comment %} <a href="{% url 'mostrar_cliente' cliente.id %}" {% endcomment %}
+                                            <a>{{ servicio.cliente }}</a>
+                                        </td>
+                                        {% comment %} <td align="right">
+                                                <a href="{% url 'modificar_cliente' cliente.id %}">
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                                </a>
+                                                <a href="{% url 'eliminar_cliente' cliente.id%}">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar cliente</button>
+                                                </a>
+                                        </td> {% endcomment %}
+                                </tr>
+                        {% empty %}
+
+                            <h3> No se encuentra ningun servicio </h3>
+
+                        {% endfor %}
+                        </table>
+                        {% comment %} <a href="{% url 'agregar_cliente' %}">
+                                        <button type="button" class="btn btn-secondary"style="float: right">Agregar cliente</button>
+                        </a>
+                        <br/>
+                        <br/> {% endcomment %}
+                </div>
+        </center>   
+    </div>
+
+{% comment %} {% endblock %} {% endcomment %}

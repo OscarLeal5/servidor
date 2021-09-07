@@ -3,88 +3,87 @@
 {% block body %}
 
 
-<div class="container-fluid p-4">
-    <h1> Servicios de Mantenimiento {{cliente}}</h1>
-</div>
-
-<div class="container">
-
-    <div class="container">
-        <div class="row">
-          <div class="col-5">
-
-                <ul>Nombre del encargado: </ul>
-
-                <ul>Puesto: </ul>
-                
-                <ul>Numero de contacto: </ul>
-                
-                <ul>Correo de contacto: </ul>
-
-                <ul>Lugar donde se realiza el mantenimiento: </ul>
-
-                <ul>Descripcion del mantenimiento: </ul>
-
-                <ul>Fecha programada: </ul>
-
-                <ul>Dispositivos:</ul>
-                {% for dispositivo in cliente.dispositivo.all %}
-                        <br></br>
-                {% endfor %}
-                <ul>Mantenimientos:</ul>
-                {% for mantenimiento in cliente.mantenimiento.all %}
-                                <br><br>
-                {% endfor %}
-
-          </div>
-          <div class="col-5">
-
-                <ul>{{ cliente.encargado }}</ul>
-
-                <ul>{{ cliente.puesto_encargado }}</ul>
-                
-                <ul>{{ cliente.numero_contacto }}</ul>
-                
-                <ul>{{ cliente.correo_contacto }}</ul>
-
-                <ul>{{ cliente.lugar_de_mantenimiento }}</ul>
-                
-                <ul>{{ cliente.descripcion_cotizacion }}</ul>
-
-                <ul>{{ cliente.fecha }}</ul>
-
-
-                {% for dispositivo in cliente.dispositivo.all %}
-                        <ul>{{ dispositivo }}</ul>
-                {% endfor %}
-                <br> </br>
-                {% for servicio in mantenimiento %} %}
-                        <ul>{{ servicio }}</ul>
-
-                {% endfor %}
-          </div>
-          <div class="col">
-
-          </div>
+        <div class="container-fluid p-4">
+                <h1> Servicios de Mantenimiento {{cliente}}</h1>
         </div>
-      </div>
-          <center>
-                <div>
-                        <a href="{% url 'modificar_cliente' cliente.id %}">
-                                <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar</button>
-                        </a>
-                        <a href="{% url 'eliminar_cliente' cliente.id %}">
-                                <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar</button>
-                        </a>
-                        <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
-                                <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
-                        </a>
-                        <a href="{% url 'crear_servicio' %}">
-                                <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
-                        </a>
+
+        <div class="container">
+
+        <div class="container">
+                <div class="row">
+                <div class="col-5">
+
+                        <ul>Nombre del encargado: </ul>
+
+                        <ul>Puesto: </ul>
+                        
+                        <ul>Numero de contacto: </ul>
+                        
+                        <ul>Correo de contacto: </ul>
+
+                        <ul>Lugar donde se realiza el mantenimiento: </ul>
+
+                        <ul>Descripcion del mantenimiento: </ul>
+
+                        <ul>Fecha programada: </ul>
+
+                        <ul>Dispositivos:</ul>
+                        {% for dispositivo in cliente.dispositivo.all %}
+
+                        {% endfor %}
+                                <br></br>
+
                 </div>
-        </center>
-        
-</div>
+                <div class="col-5">
+
+                        <ul>{{ cliente.encargado }}</ul>
+
+                        <ul>{{ cliente.puesto_encargado }}</ul>
+                        
+                        <ul>{{ cliente.numero_contacto }}</ul>
+                        
+                        <ul>{{ cliente.correo_contacto }}</ul>
+
+                        <ul>{{ cliente.lugar_de_mantenimiento }}</ul>
+                        
+                        <ul>{{ cliente.descripcion_cotizacion }}</ul>
+
+                        <ul>{{ cliente.fecha }}</ul>
+
+
+                        {% for dispositivo in cliente.dispositivo.all %}
+                                <ul>{{ dispositivo }}</ul>
+                        {% endfor %}
+                        <br> </br>
+                </div>
+                <div class="col">
+
+                </div>
+                </div>
+        </div>
+                <center>
+                        <div>
+                                {%  block services %}
+                                        {% include 'mantenimientos/lista_servicios_cliente.html' %}
+                                {%  endblock %}
+                        </div>
+                        <br>
+                        <div>
+                                <a href="{% url 'modificar_cliente' cliente.id %}">
+                                        <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar</button>
+                                </a>
+                                <a href="{% url 'eliminar_cliente' cliente.id %}">
+                                        <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar</button>
+                                </a>
+                                <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                                        <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
+                                </a>
+                                <a href="{% url 'crear_servicio' %}">
+                                        <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
+                                </a>
+                        </div>
+                </center>
+                
+        </div>
 
 {% endblock %}

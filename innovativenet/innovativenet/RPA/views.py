@@ -29,8 +29,7 @@ from num2words import num2words
 class Agregar_Servicio(LoginRequiredMixin, CreateView):
     model = Mantenimiento
     fields = ['Titulo','periodisidadactividades', 'periodisidadadicional',
-     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad',
-      'costomantenimientoadicional', 'costomantenimientoregular']
+     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
     success_url = reverse_lazy('home')
     template_name = 'mantenimientos/agregar_servicio.html'
 

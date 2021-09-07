@@ -28,7 +28,7 @@ from num2words import num2words
 
 class Agregar_Servicio(LoginRequiredMixin, CreateView):
     model = Mantenimiento
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional',
+    fields = ['Titulo','cliente','periodisidadactividades', 'periodisidadadicional',
      'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
     success_url = reverse_lazy('home')
     template_name = 'mantenimientos/agregar_servicio.html'
@@ -41,16 +41,23 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         return super(Agregar_Servicio, self).form_valid(form)
 
-class Mostrar_ServicioyCliente(LoginRequiredMixin, ListView):
+class MttoUpdate (LoginRequiredMixin, UpdateView):
     model = Mantenimiento
-    context_object_name = "detalle_serviciocliente"
-    template_name = "mantenimientos/lista_servicios_cliente.html"
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-    # compara los usuarios con su informacion y projecta solo informacion de usuario
-        context['servicios'] = context['servicios'].filter()
-        context['count'] = context['mantenimientos'].filter(complete=False).count()
-        return context
+    fields = ['Titulo','cliente','periodisidadactividades', 'periodisidadadicional',
+     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
+    success_url = reverse_lazy('home')
+    template_name = 'mantenimientos/eliminar_servicio.html'
+
+class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
+    model = Mantenimiento
+    context_object_name = 'servicios'
+    success_url = reverse_lazy('home')
+    template_name = 'mantenimientos/eliminar_servicio.html'
+
+class Detalle_Cliente(LoginRequiredMixin, DetailView):
+    model = Mantenimiento
+    context_object_name = 'servicio'
+    template_name = 'mantenimientos/detalle_servicio.html'
 
 # ------ VIEWS CLIENTE ------ #
 

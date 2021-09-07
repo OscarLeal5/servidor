@@ -2,76 +2,88 @@
 {% extends "mantenimientos/base.html" %}
 {% block body %}
 
-
         <div class="container-fluid p-4">
                 <h1> Servicios de Mantenimiento {{cliente}}</h1>
         </div>
 
         <div class="container">
 
-        <div class="container">
-                <div class="row">
-                <div class="col-5">
+                <div class="container">
+                        <div class="row">
+                        <div class="col-5">
 
-                        <ul>Nombre del encargado: </ul>
+                                <ul>Nombre del encargado: </ul>
 
-                        <ul>Puesto: </ul>
-                        
-                        <ul>Numero de contacto: </ul>
-                        
-                        <ul>Correo de contacto: </ul>
+                                <ul>Puesto: </ul>
+                                
+                                <ul>Numero de contacto: </ul>
+                                
+                                <ul>Correo de contacto: </ul>
 
-                        <ul>Lugar donde se realiza el mantenimiento: </ul>
+                                <ul>Lugar donde se realiza el mantenimiento: </ul>
 
-                        <ul>Descripcion del mantenimiento: </ul>
+                                <ul>Descripcion del mantenimiento: </ul>
 
-                        <ul>Fecha programada: </ul>
+                                <ul>Fecha programada: </ul>
 
-                        <ul>Dispositivos:</ul>
-                        {% for dispositivo in cliente.dispositivo.all %}
-
-                        {% endfor %}
-                                <br></br>
-
-                </div>
-                <div class="col-5">
-
-                        <ul>{{ cliente.encargado }}</ul>
-
-                        <ul>{{ cliente.puesto_encargado }}</ul>
-                        
-                        <ul>{{ cliente.numero_contacto }}</ul>
-                        
-                        <ul>{{ cliente.correo_contacto }}</ul>
-
-                        <ul>{{ cliente.lugar_de_mantenimiento }}</ul>
-                        
-                        <ul>{{ cliente.descripcion_cotizacion }}</ul>
-
-                        <ul>{{ cliente.fecha }}</ul>
-
-
-                        {% for dispositivo in cliente.dispositivo.all %}
-                                <ul>{{ dispositivo }}</ul>
-                        {% endfor %}
-                        <br> </br>
-                </div>
-                <div class="col">
-
-                </div>
-                </div>
-        </div>
-                <center>
-                        <div>
-
-                                {% for x in servicios %}
-
-                                        <li>{{ x }}</li>
+                                <ul>Dispositivos:</ul>
+                                {% for dispositivo in cliente.dispositivo.all %}
 
                                 {% endfor %}
-                                {% comment %} {%  block services %}
-                                        {% include 'mantenimientos/lista_servicios_cliente.html' %}
-                                {%  endblock %} {% endcomment %}
+                                        <br></br>
+
+                        </div>
+                        <div class="col-5">
+
+                                <ul>{{ cliente.encargado }}</ul>
+
+                                <ul>{{ cliente.puesto_encargado }}</ul>
+                                
+                                <ul>{{ cliente.numero_contacto }}</ul>
+                                
+                                <ul>{{ cliente.correo_contacto }}</ul>
+
+                                <ul>{{ cliente.lugar_de_mantenimiento }}</ul>
+                                
+                                <ul>{{ cliente.descripcion_cotizacion }}</ul>
+
+                                <ul>{{ cliente.fecha }}</ul>
+
+
+                                {% for dispositivo in cliente.dispositivo.all %}
+                                        <ul>{{ dispositivo }}</ul>
+                                {% endfor %}
+                                <br> </br>
+                        </div>
+                        <div class="col">
+
+                        </div>
+                </div>
+                <center>
+                        <div class='container-fluid m-2'>
+                                <h2> Servicios </h2>    
+                                <br/>
+                                <table class="table table-striped table-hover table bordered">
+                                {% for x in servicios %}
+                                        <tr>
+                                                <td>
+                                                        <a href="{% url 'detalle_servicio' x.id %}">
+                                                                {{ x }}
+                                                        </a>
+                                                </td>
+                                                <td align="right">
+                                                        <a href="{% url 'modificar_servicio' x.id %}">
+                                                                <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                                        </a>
+                                                        <a href="{% url 'eliminar_servicio' x.id%}">
+                                                                <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                                                        </a>
+
+                                                </td>
+                                        </tr>
+                                {% endfor %}
+                                </table>
+
                         </div>
                         <br>
                         <div>
@@ -89,7 +101,7 @@
                                 </a>
                         </div>
                 </center>
-                
         </div>
+
 
 {% endblock %}

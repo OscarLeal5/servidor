@@ -61,6 +61,12 @@ class Mantenimiento(models.Model):
     rev_limp_humobeam = 'Revision y limpieza Sensor de humo tipo Beam'
     rev_limp_modulodecontrol = 'Revision y limpieza de modulos de Control'
     rev_limp_modconttrct1ct2 = 'Revision y limpieza de modulo de control CT1 o CT2'
+    rev_limp_modreleevadorcr = 'Revision y limpieza de modulo releevador CR'
+    rev_veri_resistenciafinlinea = 'Revision y Verificacion de resistencias de fin de linea'
+    cambiar_ubi_herramientrasypersonal = 'Cambiar ubicaciones Herramientas y personal (mover el punto A al punto B)'
+    relleno_informe = 'Relleno de informe'
+    prueba_com_datospanelydisp = 'Prueba de comunicación de datos entre panel y dispositivos, asi como los loops.'
+
     MANTENIMIENTOS_LISTA = [
         (limpieza_panel_alarmas, 'Revision y limpieza de panel de alarmas / Remoto'),
         (revision_limpieza_sensor_humo, 'Revision y limpieza de sensores de humo'),
@@ -72,6 +78,11 @@ class Mantenimiento(models.Model):
         (rev_limp_humobeam, 'Revision y limpieza Sensor de humo tipo Beam'),
         (rev_limp_modulodecontrol, 'Revision y limpieza de modulos de Control'),
         (rev_limp_modconttrct1ct2, 'Revision y limpieza de modulo de control CT1 o CT2'),
+        (rev_limp_modreleevadorcr, 'Revision y limpieza de modulo releevador CR'),
+        (rev_veri_resistenciafinlinea,'Revision y Verificacion de resistencias de fin de linea'),
+        (cambiar_ubi_herramientrasypersonal,'Cambiar ubicaciones Herramientas y personal (mover el punto A al punto B)'),
+        (relleno_informe,'Relleno de informe'),
+        (prueba_com_datospanelydisp, 'Prueba de comunicación de datos entre panel y dispositivos, asi como los loops.'),
     ]
     Titulo = models.CharField(
         max_length=200,

@@ -150,20 +150,10 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
     template_name = "mantenimientos/detalle_cliente.html"
     def get_context_data(self, **kwargs):
         ctx = super(Mostrar_Cliente, self).get_context_data(**kwargs)
-        print(kwargs)
+        # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
-        print(cat)
-        lol = Cliente.objects.get(nombre = cat)
-        ctx['servicios'] = Mantenimiento.objects.filter(cliente = lol)
+        ctx['servicios'] = Mantenimiento.objects.filter(cliente = cat)
         return ctx
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['cliente'] = Cliente.objects.get()  # or whatever
-    #     context['servicio'] = Mantenimiento.objects.get()  # or whatever
-    #     return context
-# def mostrar_cliente(request, cliente_id):
-#     cliente = Cliente.objects.get(pk=cliente_id)
-#     return render(request,'mantenimientos/mostrar_cliente.html',{'cliente':cliente})
 
 
 def cotizacion_pdf(request, cliente_id):

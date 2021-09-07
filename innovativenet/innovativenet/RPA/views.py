@@ -15,6 +15,7 @@ from datetime import datetime
 from .models import Cliente, Mantenimiento
 from datetime import date
 import io
+from operator import itemgetter
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -45,12 +46,12 @@ class Mostrar_ServicioyCliente(LoginRequiredMixin, ListView):
     model = Mantenimiento
     context_object_name = "detalle_serviciocliente"
     template_name = "mantenimientos/lista_servicios_cliente.html"
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     # compara los usuarios con su informacion y projecta solo informacion de usuario
-    #     context['servicios'] = context['servicios'].filter(cliente=self.request.user)
-    #     #context['count'] = context['mantenimientos'].filter(complete=False).count()
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+    # compara los usuarios con su informacion y projecta solo informacion de usuario
+        context['servicios'] = context['servicios'].filter()
+        context['count'] = context['mantenimientos'].filter(complete=False).count()
+        return context
 
 # ------ VIEWS CLIENTE ------ #
 
@@ -136,10 +137,19 @@ def buscar_clientes(request):
 # def home(request):
 #     return render(request, 'mantenimientos/home.html',{})
 
+
 class Mostrar_Cliente(LoginRequiredMixin, DetailView):
     model = Cliente
     object = "cliente"
     template_name = "mantenimientos/detalle_cliente.html"
+    def get_context_data(self, **kwargs):
+        ctx = super(Mostrar_Cliente, self).get_context_data(**kwargs)
+        print(kwargs)
+        cat = kwargs.get("object")
+        print(cat)
+        lol = Cliente.objects.get(nombre = cat)
+        ctx['servicios'] = Mantenimiento.objects.filter(cliente = lol)
+        return ctx
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['cliente'] = Cliente.objects.get()  # or whatever

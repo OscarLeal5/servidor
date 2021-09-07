@@ -63,9 +63,15 @@
         </div>
                 <center>
                         <div>
-                                {%  block services %}
+
+                                {% for x in servicios %}
+
+                                        <li>{{ x }}</li>
+
+                                {% endfor %}
+                                {% comment %} {%  block services %}
                                         {% include 'mantenimientos/lista_servicios_cliente.html' %}
-                                {%  endblock %}
+                                {%  endblock %} {% endcomment %}
                         </div>
                         <br>
                         <div>

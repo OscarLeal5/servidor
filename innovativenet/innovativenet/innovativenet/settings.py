@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    'RPA',
-    'drf_multiple_model',
+    'RPA'
 ]
 
 MIDDLEWARE = [

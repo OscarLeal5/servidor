@@ -12,19 +12,6 @@ class Precio(models.Model):
         ordering = ['encargado']
 
 
-
-class Dispositivo(models.Model):
-    marca = models.CharField(max_length=200, verbose_name="Marca del dispositivo", null=True, blank=True)
-    titulo = models.CharField(max_length=200, verbose_name="Nombre del dispositivo", null=True, blank=True)
-    cantidad = models.IntegerField(verbose_name="Cantidad de dispositivos actuales", null=True)
-    actividad = models.CharField(max_length=200, verbose_name="Actividad de mantenimiento a realizar",null=True, blank=True)
-    plan = models.CharField(max_length=200, verbose_name="Tipo de poliza/plan", null=True, blank=True)
-
-    def __str__(self):
-        return self.marca +" "+ self.titulo
-    class Meta:
-        ordering = ['titulo']
-
 class Cliente(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     nombre = models.CharField('Nombre de la compañia cliente',max_length=200)
@@ -40,14 +27,25 @@ class Cliente(models.Model):
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
 
-    dispositivo = models.ManyToManyField(Dispositivo, blank=True, related_name="cliente")
-
     def __str__(self):
         return self.nombre
 
     class Meta:
         ordering = ['nombre']
 
+class Dispositivo(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
+    marca = models.CharField(max_length=200, verbose_name="Marca del dispositivo", null=True, blank=True)
+    titulo = models.CharField(max_length=200, verbose_name="Nombre del dispositivo", null=True, blank=True)
+    cantidad = models.IntegerField(verbose_name="Cantidad de dispositivos actuales", null=True)
+    actividad = models.CharField(max_length=200, verbose_name="Actividad de mantenimiento a realizar",null=True, blank=True)
+    plan = models.CharField(max_length=200, verbose_name="Tipo de poliza/plan", null=True, blank=True)
+
+    def __str__(self):
+        return self.marca +" "+ self.titulo
+    class Meta:
+        ordering = ['titulo']
+        
 class Mantenimiento(models.Model):
     #title = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
@@ -96,27 +94,6 @@ class Mantenimiento(models.Model):
     horasactividad = models.IntegerField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
-
-    Tecnico = 'Tecnico'
-    precioTecnico = 23.68
-    ProjectManager = 'Project Manager'
-    precioProject = 78.95
-    Engineering = 'Ingeniero'
-    precioEngineering = 71.05
-    Team = 'Equipo de tecnicos'
-    precioTeam = 47.36
-    Electrical = 'Electrico'
-    precioElectrical = 23.68
-    Trainer = 'Trainer'
-    precioTrainer = 78.95
-    tipoDeTrabajo=[(Tecnico,'Tecnico'),
-                   (ProjectManager,'Project Manager'),
-                   (Engineering,'Ingeniero'),
-                   (Team,'Equipo de Tecnicos'),
-                   (Electrical,'Electrico'),
-                   (Trainer,'Trainer'),
-                   ]
-
 
     encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE, default=1)
 

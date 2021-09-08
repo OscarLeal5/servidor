@@ -3,56 +3,60 @@
 {% block body %}
 
 
-        <div class="container-fluid p-4">
-                <h1> Servicio de Mantenimiento {{ servicio.cliente }}</h1>
+        <div class="container-fluid p-3">
+                <center>
+                        <h1> Servicio de Mantenimiento {{ servicio.cliente }}</h1>
+                </center>
         </div>
 
         <div class="container">
 
         <div class="container">
                 <div class="row">
-                <div class="col-6">
+                        <div class="col-6">
 
-                        <ul>Servicio: </ul>
+                                <ul>Servicio: </ul>
 
-                        <ul>Periodicidad regular de actividad de mtto por año: </ul>
-                        
-                        <ul>Periodicidad adicional de actividad de mtto a la regular: </ul>
-                        
-                        <ul>Tiempo de ejecucion del mantenimiento: </ul>
+                                <ul>Periodicidad regular de actividad de mtto por año: </ul>
+                                
+                                <ul>Periodicidad adicional de actividad de mtto a la regular: </ul>
+                                
+                                <ul>Tiempo de ejecucion del mantenimiento: </ul>
 
-                        <ul>Lugar donde se realiza el mantenimiento: </ul>
+                                <ul>Lugar donde se realiza el mantenimiento: </ul>
 
-                        <ul>Cantidad de dispositivos a considerar en periodicidad regular: </ul>
+                                <ul>Cantidad de dispositivos a considerar en periodicidad regular: </ul>
 
-                        <ul>horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion: </ul>
+                                <ul>horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion: </ul>
 
-                        <ul>Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion:</ul>
+                                <ul>Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion:</ul>
 
-                </div>
-                <div class="col-4">
+                                <ul>Tipo de Mano de obra:</ul>
 
-                        <ul>{{ servicio.Titulo }}</ul>
+                        </div>
+                        <div class="col-4">
 
-                        <ul>{{ servicio.periodisidadactividades }}</ul>
-                        
-                        <ul>{{ servicio.periodisidadadicional }}</ul>
-                        
-                        <ul>{{ servicio.tiempoejecucion }}</ul>
+                                <ul>{{ servicio.Titulo }}</ul>
 
-                        <ul>{{ servicio.cantidaddispositivos }}</ul>
-                        
-                        <ul>{{ servicio.horasactividad }}</ul>
+                                <ul>{{ servicio.periodisidadactividades }}</ul>
+                                
+                                <ul>{{ servicio.periodisidadadicional }}</ul>
+                                
+                                <ul>{{ servicio.tiempoejecucion }}</ul>
 
-                        <ul>{{ servicio.costomantenimientoadicional }}</ul>
+                                <ul>{{ servicio.cantidaddispositivos }}</ul>
+                                
+                                <ul>{{ servicio.horasactividad }}</ul>
 
-                        <br/>
-                        <ul>{{ servicio.costomantenimientoregular }}</ul>
+                                <ul>{{ servicio.costomantenimientoadicional }}</ul>
 
-                </div>
-                <div class="col">
+                                <br/>
+                                <ul>{{ servicio.costomantenimientoregular }}</ul>
 
-                </div>
+                                <br/>
+                                <ul>{{ servicio.encargadoTrabajo1 }}</ul>
+
+                        </div>
                 </div>
         </div>
 

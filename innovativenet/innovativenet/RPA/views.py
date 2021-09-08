@@ -359,7 +359,25 @@ def cotizacion_pdf(request, cliente_id):
         p14 = Paragraph("A continuación, se muestra una visión general de los equipos y condiciones actuales. Se presenta una lista de equipos instalados actualmente en el lugar.",styleN)
         p15 = Paragraph("1.1 Politica de mantenimiento preventivo",styleHB)
         p16 = Paragraph("Para aplicar el mantenimiento preventivo se entenderá que el sistema de detección de incendios debe estar en operación al 100%, si esto no se cumpliera así deberá realizarse primero el mantenimiento correctivo",styleN)
-        p17 = Paragraph("Una politica de mantenimiento preventivo se considera valida para ",styleN)
+        listadispositivos = ''
+        listdisp = list(dispositivos)
+        lastdisp = listdisp[-1]
+        
+        for dispositivo in dispositivos:
+            if len(dispositivos) == 1:
+                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+'.'
+            
+            elif dispositivo != lastdisp:
+                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+","
+                
+            elif dispositivo == lastdisp:
+                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+","
+                listadispositivos = listadispositivos[:-1]
+                listadispositivos = listadispositivos+"."
+
+
+            
+        p17 = Paragraph("Una politica de mantenimiento preventivo se considera valida para "+str(listadispositivos),styleN)
         p18 = Paragraph("Vigencia **"+actyear+"-"+sigyear+"**",styleB)
         p19 = Paragraph("En la siguiente tabla se muestran las actividades que se consideran.",styleB)
         p20 = Paragraph("2.0 Alcance de la descripción del trabajo",styleHB)

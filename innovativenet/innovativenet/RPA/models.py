@@ -64,6 +64,7 @@ class Mantenimiento(models.Model):
     cambiar_ubi_herramientrasypersonal = 'Cambiar ubicaciones Herramientas y personal (mover el punto A al punto B)'
     relleno_informe = 'Relleno de informe'
     prueba_com_datospanelydisp = 'Prueba de comunicación de datos entre panel y dispositivos, asi como los loops.'
+    soporte_tecnico = 'Servicio de soporte técnico -Horas de servicios generales adicionales'
 
     MANTENIMIENTOS_LISTA = [
         (limpieza_panel_alarmas, 'Revision y limpieza de panel de alarmas / Remoto'),
@@ -81,6 +82,7 @@ class Mantenimiento(models.Model):
         (cambiar_ubi_herramientrasypersonal,'Cambiar ubicaciones Herramientas y personal (mover el punto A al punto B)'),
         (relleno_informe,'Relleno de informe'),
         (prueba_com_datospanelydisp, 'Prueba de comunicación de datos entre panel y dispositivos, asi como los loops.'),
+        (soporte_tecnico, 'Servicio de soporte técnico -Horas de servicios generales adicionales'),
     ]
     Titulo = models.CharField(
         max_length=200,
@@ -96,6 +98,7 @@ class Mantenimiento(models.Model):
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
 
     encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE, default=1)
+
 
     def save(self, *args, **kwargs):
             self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad

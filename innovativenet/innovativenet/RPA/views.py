@@ -7,12 +7,13 @@ from django.http import HttpResponseRedirect
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from django.http import FileResponse
+from django.urls import reverse
 from reportlab.pdfgen import canvas
 from django.contrib import messages
 from reportlab.lib import colors
 from .forms import ClienteForm
 from datetime import datetime
-from .models import Cliente, Mantenimiento, Dispositivo
+from .models import Cliente, Mantenimiento, Dispositivo, Precio
 from datetime import date
 import io
 import os
@@ -33,7 +34,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
     fields = ['marca','titulo','cantidad','actividad','plan']
     # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('lista_clientes')
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_dispositivo.html'
 
@@ -41,19 +42,26 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Dispositivo, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
 
 class Update_Dispositivo(LoginRequiredMixin, UpdateView):
     model = Dispositivo
     fields =['marca','titulo','cantidad','actividad','plan']
-    success_url = reverse_lazy('home')
     template_name = 'mantenimientos/modificar_dispositivo.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
 
 class Eliminar_Dispositivo(LoginRequiredMixin, DeleteView):
     model = Dispositivo
     context_object_name = 'dispositivo'
-    success_url = reverse_lazy('home')
     template_name = 'mantenimientos/eliminar_dispositivo.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
 
 class Detalle_Dispositivo(LoginRequiredMixin, DetailView):
     model = Dispositivo
@@ -66,31 +74,63 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional',
-     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
-    # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
-    success_url = reverse_lazy('home')
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional','tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
-        return super(Agregar_Servicio, self).form_valid(form)
+        if form.instance.Titulo != Mantenimiento.prueba_com_datospanelydisp:
+            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+            return super(Agregar_Servicio, self).form_valid(form)
+        elif form.instance.Titulo != Mantenimiento.soporte_tecnico:
+            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+            return super(Agregar_Servicio, self).form_valid(form)
+        elif form.instance.Titulo != Mantenimiento.relleno_informe:
+            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+            return super(Agregar_Servicio, self).form_valid(form)
 
+    
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
-class MttoUpdate (LoginRequiredMixin, UpdateView):
+class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional',
-     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
-    success_url = reverse_lazy('home')
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional','tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
     template_name = 'mantenimientos/modificar_servicio.html'
+
+    def form_valid(self, form):
+        soporte_tecnico = 'Servicio de soporte técnico -Horas de servicios generales adicionales'
+        relleno_informe = 'Relleno de informe'
+        prueba_com_datospanelydisp = 'Prueba de comunicación de datos entre panel y dispositivos, asi como los loops.'
+    
+        if form['Titulo'] is not prueba_com_datospanelydisp:
+            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+            return super(MttoUpdate, self).form_valid(form)
+        elif form['Titulo'] is not soporte_tecnico:
+            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+            return super(MttoUpdate, self).form_valid(form)
+        elif form['Titulo'] is not relleno_informe:
+            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+            return super(MttoUpdate, self).form_valid(form)
+        else:
+            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
+            return super(MttoUpdate, self).form_valid(form)
+         
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+
 
 class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     model = Mantenimiento
     context_object_name = 'servicio'
-    success_url = reverse_lazy('home')
     template_name = 'mantenimientos/eliminar_servicio.html'
+    
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
 
 class Detalle_Servicio(LoginRequiredMixin, DetailView):
     model = Mantenimiento
@@ -107,7 +147,7 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self) -> str:
-        return reverse_lazy('home')
+        return reverse_lazy('lista_clientes')
 
 class Home(LoginRequiredMixin, ListView):
     model = Cliente
@@ -127,12 +167,14 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion'
             ,]
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/agregar_cliente.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super(Agregar_Cliente, self).form_valid(form)
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.pk})
 
 
 class Modificar_Cliente (LoginRequiredMixin, UpdateView):
@@ -141,14 +183,14 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion', 
             'fecha',]
-    success_url = reverse_lazy('home')
     template_name = 'mantenimientos/modificar_cliente.html'
-
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.pk})
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente
     context_object_name = "cliente"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("lista_clientes")
     template_name = "mantenimientos/confirm_delete.html"
 
 class Todos_Clientes(LoginRequiredMixin, ListView):

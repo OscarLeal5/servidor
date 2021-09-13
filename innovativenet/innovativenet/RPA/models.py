@@ -97,10 +97,18 @@ class Mantenimiento(models.Model):
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
 
-    encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE, default=1)
+    encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE)
 
 
     def save(self, *args, **kwargs):
+            if self.Titulo == self.relleno_informe:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
+            elif self.Titulo == self.prueba_com_datospanelydisp:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
+            elif self.Titulo == self.soporte_tecnico:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
+            else:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
             self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
             super(Mantenimiento, self).save(*args, **kwargs)
 

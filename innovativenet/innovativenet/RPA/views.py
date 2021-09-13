@@ -81,16 +81,7 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
-        if form.instance.Titulo != Mantenimiento.prueba_com_datospanelydisp:
-            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
-            return super(Agregar_Servicio, self).form_valid(form)
-        elif form.instance.Titulo != Mantenimiento.soporte_tecnico:
-            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
-            return super(Agregar_Servicio, self).form_valid(form)
-        elif form.instance.Titulo != Mantenimiento.relleno_informe:
-            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
-            return super(Agregar_Servicio, self).form_valid(form)
-
+        return super(Agregar_Servicio, self).form_valid(form)
     
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -100,24 +91,6 @@ class MttoUpdate(LoginRequiredMixin, UpdateView):
     fields = ['Titulo','periodisidadactividades', 'periodisidadadicional','tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
     template_name = 'mantenimientos/modificar_servicio.html'
 
-    def form_valid(self, form):
-        soporte_tecnico = 'Servicio de soporte técnico -Horas de servicios generales adicionales'
-        relleno_informe = 'Relleno de informe'
-        prueba_com_datospanelydisp = 'Prueba de comunicación de datos entre panel y dispositivos, asi como los loops.'
-    
-        if form['Titulo'] is not prueba_com_datospanelydisp:
-            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
-            return super(MttoUpdate, self).form_valid(form)
-        elif form['Titulo'] is not soporte_tecnico:
-            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
-            return super(MttoUpdate, self).form_valid(form)
-        elif form['Titulo'] is not relleno_informe:
-            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
-            return super(MttoUpdate, self).form_valid(form)
-        else:
-            form.instance.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
-            return super(MttoUpdate, self).form_valid(form)
-         
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 

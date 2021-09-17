@@ -7,14 +7,16 @@ from django.http import HttpResponseRedirect
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from django.http import FileResponse
+from django.urls import reverse
 from reportlab.pdfgen import canvas
 from django.contrib import messages
 from reportlab.lib import colors
 from .forms import ClienteForm
 from datetime import datetime
-from .models import Cliente, Mantenimiento
+from .models import Cliente, Mantenimiento, Dispositivo, Precio
 from datetime import date
 import io
+import os
 from operator import itemgetter
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
@@ -24,41 +26,86 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 
+# ------ VIEWS DISPOSITIVOS ------ #
+
+class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
+    # Manda a llamar el Modelo Mantenimiento
+    model = Dispositivo
+    # Hace la eleccion de que inputs del Modelo tomar en cuenta
+    fields = ['marca','titulo','cantidad','actividad','plan']
+    # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
+    success_url = reverse_lazy('lista_clientes')
+    # Busca un html en especifico
+    template_name = 'mantenimientos/agregar_dispositivo.html'
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
+        return super(Agregar_Dispositivo, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+
+class Update_Dispositivo(LoginRequiredMixin, UpdateView):
+    model = Dispositivo
+    fields =['marca','titulo','cantidad','actividad','plan']
+    template_name = 'mantenimientos/modificar_dispositivo.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+
+class Eliminar_Dispositivo(LoginRequiredMixin, DeleteView):
+    model = Dispositivo
+    context_object_name = 'dispositivo'
+    template_name = 'mantenimientos/eliminar_dispositivo.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+
+class Detalle_Dispositivo(LoginRequiredMixin, DetailView):
+    model = Dispositivo
+    context_object_name = 'dispositivo'
+    template_name = 'mantenimientos/detalle_dispositivo.html'
+
 # ------ VIEWS SERVICIOS ------ #
 
 class Agregar_Servicio(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','cliente','periodisidadactividades', 'periodisidadadicional',
-     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
-    # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
-    success_url = reverse_lazy('home')
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional','tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
     def form_valid(self, form):
-        form.instance.cliente = Cliente.objects.get(id)
-        return super(Agregar_Servicio, self).form_valid(form)
-
-    def form_valid(self, form):
         form.instance.usuario = self.request.user
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Servicio, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
-class MttoUpdate (LoginRequiredMixin, UpdateView):
+class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
-    fields = ['Titulo','cliente','periodisidadactividades', 'periodisidadadicional',
-     'tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
-    success_url = reverse_lazy('home')
-    template_name = 'mantenimientos/eliminar_servicio.html'
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional','tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
+    template_name = 'mantenimientos/modificar_servicio.html'
+
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+
 
 class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     model = Mantenimiento
-    context_object_name = 'servicios'
-    success_url = reverse_lazy('home')
+    context_object_name = 'servicio'
     template_name = 'mantenimientos/eliminar_servicio.html'
+    
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
-class Detalle_Cliente(LoginRequiredMixin, DetailView):
+
+class Detalle_Servicio(LoginRequiredMixin, DetailView):
     model = Mantenimiento
     context_object_name = 'servicio'
     template_name = 'mantenimientos/detalle_servicio.html'
@@ -73,7 +120,7 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self) -> str:
-        return reverse_lazy('home')
+        return reverse_lazy('lista_clientes')
 
 class Home(LoginRequiredMixin, ListView):
     model = Cliente
@@ -92,13 +139,15 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
     fields = ['nombre', 'encargado', 'puesto_encargado', 
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion'
-            , 'dispositivo']
-    success_url = reverse_lazy('home')
+            ,]
+    success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/agregar_cliente.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         return super(Agregar_Cliente, self).form_valid(form)
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.pk})
 
 
 class Modificar_Cliente (LoginRequiredMixin, UpdateView):
@@ -107,14 +156,15 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion', 
             'fecha', 'dispositivo']
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/modificar_cliente.html'
-
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.pk})
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente
     context_object_name = "cliente"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("lista_clientes")
     template_name = "mantenimientos/confirm_delete.html"
 
 class Todos_Clientes(LoginRequiredMixin, ListView):
@@ -153,6 +203,7 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento.objects.filter(cliente = cat)
+        ctx['dispositivos'] = Dispositivo.objects.filter(cliente = cat)
         return ctx
 
 
@@ -170,22 +221,6 @@ def cotizacion_pdf(request, cliente_id):
     lugar_de_mantenimiento=cliente.lugar_de_mantenimiento
     descripcion_cotizacion=cliente.descripcion_cotizacion
     fecha=cliente.fecha
-
-    # if mantenimientos.encargadoTrabajo =='Tecnico':
-    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTecnico * mantenimientos.horasactividad
-    # elif mantenimientos.encargadoTrabajo == 'Trainer':
-    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTrainer * mantenimientos.horasactividad
-    # elif mantenimientos.encargadoTrabajo == 'Electrico':
-    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioElectrical * mantenimientos.horasactividad
-    # elif mantenimientos.encargadoTrabajo == 'Equipo de tecnicos':
-    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioTeam * mantenimientos.horasactividad
-    # elif mantenimientos.encargadoTrabajo == 'Ingeniero':
-    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioEngineering * mantenimientos.horasactividad
-    # elif mantenimientos.encargadoTrabajo == 'Project Manager':
-    #     mantenimientos.costomantenimientoregular = Mantenimiento.precioProject * mantenimientos.horasactividad
-
-
-
 
     dateTimeObj = datetime.now()
     dateObj = dateTimeObj.date()
@@ -271,24 +306,30 @@ def cotizacion_pdf(request, cliente_id):
 
 
     def myFirstPage(canvas, doc):
+        path = os.getcwd()
+        path = os.path.join(path,"RPA","img_pdf")
         canvas.saveState()
         canvas.setFont('Times-Bold', 16)
         canvas.setFont('Times-Roman', 14)
-        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\logo.png', 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\lenellogo.png', 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\footer.png', inch, 1, width=460, height=80)
+        canvas.drawImage(os.path.join(path,'logo.png'), 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(os.path.join(path,'lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(os.path.join(path,'footer.png'), inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def myLaterPages(canvas, doc):
+        path = os.getcwd()
+        path = os.path.join(path,"RPA","img_pdf")
         canvas.saveState()
         canvas.setFont('Times-Roman', 9)
-        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\logo.png', 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\lenellogo.png', 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage(r'innovativenet\innovativenet\RPA\static\img_pdf\footer.png', inch, 1, width=460, height=80)
+        canvas.drawImage(os.path.join(path,'logo.png'), 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(os.path.join(path,'lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(os.path.join(path,'footer.png'), inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def go():
         cliente = Cliente.objects.get(pk=cliente_id)
+        mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id)
+        dispositivos = Dispositivo.objects.filter(cliente = cliente_id)
         doc = SimpleDocTemplate(buf, pagesize=letter,
                                 rightMargin=inch, leftMargin=inch,
                                 topMargin=2 * inch, bottomMargin=inch)
@@ -334,7 +375,25 @@ def cotizacion_pdf(request, cliente_id):
         p14 = Paragraph("A continuación, se muestra una visión general de los equipos y condiciones actuales. Se presenta una lista de equipos instalados actualmente en el lugar.",styleN)
         p15 = Paragraph("1.1 Politica de mantenimiento preventivo",styleHB)
         p16 = Paragraph("Para aplicar el mantenimiento preventivo se entenderá que el sistema de detección de incendios debe estar en operación al 100%, si esto no se cumpliera así deberá realizarse primero el mantenimiento correctivo",styleN)
-        p17 = Paragraph("Una politica de mantenimiento preventivo se considera valida para ",styleN)
+        listadispositivos = ''
+        listdisp = list(dispositivos)
+        lastdisp = listdisp[-1]
+        
+        for dispositivo in dispositivos:
+            if len(dispositivos) == 1:
+                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+'.'
+            
+            elif dispositivo != lastdisp:
+                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+","
+                
+            elif dispositivo == lastdisp:
+                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+","
+                listadispositivos = listadispositivos[:-1]
+                listadispositivos = listadispositivos+"."
+
+
+            
+        p17 = Paragraph("Una politica de mantenimiento preventivo se considera valida para "+str(listadispositivos),styleN)
         p18 = Paragraph("Vigencia **"+actyear+"-"+sigyear+"**",styleB)
         p19 = Paragraph("En la siguiente tabla se muestran las actividades que se consideran.",styleB)
         p20 = Paragraph("2.0 Alcance de la descripción del trabajo",styleHB)
@@ -377,8 +436,7 @@ def cotizacion_pdf(request, cliente_id):
 
 
 
-        td_dispositivos =[["Marca","Nombre","Cantidad","Actvidad","Plan"]]
-        dispositivos = cliente.dispositivo.all()
+        td_dispositivos =[["Marca","Nombre","Cantidad","Actvidad","Plan"]] 
         for dispositivo in dispositivos:
             data_dispositivos = [dispositivo.marca,dispositivo.titulo,dispositivo.cantidad,dispositivo.actividad,dispositivo.plan]
             td_dispositivos.append(data_dispositivos)
@@ -386,10 +444,11 @@ def cotizacion_pdf(request, cliente_id):
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
         table_dis.setStyle(ts)
 
-        td_mantenimientos = [["Mantenimiento","Acts. de mmnto por año","Acts. adicionales/Renta de equipo","Tiempo de ejecucion"]]
-        mantenimientos = cliente.mantenimiento.all()
+        td_mantenimientos = [["Mantenimiento","Acts. de mmnto por año",
+                            "Acts. adicionales/Renta de equipo"
+                            ,"Tiempo de ejecucion"]]
         for mantenimiento in mantenimientos:
-            data_mantenimientos = [mantenimiento.title,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
+            data_mantenimientos = [mantenimiento.Titulo,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
             td_mantenimientos.append(data_mantenimientos)
         table_man = Table(td_mantenimientos)
         table_man.setStyle(ts)
@@ -406,10 +465,8 @@ def cotizacion_pdf(request, cliente_id):
                              ("BACKGROUND",(0,0),(-1,-1),colors.yellow)])
         table_tot.setStyle(ts_tot)
 
-        ##Insertar variable de cliente precio aqui##
         preciofinal = 0
         for mantenimiento in mantenimientos:
-            Mantenimiento.update_costo(self=mantenimiento)
             preciofinal = preciofinal + mantenimiento.costomantenimientoregular
         preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
 

@@ -1,0 +1,47 @@
+
+{% extends "mantenimientos/base.html" %}
+{% block body %}
+
+
+        <div class="container-fluid p-4">
+                <h1> Disposiivo {{ dispositivo.cliente }}</h1>
+        </div>
+
+        <div class="container">
+
+        <div class="container">
+                <div class="row">
+                <div class="col-6">
+
+                        <ul>Dispositivo: </ul>
+
+                        <ul>Marca: </ul>
+                                                
+                        <ul>Cantidad: </ul>
+
+                        <ul>Actividad a realizar: </ul>
+
+                        <ul>Plan de mantenimiento: </ul>
+
+                </div>
+                <div class="col-4">
+
+                        <ul>{{ dispositivo.titulo }}</ul>
+
+                        <ul>{{ dispositivo.marca }}</ul>
+                        
+                        <ul>{{ dispositivo.cantidad }}</ul>
+                        
+                        <ul>{{ dispositivo.actividad }}</ul>
+
+                        <ul>{{ dispositivo.plan }}</ul>
+                        
+
+                </div>
+                <div class="col">
+
+                </div>
+                </div>
+        </div>
+
+{% endblock %}

@@ -49,17 +49,54 @@
 
                                 <ul>{{ cliente.fecha }}</ul>
 
-
-                                {% for dispositivo in cliente.dispositivo.all %}
-                                        <ul>{{ dispositivo }}</ul>
-                                {% endfor %}
                                 <br> </br>
                         </div>
                         <div class="col">
 
                         </div>
+                        <div>
+                        <center>
+                                <a href="{% url 'modificar_cliente' cliente.id %}">
+                                        <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar detalles</button>
+                                </a>
+                                <a href="{% url 'eliminar_cliente' cliente.id %}">
+                                        <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar cliente</button>
+                                </a>
+                        </center>
+                        </div>
                 </div>
                 <center>
+                        <div class='container-fluid m-2'>
+                                <h2> Dispositivos </h2>    
+                                <br/>
+                                <table class="table table-striped table-hover table bordered">
+                                {% for x in dispositivos %}
+                                        <tr>
+                                                <td>
+                                                        <a href="{% url 'detalle_dispositivo' x.id %}">
+                                                                {{ x }}
+                                                        </a>
+                                                </td>
+                                                <td align="right">
+                                                        <a href="{% url 'modificar_dispositivo' x.id %}">
+                                                                <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                                        </a>
+                                                        <a href="{% url 'eliminar_dispositivo' x.id%}">
+                                                                <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                                                        </a>
+
+                                                </td>
+                                        </tr>
+                                {% endfor %}
+                                </table>
+                                <div align="right">
+                                        <right>
+                                                <a href="{% url 'crear_dispositivo' cliente.id %}">
+                                                        <button type=button class="btn btn-secondary" style="margin:5px">Agregar Dispositivo</button>
+                                                </a>
+                                        </right>
+                                </div>
+                        </div>
                         <div class='container-fluid m-2'>
                                 <h2> Servicios </h2>    
                                 <br/>
@@ -83,24 +120,22 @@
                                         </tr>
                                 {% endfor %}
                                 </table>
-
+                                <div align="right">
+                                        <aright>
+                                                <a href="{% url 'crear_servicio' cliente.id%}">
+                                                        <button type=button class="btn btn-secondary" style="margin:5px">Agregar Servicio</button>
+                                                </a>
+                                        </right>
+                                </div>
                         </div>
                         <br>
                         <div>
-                                <a href="{% url 'modificar_cliente' cliente.id %}">
-                                        <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar</button>
-                                </a>
-                                <a href="{% url 'eliminar_cliente' cliente.id %}">
-                                        <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar</button>
-                                </a>
                                 <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
                                         <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
                                 </a>
-                                <a href="{% url 'crear_servicio' %}">
-                                        <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
-                                </a>
                         </div>
                 </center>
+                <br>
         </div>
 
 

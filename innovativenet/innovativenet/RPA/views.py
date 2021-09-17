@@ -106,7 +106,7 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     fields = ['nombre', 'encargado', 'puesto_encargado', 
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion', 
-            'fecha', 'mantenimiento', 'dispositivo']
+            'fecha', 'dispositivo']
     success_url = reverse_lazy('home')
     template_name = 'mantenimientos/modificar_cliente.html'
 

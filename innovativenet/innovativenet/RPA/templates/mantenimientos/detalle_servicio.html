@@ -1,15 +1,12 @@
-
 {% extends "mantenimientos/base.html" %}
 {% block body %}
 
 
-        <div class="container-fluid p-3">
-                <center>
-                        <h1> Servicio de Mantenimiento {{ servicio.cliente }}</h1>
-                </center>
-        </div>
+<div class="container-fluid p-4">
+        <h1> Servicio de Mantenimiento {{ servicio.cliente }}</h1>
+</div>
 
-        <div class="container">
+<div class="container">
 
         <div class="container">
                 <div class="row">
@@ -18,20 +15,20 @@
                                 <ul>Servicio: </ul>
 
                                 <ul>Periodicidad regular de actividad de mtto por año: </ul>
-                                
+
                                 <ul>Periodicidad adicional de actividad de mtto a la regular: </ul>
-                                
+
                                 <ul>Tiempo de ejecucion del mantenimiento: </ul>
 
                                 <ul>Lugar donde se realiza el mantenimiento: </ul>
 
                                 <ul>Cantidad de dispositivos a considerar en periodicidad regular: </ul>
 
-                                <ul>horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion: </ul>
+                                <ul>horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion:
+                                </ul>
 
-                                <ul>Costo Regular = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion:</ul>
-
-                                <ul>Tipo de Mano de obra:</ul>
+                                <ul>Costo Regular = horas por actividad de mtto adicional =Importe de cantidad x
+                                        Tiempo de ejecucion:</ul>
 
                         </div>
                         <div class="col-4">
@@ -39,25 +36,25 @@
                                 <ul>{{ servicio.Titulo }}</ul>
 
                                 <ul>{{ servicio.periodisidadactividades }}</ul>
-                                
+
                                 <ul>{{ servicio.periodisidadadicional }}</ul>
-                                
+
                                 <ul>{{ servicio.tiempoejecucion }}</ul>
 
                                 <ul>{{ servicio.cantidaddispositivos }}</ul>
-                                
+
                                 <ul>{{ servicio.horasactividad }}</ul>
 
                                 <ul>{{ servicio.costomantenimientoadicional }}</ul>
 
-                                <br/>
+                                <br />
                                 <ul>{{ servicio.costomantenimientoregular }}</ul>
 
-                                <br/>
-                                <ul>{{ servicio.encargadoTrabajo1 }}</ul>
+                        </div>
+                        <div class="col">
 
                         </div>
                 </div>
         </div>
 
-{% endblock %}
+        {% endblock %}

@@ -17,7 +17,6 @@ from .models import Cliente, Mantenimiento, Dispositivo, Precio
 from datetime import date
 import io
 import os
-from operator import itemgetter
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin

@@ -155,7 +155,7 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     fields = ['nombre', 'encargado', 'puesto_encargado', 
             'numero_contacto', 'correo_contacto',
             'lugar_de_mantenimiento', 'descripcion_cotizacion', 
-            'fecha', 'dispositivo']
+            'fecha']
     success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/modificar_cliente.html'
     def get_success_url(self):

@@ -11,6 +11,16 @@ class Precio(models.Model):
     class Meta:
         ordering = ['encargado']
 
+class Dispositivo(models.Model):
+    titulo = models.CharField(max_length=200, verbose_name="Nombre del dispositivo", null=True, blank=True)
+    cantidad = models.IntegerField(verbose_name="Cantidad de dispositivos actuales", null=True)
+    actividad = models.CharField(max_length=200, verbose_name="Actividad de mantenimiento a realizar",null=True, blank=True)
+    plan = models.CharField(max_length=200, verbose_name="Tipo de poliza/plan", null=True, blank=True)
+
+    def __str__(self):
+        return self.titulo
+    class Meta:
+        ordering = ['titulo']
 
 class Cliente(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -26,6 +36,14 @@ class Cliente(models.Model):
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
+    dispositivos = models.ManyToManyField(Dispositivo, blank = True)
+
+    def save(self, *args, **kwargs):
+        super(Cliente, self).save(*args, **kwargs)
+        opciones = Dispositivo.objects.all()
+        for opcion in opciones:
+            self.dispositivos.add(opcion)
+        super(Cliente, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
@@ -33,19 +51,12 @@ class Cliente(models.Model):
     class Meta:
         ordering = ['nombre']
 
-class Dispositivo(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
-    marca = models.CharField(max_length=200, verbose_name="Marca del dispositivo", null=True, blank=True)
-    titulo = models.CharField(max_length=200, verbose_name="Nombre del dispositivo", null=True, blank=True)
-    cantidad = models.IntegerField(verbose_name="Cantidad de dispositivos actuales", null=True)
-    actividad = models.CharField(max_length=200, verbose_name="Actividad de mantenimiento a realizar",null=True, blank=True)
-    plan = models.CharField(max_length=200, verbose_name="Tipo de poliza/plan", null=True, blank=True)
 
+class Nombre_servicio(models.Model):
+    titulo = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     def __str__(self):
-        return self.marca +" "+ self.titulo
-    class Meta:
-        ordering = ['titulo']
-        
+        return self.titulo
+
 class Mantenimiento(models.Model):
     #title = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
@@ -86,7 +97,7 @@ class Mantenimiento(models.Model):
     ]
     Titulo = models.CharField(
         max_length=200,
-        choices=MANTENIMIENTOS_LISTA,
+        choices=Nombre_servicio.objects.all().values_list(),
         blank=True
     )
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )

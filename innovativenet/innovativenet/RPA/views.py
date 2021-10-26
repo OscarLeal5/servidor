@@ -17,6 +17,7 @@ from .models import Cliente, Mantenimiento, Dispositivo, Precio
 from datetime import date
 import io
 import os
+from pathlib import Path
 from operator import itemgetter
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
@@ -32,7 +33,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Dispositivo
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['marca','titulo','cantidad','actividad','plan']
+    fields = ['titulo','cantidad','actividad','plan']
     # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
     success_url = reverse_lazy('lista_clientes')
     # Busca un html en especifico
@@ -306,24 +307,22 @@ def cotizacion_pdf(request, cliente_id):
 
 
     def myFirstPage(canvas, doc):
-        path = os.getcwd()
-        path = os.path.join(path,"RPA","img_pdf")
+        BASE_DIR = Path(__file__).resolve().parent.parent
         canvas.saveState()
         canvas.setFont('Times-Bold', 16)
         canvas.setFont('Times-Roman', 14)
-        canvas.drawImage(os.path.join(path,'logo.png'), 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage(os.path.join(path,'lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage(os.path.join(path,'footer.png'), inch, 1, width=460, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','logo.png'), 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','footer.png'), inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def myLaterPages(canvas, doc):
-        path = os.getcwd()
-        path = os.path.join(path,"RPA","img_pdf")
+        BASE_DIR = Path(__file__).resolve().parent.parent
         canvas.saveState()
         canvas.setFont('Times-Roman', 9)
-        canvas.drawImage(os.path.join(path,'logo.png'), 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage(os.path.join(path,'lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage(os.path.join(path,'footer.png'), inch, 1, width=460, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','logo.png'), 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','footer.png'), inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def go():
@@ -468,8 +467,9 @@ def cotizacion_pdf(request, cliente_id):
         preciofinal = 0
         for mantenimiento in mantenimientos:
             preciofinal = preciofinal + mantenimiento.costomantenimientoregular
+        preciofinal = float(round(preciofinal))
         preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
-
+        
         td_precio = [["Description","QTY","Unit","Amount"]]
         data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","${}".format(preciofinal)]
         td_precio.append(data_precio)
@@ -483,7 +483,7 @@ def cotizacion_pdf(request, cliente_id):
 
 
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
-        p24 = Paragraph("Mmto.....................................................{}".format(preciofinal),styleNY)
+        p24 = Paragraph("Mmto.....................................................${}".format(preciofinal),styleNY)
         p25 = Paragraph(preciofinal1+" USD + IVA",styleNY)
         p26 = Paragraph("**Incluye maquinaria de elevacion**",styleCB)
 
@@ -641,7 +641,7 @@ def cotizacion_pdf(request, cliente_id):
         # doc.build(Story)
     go()
     buf.seek(0)
-    return FileResponse(buf, as_attachment=True,  filename='cotizacion_'+nombre+'.pdf')
+    return FileResponse(buf, as_attachment=True,  filename='cotizacion.pdf')
 
 
 

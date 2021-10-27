@@ -116,6 +116,7 @@ class Mantenimiento(models.Model):
 
 
     def save(self, *args, **kwargs):
+            dispositivosadicionales = 0
             if self.Titulo == self.relleno_informe:
                 self.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
                 self.tiempoejecucion = 4

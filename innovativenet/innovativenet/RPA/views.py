@@ -75,7 +75,7 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'horasactividad']
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional']
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
@@ -89,7 +89,7 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
 
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'horasactividad']
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional']
     template_name = 'mantenimientos/modificar_servicio.html'
 
     def get_success_url(self):

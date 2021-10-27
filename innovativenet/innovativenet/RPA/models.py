@@ -118,12 +118,79 @@ class Mantenimiento(models.Model):
     def save(self, *args, **kwargs):
             if self.Titulo == self.relleno_informe:
                 self.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
+                self.tiempoejecucion = 4
+                self.cantidaddispositivos = 1
             elif self.Titulo == self.prueba_com_datospanelydisp:
                 self.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
+                self.tiempoejecucion = 1
+                self.cantidaddispositivos = 1
             elif self.Titulo == self.soporte_tecnico:
                 self.encargadoTrabajo1 = Precio.objects.get(encargado='Ingeniero')
-            else:
+                self.tiempoejecucion = 30
+                self.cantidaddispositivos = 1
+            elif self.Titulo == self.limpieza_panel_alarmas:
                 self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+                self.tiempoejecucion = 3
+                self.cantidaddispositivos = 1
+            elif self.Titulo == self.revision_limpieza_sensor_humo:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')  
+                self.tiempoejecucion = 0.2
+                self.cantidaddispositivos = 11
+                self.periodisidadadicional = 3
+                dispositivosadicionales = 11
+            elif self.Titulo == self.rev_limp_estrobos:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+                self.tiempoejecucion = 0.2
+                self.cantidaddispositivos = 230
+                self.periodisidadadicional = 3
+                dispositivosadicionales = 230
+            elif self.Titulo == self.rev_limp_fuentespoder:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')  
+                self.tiempoejecucion = 0.2
+                self.cantidaddispositivos = 5
+                self.periodisidadadicional = 3
+                dispositivosadicionales = 5
+            elif self.Titulo == self.rev_limp_placasactivacion:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')  
+                self.tiempoejecucion = 0.1
+                self.cantidaddispositivos = 25
+            elif self.Titulo == self.rev_limp_monitoresflujo:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')  
+                self.tiempoejecucion = 0.1
+                self.cantidaddispositivos = 11
+            elif self.Titulo == self.rev_limp_sensoresductos:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+                self.tiempoejecucion = 0.5
+                self.cantidaddispositivos = 20
+            elif self.Titulo == self.rev_limp_humobeam:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')  
+                self.tiempoejecucion = 0.5
+                self.cantidaddispositivos = 6
+            elif self.Titulo == self.rev_limp_modulodecontrol:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')  
+                self.tiempoejecucion = 0.1
+                self.cantidaddispositivos = 5
+            elif self.Titulo == self.rev_limp_modconttrct1ct2:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+                self.tiempoejecucion = 0.1
+                self.cantidaddispositivos = 3
+            elif self.Titulo == self.rev_limp_modreleevadorcr:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+                self.tiempoejecucion = 0.1
+                self.cantidaddispositivos = 3
+            elif self.Titulo == self.rev_veri_resistenciafinlinea:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')
+                self.tiempoejecucion = 0.1
+                self.cantidaddispositivos = 16
+            elif self.Titulo == self.cambiar_ubi_herramientrasypersonal:
+                self.encargadoTrabajo1 = Precio.objects.get(encargado='Equipo de Tecnicos')                  
+                self.tiempoejecucion = 0.1
+                self.cantidaddispositivos = 336
+                self.periodisidadadicional = 1
+                dispositivosadicionales = 738
+            self.horasactividad = self.tiempoejecucion * self.cantidaddispositivos
+            self.costomantenimientoadicional = self.tiempoejecucion * dispositivosadicionales * self.periodisidadadicional
+            self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
             self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
             super(Mantenimiento, self).save(*args, **kwargs)
 

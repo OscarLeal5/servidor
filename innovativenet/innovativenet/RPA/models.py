@@ -95,9 +95,13 @@ class Mantenimiento(models.Model):
         (prueba_com_datospanelydisp, 'Prueba de comunicación de datos entre panel y dispositivos, asi como los loops.'),
         (soporte_tecnico, 'Servicio de soporte técnico -Horas de servicios generales adicionales'),
     ]
+    result=[]
+    for titulo in Nombre_servicio.objects.all():
+        result.append((titulo.titulo,titulo.titulo))
+    
     Titulo = models.CharField(
         max_length=200,
-        choices=Nombre_servicio.objects.all().values_list(),
+        choices=result,
         blank=True
     )
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )

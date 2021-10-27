@@ -435,9 +435,9 @@ def cotizacion_pdf(request, cliente_id):
 
 
 
-        td_dispositivos =[["Marca","Nombre","Cantidad","Actvidad","Plan"]] 
+        td_dispositivos =[["Nombre","Cantidad","Plan"]] 
         for dispositivo in dispositivos:
-            data_dispositivos = [dispositivo.marca,dispositivo.titulo,dispositivo.cantidad,dispositivo.actividad,dispositivo.plan]
+            data_dispositivos = [dispositivo.titulo,dispositivo.cantidad,dispositivo.plan]
             td_dispositivos.append(data_dispositivos)
         table_dis = Table(td_dispositivos)
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])

@@ -75,11 +75,9 @@ label{
           {% if request.user.is_authenticated %}
           <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
           {% if request.user.is_staff %}
-              <li><a class="getstarted scrollto" href="" >{{request.user}}</a></li>
-              <li><a class="getstarted scrollto" href="{% url 'admin:index' %}" >Admin</a></li>
+              <li><a class="getstarted scrollto" href="{% url 'admin:index' %}" >{{request.user}} - Admin</a></li>
               {% else %}
               <li><a class="getstarted scrollto" href="" >{{request.user}}</a></li>
-              <li><a class="getstarted scrollto" href="{% url 'home' %}" >Vendedor</a></li>
               {% endif %}
           {% else %}
           <li><a class="getstarted scrollto" href="{% url 'login'  %}" >Login</a></li>

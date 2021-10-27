@@ -75,7 +75,7 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional']
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'cantidaddispositivos', 'cantidaddispositivosextras']
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 

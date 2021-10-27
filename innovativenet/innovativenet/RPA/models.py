@@ -56,8 +56,6 @@ class Nombre_servicio(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     encargado = models.ForeignKey(Precio, on_delete=models.CASCADE, null=True)
     tiempodeejecucion = models.FloatField(verbose_name="Tiempo de Ejecucion", null=True)
-    cantidaddedispositivos = models.FloatField(verbose_name="Cantidad de Dispositivos", null=True)
-    cantidaddedispositivosextra = models.FloatField(verbose_name="Cantidad de Dispositivos Extra", null=True, blank=True)
     def __str__(self):
         return self.titulo
 
@@ -76,15 +74,13 @@ class Mantenimiento(models.Model):
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
     periodisidadadicional = models.FloatField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
     tiempoejecucion = models.FloatField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)
-    cantidaddispositivosextras = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True)
     cantidaddispositivos = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True)
+    cantidaddispositivosextras = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad Extra", blank=True, null=True)
     horasactividad = models.IntegerField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
 
     encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE)
-
-
 
     def save(self, *args, **kwargs):
             # Para los titulos dentro de la base de datos Nombre_Servicio
@@ -94,8 +90,8 @@ class Mantenimiento(models.Model):
                     # se asigna las variables con las de la base de datos Nombre_Servicio
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
-                    self.cantidaddispositivos = titulo.cantidaddedispositivos
-                    self.cantidaddispositivosextras = titulo.cantidaddedispositivosextra
+                    # self.cantidaddispositivos = titulo.cantidaddedispositivos
+                    # self.cantidaddispositivosextras = titulo.cantidaddedispositivosextra
                     # Se obtienen varioles finales con variables previamente asignadas por medio de multiplicaciones.
                     self.horasactividad = self.tiempoejecucion * self.cantidaddispositivos
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional

@@ -72,6 +72,7 @@ class Nombre_servicio(models.Model):
 
 class Mantenimiento(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
+    cotizacion = models.ForeignKey(cotizacion_servicio, on_delete=models.CASCADE, null=True, blank=True)
     result=[]
     for titulo in Nombre_servicio.objects.all():
         result.append((titulo.titulo,titulo.titulo))

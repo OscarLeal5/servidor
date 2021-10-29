@@ -13,7 +13,7 @@ from django.contrib import messages
 from reportlab.lib import colors
 from .forms import ClienteForm
 from datetime import datetime
-from .models import Cliente, Mantenimiento, Dispositivo, Precio
+from .models import Cliente, Mantenimiento, Dispositivo, Precio, cotizacion_servicio
 from datetime import date
 import io
 import os
@@ -26,6 +26,31 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
+
+# ------ VIEWS DISPOSITIVOS ------ #
+class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
+    model = cotizacion_servicio
+    fields = ['titulo','periodisidadxano','periodoextra']
+    template_name = 'mantenimientos/agregar_cotizacion.html'
+
+    def form_valid(self, form):
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
+        return super(Agregar_Cotizacion, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
+    model = cotizacion_servicio
+    object = "cotizacion"
+    template_name = "mantenimientos/detalle_cotizacion.html"
+    def get_context_data(self, **kwargs):
+        ctx = super(Detalle_Cotizacion, self).get_context_data(**kwargs)
+        # del diccionario de Key Word ARGumentS obtiene el valor de object
+        cat = kwargs.get("object")
+        ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
+        ctx['dispositivos'] = Dispositivo.objects.filter(cotizacion = cat)
+        return ctx
 
 # ------ VIEWS DISPOSITIVOS ------ #
 

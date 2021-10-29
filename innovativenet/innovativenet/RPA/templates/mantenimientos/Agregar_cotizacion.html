@@ -1,0 +1,25 @@
+{% extends 'mantenimientos/base.html'%}
+{% load static %}
+
+{% block body %}
+        <center>
+            <h1> Agregar Cotizacion Nueva </h1>
+            <br/>
+            <br/>
+            {% if submitted %}
+                <p> Se agrego la cotizacion exitosamente! </p>
+
+            {% else %}
+                <form action="" method="POST">
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <input type="submit" value="Agregar" class="btn btn-secondary">
+                </form>
+            <br/>
+            {% endif %}
+        </center>
+
+
+{% endblock %}

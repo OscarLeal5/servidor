@@ -52,25 +52,31 @@ class Cliente(models.Model):
         ordering = ['nombre']
 
 
+class cotizacion_servicio(models.Model):
+    num_list = [(1,"1"),(2,"2"),(4,"4"),(6,"6")]
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
+    titulo = models.CharField(verbose_name="Nombre Cotizacion", null=True, blank=True)
+    periodisidadxano = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", choices=num_list, blank=True, null=True)
+    periodoextra = models.BooleanField(verbose_name="¿Quieres Periodicidad Adicional a la regular?", default=False)
+
+
 class Nombre_servicio(models.Model):
-    titulo = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
+    titulo = models.CharField(
+        max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     encargado = models.ForeignKey(Precio, on_delete=models.CASCADE, null=True)
-    tiempodeejecucion = models.FloatField(verbose_name="Tiempo de Ejecucion", null=True)
+    tiempodeejecucion = models.FloatField(
+        verbose_name="Tiempo de Ejecucion", null=True)
+
     def __str__(self):
         return self.titulo
 
 class Mantenimiento(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
-
     result=[]
     for titulo in Nombre_servicio.objects.all():
         result.append((titulo.titulo,titulo.titulo))
     
-    Titulo = models.CharField(
-        max_length=200,
-        choices=result,
-        blank=True
-    )
+    Titulo = models.CharField(max_length=200,choices=result,blank=True)
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
     periodisidadadicional = models.FloatField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
     tiempoejecucion = models.FloatField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)

@@ -27,7 +27,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 
-# ------ VIEWS DISPOSITIVOS ------ #
+# ------ VIEWS COTIZACION ------ #
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
     model = cotizacion_servicio
     fields = ['titulo','periodisidadxano','periodoextra']
@@ -51,6 +51,16 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
         ctx['dispositivos'] = Dispositivo.objects.filter(cotizacion = cat)
         return ctx
+        
+
+class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
+    model = cotizacion_servicio
+    context_object_name = "cotizacion"
+    template_name = "mantenimientos/confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
 
 # ------ VIEWS DISPOSITIVOS ------ #
 
@@ -228,8 +238,7 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
         ctx = super(Mostrar_Cliente, self).get_context_data(**kwargs)
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
-        ctx['servicios'] = Mantenimiento.objects.filter(cliente = cat)
-        ctx['dispositivos'] = Dispositivo.objects.filter(cliente = cat)
+        ctx['cotizaciones'] = cotizacion_servicio.objects.filter(cliente = cat)
         return ctx
 
 

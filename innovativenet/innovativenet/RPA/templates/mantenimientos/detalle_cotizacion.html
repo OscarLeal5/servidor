@@ -36,6 +36,18 @@
                     </td>
                 </tr>
         </table>
+        <div>
+            <div>
+                <a href="{% url 'crear_servicio' cliente.id%}">
+                    <button type=button class="btn btn-secondary" style="margin:5px">Agregar Servicio</button>
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                    <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

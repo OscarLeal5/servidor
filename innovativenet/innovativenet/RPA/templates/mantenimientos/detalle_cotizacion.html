@@ -1,8 +1,43 @@
 {% extends "mantenimiento/base.html" %}
 {% block body %}
 
-<div>
-    <center>
-        <h1> Cotizacion </h1>
-    </center>
+<div >
+    <div>
+        <center>
+            <h1> Cotizacion {{cliente}} </h1>
+            <h2> {{titulo}} </h2>
+        </center>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th> Servicios </th>
+                <th> C/D </th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for servicio in servicios %}
+                <tr>
+                    <td>
+                        <a href="{% url 'detalle_servicio' servicio.id %}">
+                            {{ servicio }}
+                        </a>
+                    </td>
+                    <td>
+                        <p> {{ servicio.cantidaddispositivos }} </p>
+                    </td>
+                    <td>
+                        <a href="{% url 'modificar_servicio' %}">
+                            <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                        </a>
+                        <a href="{% url 'eliminar_servicio' x.id%}">
+                            <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                        </a>
+                    </td>
+                </tr>
+        </table>
+    </div>
 </div>
+
+
+{% endblock %}

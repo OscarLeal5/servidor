@@ -48,7 +48,6 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
-        ctx['dispositivos'] = Dispositivo.objects.filter(cotizacion = cat)
         return ctx
         
 

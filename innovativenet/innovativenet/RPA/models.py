@@ -22,10 +22,35 @@ class Nombre_servicio(models.Model):
     
     class Meta:
         ordering = ['titulo']
+    
+class Cliente(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    nombre = models.CharField('Nombre de la compañia cliente',max_length=200)
+    encargado = models.CharField('Nombre del contacto dentro de la empresa',max_length
+    =120)
+    puesto_encargado = models.CharField('Puesto del contacto',max_length
+    =120)
+    numero_contacto=models.CharField('Numero de telefono para contactar',max_length
+    =10)
+    correo_contacto=models.EmailField('Correo para contactar',blank=True)
+    # dispositivos = models.ManyToManyField(Dispositivo, blank = True)
+
+    # def save(self, *args, **kwargs):
+    #     super(Cliente, self).save(*args, **kwargs)
+    #     opciones = Dispositivo.objects.all()
+    #     for opcion in opciones:
+    #         self.dispositivos.add(opcion)
+    #     super(Cliente, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        ordering = ['nombre']
 
 class Cotizacion(models.Model):
     num_list = [(1,"1"),(2,"2"),(4,"4"),(6,"6")]
-    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, null=True, blank=True)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
     titulo = models.CharField(verbose_name="Nombre Cotizacion", null=True, blank=True,max_length=200)
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
@@ -50,7 +75,7 @@ class Cotizacion(models.Model):
 
 
 class Mantenimiento(models.Model):
-    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, null=True, blank=True)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
     cotizacion = models.ForeignKey(Cotizacion, on_delete=models.CASCADE, null=True, blank=True)
     result=[]
     for titulo in Nombre_servicio.objects.all():
@@ -89,30 +114,6 @@ class Mantenimiento(models.Model):
     class Meta:
         ordering = ['Titulo']
 
-class Cliente(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    nombre = models.CharField('Nombre de la compañia cliente',max_length=200)
-    encargado = models.CharField('Nombre del contacto dentro de la empresa',max_length
-    =120)
-    puesto_encargado = models.CharField('Puesto del contacto',max_length
-    =120)
-    numero_contacto=models.CharField('Numero de telefono para contactar',max_length
-    =10)
-    correo_contacto=models.EmailField('Correo para contactar',blank=True)
-    # dispositivos = models.ManyToManyField(Dispositivo, blank = True)
-
-    # def save(self, *args, **kwargs):
-    #     super(Cliente, self).save(*args, **kwargs)
-    #     opciones = Dispositivo.objects.all()
-    #     for opcion in opciones:
-    #         self.dispositivos.add(opcion)
-    #     super(Cliente, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.nombre
-
-    class Meta:
-        ordering = ['nombre']
         
 class Dispositivo(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)

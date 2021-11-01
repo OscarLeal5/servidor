@@ -116,19 +116,19 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'cantidaddispositivos', 'cantidaddispositivosextras']
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'cantidaddedispositivos', 'cantidaddispositivosextras']
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
     # Cuando se confirma el mantenimiento
     def form_valid(self, form):
         # se agrega el usuario que se esta usando en la instancia de usuario
-        # form.instance.usuario = self.request.user
-        form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['pk'])
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['cotizacion'])
         return super(Agregar_Mantenimiento, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id})
+        return reverse('detalle_cotizacion', kwargs={'cotizacion':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
@@ -136,7 +136,7 @@ class MttoUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'mantenimientos/modificar_servicio.html'
 
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('detalle_cotizacion', kwargs={'cotizacion':self.object.cotizacion.id})
 
 
 
@@ -146,7 +146,7 @@ class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     template_name = 'mantenimientos/eliminar_servicio.html'
     
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('detalle_cotizacion', kwargs={'cotizacion':self.object.cotizacion.id})
 
 
 class Detalle_Servicio(LoginRequiredMixin, DetailView):

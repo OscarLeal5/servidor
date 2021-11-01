@@ -30,13 +30,13 @@ urlpatterns = [
 
     # -------------- SERVICIO -------------------
 
-    path('agregar_servicio/<int:pk>', Agregar_Mantenimiento.as_view(), name='crear_servicio'),
+    path('<int:cliente>/<int:cotizacion>/agregar_servicio', Agregar_Mantenimiento.as_view(), name='crear_servicio'),
 
-    path('eliminar_servicio/<int:pk>', EliminarMantenimiento.as_view(), name='eliminar_servicio'),
+    path('<int:cotizacion>/eliminar_servicio>', EliminarMantenimiento.as_view(), name='eliminar_servicio'),
 
-    path('modificar_servicio/<int:pk>', MttoUpdate.as_view(), name='modificar_servicio'),
+    path('<int:cotizacion>/modificar_servicio>', MttoUpdate.as_view(), name='modificar_servicio'),
 
-    path('detalle_servicio/<int:pk>', Detalle_Servicio.as_view(), name='detalle_servicio'),
+    path('<int:cotizacion>/detalle_servicio>', Detalle_Servicio.as_view(), name='detalle_servicio'),
 
     # -------------- DISPOSITIVO -------------------
 
@@ -52,7 +52,7 @@ urlpatterns = [
 
     path('agregar_cotizacion/<int:pk>', Agregar_Cotizacion.as_view(), name='agregar_cotizacion'),
 
-    path('detalle_cotizacion/<int:pk>', Detalle_Cotizacion.as_view(), name='detalle_cotizacion'),
+    path('<int:cliente>/<int:pk>/detalle_cotizacion', Detalle_Cotizacion.as_view(), name='detalle_cotizacion'),
 
     path('eliminar_cotizacion/<int:pk>', Eliminar_Cotizacion.as_view(), name='eliminar_cotizacion'),
     

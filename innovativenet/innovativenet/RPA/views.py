@@ -11,7 +11,6 @@ from django.urls import reverse
 from reportlab.pdfgen import canvas
 from django.contrib import messages
 from reportlab.lib import colors
-from .forms import ClienteForm
 from datetime import datetime
 from .models import Cliente, Mantenimiento, Dispositivo, Precio, cotizacion_servicio
 from datetime import date
@@ -173,9 +172,7 @@ class Home(LoginRequiredMixin, ListView):
 class Agregar_Cliente(LoginRequiredMixin, CreateView):
     model = Cliente
     fields = ['nombre', 'encargado', 'puesto_encargado', 
-            'numero_contacto', 'correo_contacto',
-            'lugar_de_mantenimiento', 'descripcion_cotizacion'
-            ,]
+            'numero_contacto', 'correo_contacto',]
     success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/agregar_cliente.html'
 
@@ -189,8 +186,7 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
 class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     model = Cliente
     fields = ['nombre', 'encargado', 'puesto_encargado', 
-            'numero_contacto', 'correo_contacto',
-            'lugar_de_mantenimiento', 'descripcion_cotizacion', 
+            'numero_contacto', 'correo_contacto', 
             'fecha']
     success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/modificar_cliente.html'

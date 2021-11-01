@@ -60,12 +60,12 @@ class Cotizacion(models.Model):
     mantenimientos = models.ManyToManyField(Nombre_servicio,through="Mantenimiento")
 
 
-    # def save(self, *args, **kwargs):
-    #     super(Cliente, self).save(*args, **kwargs)
-    #     opciones = Dispositivo.objects.all()
-    #     for opcion in opciones:
-    #         self.dispositivos.add(opcion)
-    #     super(Cliente, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        super(Cliente, self).save(*args, **kwargs)
+        opciones = Nombre_servicio.objects.all()
+        for opcion in opciones:
+            self.dispositivos.add(opcion)
+        super(Cliente, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.cliente)+"-"+str(self.titulo)
@@ -112,7 +112,7 @@ class Mantenimiento(models.Model):
         return self.Titulo
 
     class Meta:
-        ordering = ['Titulo']
+        ordering = ['titulonombre']
 
         
 class Dispositivo(models.Model):

@@ -29,7 +29,7 @@ urlpatterns = [
 
     # -------------- SERVICIO -------------------
 
-    path('<int:cliente>/<int:cotizacion>/agregar_servicio', Agregar_Mantenimiento.as_view(), name='crear_servicio'),
+    path('<int:cliente>/<int:pk>/agregar_servicio/', Agregar_Mantenimiento.as_view(), name='crear_servicio'),
 
     path('<int:cotizacion>/eliminar_servicio>', EliminarMantenimiento.as_view(), name='eliminar_servicio'),
 

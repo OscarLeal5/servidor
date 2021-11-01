@@ -124,11 +124,11 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         # se agrega el usuario que se esta usando en la instancia de usuario
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
-        form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['cotizacion'])
+        form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Mantenimiento, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('detalle_cotizacion', kwargs={'cotizacion':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
+        return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento

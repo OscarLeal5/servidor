@@ -60,12 +60,12 @@ class Cotizacion(models.Model):
     mantenimientos = models.ManyToManyField(Nombre_servicio,through="Mantenimiento")
 
 
-    # def save(self, *args, **kwargs):
-    #     super(Cliente, self).save(*args, **kwargs)
-    #     opciones = Nombre_servicio.objects.all()
-    #     for opcion in opciones:
-    #         self.dispositivos.add(opcion)
-    #     super(Cliente, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        super(Cotizacion, self).save(*args, **kwargs)
+        opciones = Nombre_servicio.objects.all()
+        for opcion in opciones:
+            self.mantenimientos.add(opcion)
+        super(Cotizacion, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.cliente)+"-"+str(self.titulo)
@@ -82,7 +82,7 @@ class Mantenimiento(models.Model):
         result.append((titulo.titulo,titulo.titulo))
     titulonombre = models.ForeignKey(Nombre_servicio,on_delete=models.CASCADE, null=True, blank=True)
     Titulo = models.CharField(max_length=200,choices=result,blank=True)
-    encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE)
+    encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE,null=True)
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
     periodisidadadicional = models.FloatField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
     tiempoejecucion = models.FloatField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)
@@ -95,7 +95,7 @@ class Mantenimiento(models.Model):
             # Para los titulos dentro de la base de datos Nombre_Servicio
             for titulo in Nombre_servicio.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
-                if self.Titulo == titulo.titulo:
+                if self.titulonombre == titulo.titulo:
                     # se asigna las variables con las de la base de datos Nombre_Servicio
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
@@ -107,7 +107,7 @@ class Mantenimiento(models.Model):
                     self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     super(Mantenimiento, self).save(*args, **kwargs)
-                    return
+                return 
     def __str__(self):
         return self.Titulo
 

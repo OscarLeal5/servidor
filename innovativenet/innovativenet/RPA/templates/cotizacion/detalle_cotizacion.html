@@ -1,15 +1,16 @@
-{% extends "mantenimiento/base.html" %}
+{% extends "mantenimientos/base.html" %}
 {% block body %}
 
 <div >
     <div>
         <center>
-            <h1> Cotizacion {{cliente}} </h1>
-            <h2> {{titulo}} </h2>
+            <h1> Cotizacion {{cotizacion.cliente}} </h1>
+            <h2> {{cotizacion.titulo}} </h2>
         </center>
     </div>
-    {% for servicio in servicios %}
+    {% for servicio in cotizacion.mantenimientos.all %}
     <div class="card" style="width:300px">
+<<<<<<< HEAD
         <h4> {{ servicio }} </h4>
         <div>
             <a href="{% url 'crear_servicio' cliente.id %}">
@@ -23,6 +24,21 @@
 
     </div>
     {% endfor %}
+=======
+        <h6> {{ servicio }} </h6>
+    </div>
+    {% endfor %}
+    <div>
+        <center>
+        <a href="{% url 'crear_servicio' cotizacion.id%}">
+            <button type=button class="btn btn-secondary" style="margin:5px">Agregar Servicio</button>
+        </a>
+        <a href="{% url 'cotizacion_pdf' cotizacion.id %}" download="cotizacion.pdf">
+            <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
+        </a>
+        </center>
+    </div>
+>>>>>>> origin/Fusion-Servidores
 </div>
 
 

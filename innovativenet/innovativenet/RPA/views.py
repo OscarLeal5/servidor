@@ -53,7 +53,6 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
-        ctx['dispositivos'] = Dispositivo.objects.filter(cotizacion = cat)
         return ctx
         
 class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
@@ -129,11 +128,11 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         # se agrega el usuario que se esta usando en la instancia de usuario
         # form.instance.usuario = self.request.user
-        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
+        form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Mantenimiento, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id})
 
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento

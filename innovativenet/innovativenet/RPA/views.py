@@ -12,7 +12,7 @@ from reportlab.pdfgen import canvas
 from django.contrib import messages
 from reportlab.lib import colors
 from datetime import datetime
-from .models import Cliente, Cotizacion_Servicio, Mantenimiento, Dispositivo, Precio, Cotizacion_Servicio
+from .models import *
 from datetime import date
 import io
 import os
@@ -29,7 +29,7 @@ from num2words import num2words
 # ------ VIEWS COTIZACION ------ #
 
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
-    model = Cotizacion_Servicio
+    model = Cotizacion
     fields = ['titulo','periodisidadxano','periodoextra']
     template_name = 'cotizacion/agregar_cotizacion.html'
 
@@ -41,7 +41,7 @@ class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
         return reverse('Mostrar_Cliente', kwargs={'pk':self.object.cliente.id})
 
 class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
-    model = Cotizacion_Servicio
+    model = Cotizacion
     object = "cotizacion"
     template_name = "cotizacion/detalle_cotizacion.html"
     def get_context_data(self, **kwargs):
@@ -52,7 +52,7 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         return ctx
         
 class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
-    model = Cotizacion_Servicio
+    model = Cotizacion
     object = "cotizacion"
     fields = ['titulo', 'periodisidadxano', 'periodoextra']
     template_name = 'cotizacion/modificar_cotizacion.html'
@@ -60,7 +60,7 @@ class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
 class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
-    model = Cotizacion_Servicio
+    model = Cotizacion
     context_object_name = "cotizacion"
     template_name = "cotizacion/confirm_delete.html"
 
@@ -245,7 +245,7 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
         cat = kwargs.get("object")
         # filtra los elemento de la clase y los determina en
         # el html con el nombre dado en ctx['cotizaciones']
-        ctx['cotizaciones'] = Cotizacion_Servicio.objects.filter(cliente = cat)
+        ctx['cotizaciones'] = Cotizacion.objects.filter(cliente = cat)
         return ctx
 
 

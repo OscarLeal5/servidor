@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import dateutil.utils
+import dateutil.utils as date
 
 class Precio(models.Model):
     encargado = models.CharField(max_length=50, verbose_name='Encargado del trabajo',blank=True, null=True)
@@ -15,7 +15,7 @@ class Nombre_servicio(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     encargado = models.ForeignKey(Precio, on_delete=models.CASCADE, null=True)
     tiempodeejecucion = models.FloatField(verbose_name="Tiempo de Ejecucion", null=True)
-    # dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
+    #dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
     def __str__(self):
         return self.titulo
     
@@ -29,7 +29,7 @@ class Cotizacion(models.Model):
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
-    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
+    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=date.today())
     dispositivos = models.ManyToManyField('Dispositivo', blank = True)
 
     def save(self, *args, **kwargs):
@@ -40,10 +40,10 @@ class Cotizacion(models.Model):
         super(Cliente, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.nombre
+        return str(self.cliente)+"-"+str(self.titulo)
 
     class Meta:
-        ordering = ['nombre']
+        ordering = ['cliente']
 
 
 class Mantenimiento(models.Model):
@@ -58,7 +58,7 @@ class Mantenimiento(models.Model):
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
     periodisidadadicional = models.FloatField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
     tiempoejecucion = models.FloatField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)
-    cantidaddispositivos = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True)
+    cantidaddedispositivos = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True)
     cantidaddispositivosextras = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad Extra", blank=True, null=True)
     horasactividad = models.IntegerField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)

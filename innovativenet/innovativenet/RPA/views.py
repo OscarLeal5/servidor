@@ -2,7 +2,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Page
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.rl_config import defaultPageSize
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
@@ -44,6 +44,10 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
     model = Cotizacion
     object = "cotizacion"
     template_name = "cotizacion/detalle_cotizacion.html"
+
+    def get_object(self):
+        object = get_object_or_404(Cotizacion, pk=self.kwargs.get('cotizacion'))
+        return object
     def get_context_data(self, **kwargs):
         ctx = super(Detalle_Cotizacion, self).get_context_data(**kwargs)
         # del diccionario de Key Word ARGumentS obtiene el valor de object
@@ -237,6 +241,7 @@ def buscar_clientes(request):
 
 
 class Mostrar_Cliente(LoginRequiredMixin, DetailView):
+    counter = 0
     model = Cliente
     object = "cliente"
     template_name = "mantenimientos/detalle_cliente.html"

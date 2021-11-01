@@ -52,7 +52,7 @@ urlpatterns = [
 
     path('agregar_cotizacion/<int:pk>', Agregar_Cotizacion.as_view(), name='agregar_cotizacion'),
 
-    path('detalle_cotizacion/<int:pk>', Detalle_Cotizacion.as_view(), name='detalle_cotizacion'),
+    path('detalle_cotizacion/<int:cotizacion>', Detalle_Cotizacion.as_view(), name='detalle_cotizacion'),
 
     path('eliminar_cotizacion/<int:pk>', Eliminar_Cotizacion.as_view(), name='eliminar_cotizacion'),
     

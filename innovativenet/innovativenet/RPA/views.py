@@ -234,6 +234,8 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
         ctx = super(Mostrar_Cliente, self).get_context_data(**kwargs)
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
+        # filtra los elemento de la clase y los determina en
+        # el html con el nombre dado en ctx['cotizaciones']
         ctx['cotizaciones'] = cotizacion_servicio.objects.filter(cliente = cat)
         return ctx
 

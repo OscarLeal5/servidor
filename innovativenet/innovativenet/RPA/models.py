@@ -22,7 +22,7 @@ class Nombre_servicio(models.Model):
     class Meta:
         ordering = ['titulo']
 
-class cotizacion_servicio(models.Model):
+class Cotizacion(models.Model):
     num_list = [(1,"1"),(2,"2"),(4,"4"),(6,"6")]
     cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, null=True, blank=True)
     titulo = models.CharField(verbose_name="Nombre Cotizacion", null=True, blank=True,max_length=200)
@@ -30,8 +30,7 @@ class cotizacion_servicio(models.Model):
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
-<<<<<<< HEAD
-    dispositivos = models.ManyToManyField(Dispositivo, blank = True)
+    dispositivos = models.ManyToManyField('Dispositivo', blank = True)
 
     def save(self, *args, **kwargs):
         super(Cliente, self).save(*args, **kwargs)
@@ -47,36 +46,9 @@ class cotizacion_servicio(models.Model):
         ordering = ['nombre']
 
 
-class Cotizacion_Servicio(models.Model):
-    num_list = [(1,"1"),(2,"2"),(4,"4"),(6,"6")]
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
-    titulo = models.CharField(verbose_name="Nombre Cotizacion", max_length=200, null=True, blank=True)
-=======
->>>>>>> 8667df9bfc193a3e0b06b532005686e445f5cd86
-    periodisidadxano = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", choices=num_list, blank=True, null=True)
-    periodoextra = models.BooleanField(verbose_name="¿Quieres Periodicidad Adicional a la regular?", default=False)
-    Mantenimiento = models.ManyToManyField(Nombre_servicio,through='Mantenimiento')
-    
-    # def save(self, *args, **kwargs):
-    #     super(cotizacion_servicio, self).save(*args, **kwargs)
-    #     # if self.periodoextra == True:
-    # #     opciones = Nombre_servicio.objects.all()
-    # #     for opcion in opciones:
-    # #         self.Mantenimiento.add(opcion)
-    #     super(cotizacion_servicio, self).save(*args, **kwargs)
-    def __str__(self):
-        return str(self.cliente)+"-"+str(self.titulo)
-    
-    class Meta:
-        ordering = ['titulo']
-
 class Mantenimiento(models.Model):
-<<<<<<< HEAD
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
-    cotizacion = models.ForeignKey(Cotizacion_Servicio, on_delete=models.CASCADE, null=True, blank=True)
-=======
-    cotizacion = models.ForeignKey(cotizacion_servicio, on_delete=models.CASCADE, null=True, blank=True)
->>>>>>> 8667df9bfc193a3e0b06b532005686e445f5cd86
+    cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, null=True, blank=True)
+    cotizacion = models.ForeignKey(Cotizacion, on_delete=models.CASCADE, null=True, blank=True)
     result=[]
     for titulo in Nombre_servicio.objects.all():
         result.append((titulo.titulo,titulo.titulo))

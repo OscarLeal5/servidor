@@ -1,13 +1,8 @@
 import dateutil
 from django.db import models
 from django.contrib.auth.models import User
-<<<<<<< HEAD
-import dateutil
-from dateutil import utils
-=======
 from dateutil import utils
 
->>>>>>> origin/Fusion-Servidores
 class Precio(models.Model):
     encargado = models.CharField(max_length=50, verbose_name='Encargado del trabajo',blank=True, null=True)
     precio = models.FloatField("Precio por hora",blank=True, null=True)
@@ -17,7 +12,7 @@ class Precio(models.Model):
     class Meta:
         ordering = ['encargado']
 
-class nombre_servicio(models.Model):
+class Nombre_servicio(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     encargado = models.ForeignKey(Precio, on_delete=models.CASCADE, null=True)
     tiempodeejecucion = models.FloatField(verbose_name="Tiempo de Ejecucion", null=True)
@@ -36,21 +31,6 @@ class Cotizacion(models.Model):
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
-<<<<<<< HEAD
-    periodisidadxano = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", choices=num_list, blank=True, null=True)
-    periodoextra = models.BooleanField(verbose_name="¿Quieres Periodicidad Adicional a la regular?", default=False)
-    Mantenimiento = models.ManyToManyField(nombre_servicio,through='Mantenimiento')
-    
-    # def save(self, *args, **kwargs):
-    #     super(
-    #, self).save(*args, **kwargs)
-    #     # if self.periodoextra == True:
-    # #     opciones = nombre_servicio.objects.all()
-    # #     for opcion in opciones:
-    # #         self.Mantenimiento.add(opcion)
-    #     super(
-    #, self).save(*args, **kwargs)
-=======
     dispositivos = models.ManyToManyField('Dispositivo', blank = True)
     mantenimientos = models.ManyToManyField(Nombre_servicio,through="Mantenimiento")
 
@@ -62,7 +42,6 @@ class Cotizacion(models.Model):
     #         self.dispositivos.add(opcion)
     #     super(Cliente, self).save(*args, **kwargs)
 
->>>>>>> origin/Fusion-Servidores
     def __str__(self):
         return str(self.cliente)+"-"+str(self.titulo)
 
@@ -71,15 +50,12 @@ class Cotizacion(models.Model):
 
 
 class Mantenimiento(models.Model):
-<<<<<<< HEAD
-=======
     cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, null=True, blank=True)
->>>>>>> origin/Fusion-Servidores
     cotizacion = models.ForeignKey(Cotizacion, on_delete=models.CASCADE, null=True, blank=True)
     result=[]
-    # for titulo in nombre_servicio.objects.all():
+    # for titulo in Nombre_servicio.objects.all():
     #     result.append((titulo.titulo,titulo.titulo))
-    titulonombre = models.ForeignKey(nombre_servicio,on_delete=models.CASCADE, null=True, blank=True)
+    titulonombre = models.ForeignKey(Nombre_servicio,on_delete=models.CASCADE, null=True, blank=True)
     Titulo = models.CharField(max_length=200,choices=result,blank=True)
     encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE)
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
@@ -92,7 +68,7 @@ class Mantenimiento(models.Model):
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
     def save(self, *args, **kwargs):
             # Para los titulos dentro de la base de datos Nombre_Servicio
-            for titulo in nombre_servicio.objects.all():
+            for titulo in Nombre_servicio.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
                 if self.Titulo == titulo.titulo:
                     # se asigna las variables con las de la base de datos Nombre_Servicio

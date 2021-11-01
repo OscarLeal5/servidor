@@ -11,12 +11,16 @@ from django.urls import reverse
 from reportlab.pdfgen import canvas
 from django.contrib import messages
 from reportlab.lib import colors
-from .forms import ClienteForm
 from datetime import datetime
-from .models import Cliente, Mantenimiento, Dispositivo, Precio
+from .models import Cliente, Cotizacion_Servicio, Mantenimiento, Dispositivo, Precio, Cotizacion_Servicio
 from datetime import date
 import io
 import os
+<<<<<<< HEAD
+=======
+from pathlib import Path
+from operator import itemgetter
+>>>>>>> Fusion-Servidores
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -25,13 +29,56 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 
+# ------ VIEWS COTIZACION ------ #
+
+class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
+    model = Cotizacion_Servicio
+    fields = ['titulo','periodisidadxano','periodoextra']
+    template_name = 'cotizacion/agregar_cotizacion.html'
+
+    def form_valid(self, form):
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
+        return super(Agregar_Cotizacion, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('Mostrar_Cliente', kwargs={'pk':self.object.cliente.id})
+
+class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
+    model = Cotizacion_Servicio
+    object = "cotizacion"
+    template_name = "cotizacion/detalle_cotizacion.html"
+    def get_context_data(self, **kwargs):
+        ctx = super(Detalle_Cotizacion, self).get_context_data(**kwargs)
+        # del diccionario de Key Word ARGumentS obtiene el valor de object
+        cat = kwargs.get("object")
+        ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
+        ctx['dispositivos'] = Dispositivo.objects.filter(cotizacion = cat)
+        return ctx
+        
+class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
+    model = Cotizacion_Servicio
+    object = "cotizacion"
+    fields = ['titulo', 'periodisidadxano', 'periodoextra']
+    template_name = 'cotizacion/modificar_cotizacion.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
+    model = Cotizacion_Servicio
+    context_object_name = "cotizacion"
+    template_name = "cotizacion/confirm_delete.html"
+
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+
 # ------ VIEWS DISPOSITIVOS ------ #
 
 class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Dispositivo
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['marca','titulo','cantidad','actividad','plan']
+    fields = ['titulo','cantidad','actividad','plan']
     # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
     success_url = reverse_lazy('lista_clientes')
     # Busca un html en especifico
@@ -43,7 +90,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
         return super(Agregar_Dispositivo, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('Mostrar_Cliente', kwargs={'pk': self.object.cliente.id})
 
 
 class Update_Dispositivo(LoginRequiredMixin, UpdateView):
@@ -69,25 +116,27 @@ class Detalle_Dispositivo(LoginRequiredMixin, DetailView):
 
 # ------ VIEWS SERVICIOS ------ #
 
-class Agregar_Servicio(LoginRequiredMixin, CreateView):
+class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional','tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'cantidaddispositivos', 'cantidaddispositivosextras']
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
+    # Cuando se confirma el mantenimiento
     def form_valid(self, form):
-        form.instance.usuario = self.request.user
+        # se agrega el usuario que se esta usando en la instancia de usuario
+        # form.instance.usuario = self.request.user
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
-        return super(Agregar_Servicio, self).form_valid(form)
+        return super(Agregar_Mantenimiento, self).form_valid(form)
     
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional','tiempoejecucion', 'cantidaddispositivos', 'horasactividad']
+    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional']
     template_name = 'mantenimientos/modificar_servicio.html'
 
     def get_success_url(self):
@@ -136,9 +185,7 @@ class Home(LoginRequiredMixin, ListView):
 class Agregar_Cliente(LoginRequiredMixin, CreateView):
     model = Cliente
     fields = ['nombre', 'encargado', 'puesto_encargado', 
-            'numero_contacto', 'correo_contacto',
-            'lugar_de_mantenimiento', 'descripcion_cotizacion'
-            ,]
+            'numero_contacto', 'correo_contacto',]
     success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/agregar_cliente.html'
 
@@ -152,12 +199,12 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
 class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     model = Cliente
     fields = ['nombre', 'encargado', 'puesto_encargado', 
-            'numero_contacto', 'correo_contacto',
-            'lugar_de_mantenimiento', 'descripcion_cotizacion', 
-            'fecha',]
+            'numero_contacto', 'correo_contacto', 
+            'fecha']
+    success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/modificar_cliente.html'
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.pk})
+        return reverse('Mostrar_Cliente', kwargs={'pk': self.object.pk})
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente
@@ -200,10 +247,17 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
         ctx = super(Mostrar_Cliente, self).get_context_data(**kwargs)
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
-        ctx['servicios'] = Mantenimiento.objects.filter(cliente = cat)
-        ctx['dispositivos'] = Dispositivo.objects.filter(cliente = cat)
+        # filtra los elemento de la clase y los determina en
+        # el html con el nombre dado en ctx['cotizaciones']
+        ctx['cotizaciones'] = Cotizacion_Servicio.objects.filter(cliente = cat)
         return ctx
 
+
+
+
+
+
+# --------- DESCARGA PDF ----------------------------
 
 def cotizacion_pdf(request, cliente_id):
 
@@ -304,24 +358,22 @@ def cotizacion_pdf(request, cliente_id):
 
 
     def myFirstPage(canvas, doc):
-        path = os.getcwd()
-        path = os.path.join(path,"RPA","img_pdf")
+        BASE_DIR = Path(__file__).resolve().parent.parent
         canvas.saveState()
         canvas.setFont('Times-Bold', 16)
         canvas.setFont('Times-Roman', 14)
-        canvas.drawImage(os.path.join(path,'logo.png'), 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage(os.path.join(path,'lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage(os.path.join(path,'footer.png'), inch, 1, width=460, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','logo.png'), 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','footer.png'), inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def myLaterPages(canvas, doc):
-        path = os.getcwd()
-        path = os.path.join(path,"RPA","img_pdf")
+        BASE_DIR = Path(__file__).resolve().parent.parent
         canvas.saveState()
         canvas.setFont('Times-Roman', 9)
-        canvas.drawImage(os.path.join(path,'logo.png'), 0.8 * inch, 660, width=160, height=80)
-        canvas.drawImage(os.path.join(path,'lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
-        canvas.drawImage(os.path.join(path,'footer.png'), inch, 1, width=460, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','logo.png'), 0.8 * inch, 660, width=160, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','lenellogo.png'), 6.5 * inch, 660, width=80, height=80)
+        canvas.drawImage(os.path.join(BASE_DIR,'RPA','img_pdf','footer.png'), inch, 1, width=460, height=80)
         canvas.restoreState()
 
     def go():
@@ -434,9 +486,9 @@ def cotizacion_pdf(request, cliente_id):
 
 
 
-        td_dispositivos =[["Marca","Nombre","Cantidad","Actvidad","Plan"]] 
+        td_dispositivos =[["Nombre","Cantidad","Plan"]] 
         for dispositivo in dispositivos:
-            data_dispositivos = [dispositivo.marca,dispositivo.titulo,dispositivo.cantidad,dispositivo.actividad,dispositivo.plan]
+            data_dispositivos = [dispositivo.titulo,dispositivo.cantidad,dispositivo.plan]
             td_dispositivos.append(data_dispositivos)
         table_dis = Table(td_dispositivos)
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
@@ -466,8 +518,9 @@ def cotizacion_pdf(request, cliente_id):
         preciofinal = 0
         for mantenimiento in mantenimientos:
             preciofinal = preciofinal + mantenimiento.costomantenimientoregular
+        preciofinal = float(round(preciofinal))
         preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
-
+        
         td_precio = [["Description","QTY","Unit","Amount"]]
         data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","${}".format(preciofinal)]
         td_precio.append(data_precio)
@@ -481,7 +534,7 @@ def cotizacion_pdf(request, cliente_id):
 
 
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
-        p24 = Paragraph("Mmto.....................................................{}".format(preciofinal),styleNY)
+        p24 = Paragraph("Mmto.....................................................${}".format(preciofinal),styleNY)
         p25 = Paragraph(preciofinal1+" USD + IVA",styleNY)
         p26 = Paragraph("**Incluye maquinaria de elevacion**",styleCB)
 
@@ -639,7 +692,7 @@ def cotizacion_pdf(request, cliente_id):
         # doc.build(Story)
     go()
     buf.seek(0)
-    return FileResponse(buf, as_attachment=True,  filename='cotizacion_'+nombre+'.pdf')
+    return FileResponse(buf, as_attachment=True,  filename='cotizacion.pdf')
 
 
 

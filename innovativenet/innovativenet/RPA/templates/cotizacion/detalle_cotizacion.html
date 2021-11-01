@@ -1,0 +1,69 @@
+{% extends "mantenimiento/base.html" %}
+{% block body %}
+
+<div >
+    <div>
+        <center>
+            <h1> Cotizacion {{cliente}} </h1>
+            <h2> {{titulo}} </h2>
+        </center>
+    </div>
+    {% for servicio in servicios %}
+    <div class="card" style="width:300px">
+        <h4> {{ servicio }} </h4>
+        <div>
+            <a href="{% url 'crear_servicio' cliente.id%}">
+                <button type=button class="btn btn-secondary" style="margin:5px">Agregar Servicio</button>
+            </a>
+            <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
+            </a>
+        </div>
+
+
+    </div>
+    <!-- <div>
+        <table>
+            <tr>
+                <th> Servicios </th>
+                <th> C/D </th>
+                <th></th>
+                <th></th>
+            </tr>
+            {% for servicio in servicios %}
+                <tr>
+                    <td>
+                        <a href="{% url 'detalle_servicio' servicio.id %}">
+                            {{ servicio }}
+                        </a>
+                    </td>
+                    <td>
+                        <p> {{ servicio.cantidaddispositivos }} </p>
+                    </td>
+                    <td>
+                        <a href="{% url 'modificar_servicio' servicio.id %}">
+                            <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                        </a>
+                        <a href="{% url 'eliminar_servicio' servicio.id%}">
+                            <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                        </a>
+                    </td>
+                </tr>
+        </table>
+        <div>
+            <div>
+                <a href="{% url 'crear_servicio' cliente.id%}">
+                    <button type=button class="btn btn-secondary" style="margin:5px">Agregar Servicio</button>
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                    <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
+                </a>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+
+{% endblock %}

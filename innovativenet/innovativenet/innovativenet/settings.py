@@ -10,10 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+<<<<<<< HEAD
 import sys
 import django_heroku
 import dj_database_url
 from decouple import config
+=======
+>>>>>>> Fusion-Servidores
 from pathlib import Path
 from django.contrib.messages import constants as messages
 from django.core.management.utils import get_random_secret_key
@@ -141,11 +144,23 @@ LOGIN_URL = 'login'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+<<<<<<< HEAD
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+=======
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'RPA/static'),)
+
+SATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+>>>>>>> Fusion-Servidores
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -160,6 +175,7 @@ MESSAGE_TAGS = {
         messages.WARNING: 'alert-warning',
         messages.ERROR: 'alert-danger',
  }
+<<<<<<< HEAD
 
 # HTTPS Settings
 SESSION_COOKIE_SECURE = True
@@ -172,3 +188,5 @@ SECURE_HSTS_PRELOAD = True
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 django_heroku.settings(locals())
+=======
+>>>>>>> Fusion-Servidores

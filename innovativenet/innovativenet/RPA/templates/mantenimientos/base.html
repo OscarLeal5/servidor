@@ -74,7 +74,11 @@ label{
           <li><a class="nav-link scrollto active" href="{% url 'lista_clientes' %}">Lista de clientes activos</a></li>
           {% if request.user.is_authenticated %}
           <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
-          <li><a class="getstarted scrollto" href="" >{{request.user}}</a></li>
+          {% if request.user.is_staff %}
+              <li><a class="getstarted scrollto" href="{% url 'admin:index' %}" >{{request.user}} - Admin</a></li>
+              {% else %}
+              <li><a class="getstarted scrollto" href="" >{{request.user}}</a></li>
+              {% endif %}
           {% else %}
           <li><a class="getstarted scrollto" href="{% url 'login'  %}" >Login</a></li>
           {% endif %}

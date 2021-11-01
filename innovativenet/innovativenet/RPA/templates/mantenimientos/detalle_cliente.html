@@ -63,24 +63,38 @@
                 </center>
                 </div>
         </div>
-        {% for cotizacion in cotizaciones %}
-        <div class="card" style="width: 350px; height: 200px; padding: 20px; margin: 50px; box-shadow: 2px 3px 5px;">
-                <div class="container-fluid" style="margin: 10px; margin-bottom: 15px;">
-                        <h4>
-                                <a href="{% url 'detalle_cotizacion' cotizacion.cliente.id cotizacion.id %}">
-                                        {{ cotizacion }}
-                                </a>
-                        </h4>
-                        <div>
-                                <a href="{% url 'modificar_cotizacion' cotizacion.id %}">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
-                                </a>
-                                <a href="{% url 'eliminar_servicio' cotizacion.id%}">
-                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
-                                </a>
+        <div class="container-fluid" style="margin-top: 20px;">
+                <div class="row">
+                        {% for cotizacion in cotizaciones %}
+                        <div class="card" style="width: 350px; height: 200px; padding: 20px; margin: 50px; box-shadow: 2px 3px 5px;">
+                                <div class="container-fluid" style="margin: 10px; margin-bottom: 15px;">
+                                        <h4>
+                                                <a href="{% url 'detalle_cotizacion' cotizacion.cliente.id cotizacion.id %}">
+                                                        {{ cotizacion }}
+                                                </a>
+                                        </h4>
+                                        <div>
+                                                <a href="{% url 'modificar_cotizacion' cotizacion.id %}">
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                                </a>
+                                                <a href="{% url 'eliminar_servicio' cotizacion.id%}">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                                                </a>
+                                        </div>
+                                </div>
                         </div>
+                        {% endfor %}
                 </div>
-        {% endfor %}
+
+                <div>
+                        <center>
+                                <a href="{% url 'agregar_cotizacion' cliente.id %}">
+                                        <button type=button class="btn btn-secondary" style="margin:5px">Agregar Servicio</button>
+                                </a>
+                        </center>
+                </div>
+        </div>
+
 </div>
 
 

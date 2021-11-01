@@ -30,15 +30,15 @@ from num2words import num2words
 
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
     model = Cotizacion
-    fields = ['titulo','periodisidadxano','periodoextra']
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
     template_name = 'cotizacion/agregar_cotizacion.html'
 
     def form_valid(self, form):
-        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
         return super(Agregar_Cotizacion, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('Mostrar_Cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
 class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
     model = Cotizacion

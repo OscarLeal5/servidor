@@ -25,7 +25,6 @@ urlpatterns = [
     path('agregar_cliente', Agregar_Cliente.as_view(), name='agregar_cliente'),
 
     path('eliminar_cliente/<int:pk>', Eliminar_Cliente.as_view(), name='eliminar_cliente'),
-
     path('buscar_clientes', views.buscar_clientes, name='buscar_clientes'),
 
     # -------------- SERVICIO -------------------
@@ -50,7 +49,7 @@ urlpatterns = [
 
     # -------------- COTIZACION -------------------
 
-    path('agregar_cotizacion/<int:pk>', Agregar_Cotizacion.as_view(), name='agregar_cotizacion'),
+    path('<int:cliente>/agregar_cotizacion', Agregar_Cotizacion.as_view(), name='agregar_cotizacion'),
 
     path('detalle_cotizacion/<int:pk>', Detalle_Cotizacion.as_view(), name='detalle_cotizacion'),
 

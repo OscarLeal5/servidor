@@ -1,6 +1,7 @@
+import dateutil
 from django.db import models
 from django.contrib.auth.models import User
-import dateutil.utils as date
+from dateutil import utils
 
 class Precio(models.Model):
     encargado = models.CharField(max_length=50, verbose_name='Encargado del trabajo',blank=True, null=True)
@@ -29,7 +30,7 @@ class Cotizacion(models.Model):
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
-    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=date.today())
+    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
     dispositivos = models.ManyToManyField('Dispositivo', blank = True)
 
     def save(self, *args, **kwargs):

@@ -12,14 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='nombre_servicio',
-            name='cantidaddedispositivos',
-        ),
-        migrations.RemoveField(
-            model_name='nombre_servicio',
-            name='cantidaddedispositivosextra',
-        ),
         migrations.AlterField(
             model_name='cliente',
             name='fecha',

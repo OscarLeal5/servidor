@@ -32,13 +32,15 @@ class Cotizacion(models.Model):
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
     dispositivos = models.ManyToManyField('Dispositivo', blank = True)
+    mantenimientos = models.ManyToManyField(Nombre_servicio,through="Mantenimiento")
 
-    def save(self, *args, **kwargs):
-        super(Cliente, self).save(*args, **kwargs)
-        opciones = Dispositivo.objects.all()
-        for opcion in opciones:
-            self.dispositivos.add(opcion)
-        super(Cliente, self).save(*args, **kwargs)
+
+    # def save(self, *args, **kwargs):
+    #     super(Cliente, self).save(*args, **kwargs)
+    #     opciones = Dispositivo.objects.all()
+    #     for opcion in opciones:
+    #         self.dispositivos.add(opcion)
+    #     super(Cliente, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.cliente)+"-"+str(self.titulo)
@@ -75,7 +77,7 @@ class Mantenimiento(models.Model):
                     # self.cantidaddispositivos = titulo.cantidaddedispositivos
                     # self.cantidaddispositivosextras = titulo.cantidaddedispositivosextra
                     # Se obtienen varioles finales con variables previamente asignadas por medio de multiplicaciones.
-                    self.horasactividad = self.tiempoejecucion * self.cantidaddispositivos
+                    self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad

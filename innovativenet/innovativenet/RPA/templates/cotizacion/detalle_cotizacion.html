@@ -8,7 +8,21 @@
             <h2> {{titulo}} </h2>
         </center>
     </div>
-    <div>
+    {% for servicio in servicios %}
+    <div class="card" style="width:300px">
+        <h4> {{ servicio }} </h4>
+        <div>
+            <a href="{% url 'crear_servicio' cliente.id%}">
+                <button type=button class="btn btn-secondary" style="margin:5px">Agregar Servicio</button>
+            </a>
+            <a href="{% url 'cotizacion_pdf' cliente.id %}" download="cotizacion.pdf">
+                <button type="button" class="btn btn-primary" style="margin:5px">Descargar cotización</button>
+            </a>
+        </div>
+
+
+    </div>
+    <!-- <div>
         <table>
             <tr>
                 <th> Servicios </th>
@@ -27,10 +41,10 @@
                         <p> {{ servicio.cantidaddispositivos }} </p>
                     </td>
                     <td>
-                        <a href="{% url 'modificar_servicio' %}">
+                        <a href="{% url 'modificar_servicio' servicio.id %}">
                             <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
                         </a>
-                        <a href="{% url 'eliminar_servicio' x.id%}">
+                        <a href="{% url 'eliminar_servicio' servicio.id%}">
                             <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
                         </a>
                     </td>
@@ -48,7 +62,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 

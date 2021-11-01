@@ -52,10 +52,10 @@ class Cliente(models.Model):
         ordering = ['nombre']
 
 
-class cotizacion_servicio(models.Model):
+class Cotizacion_Servicio(models.Model):
     num_list = [(1,"1"),(2,"2"),(4,"4"),(6,"6")]
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
-    titulo = models.CharField(verbose_name="Nombre Cotizacion", null=True, blank=True)
+    titulo = models.CharField(verbose_name="Nombre Cotizacion", max_length=200, null=True, blank=True)
     periodisidadxano = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", choices=num_list, blank=True, null=True)
     periodoextra = models.BooleanField(verbose_name="¿Quieres Periodicidad Adicional a la regular?", default=False)
 
@@ -72,7 +72,7 @@ class Nombre_servicio(models.Model):
 
 class Mantenimiento(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
-    cotizacion = models.ForeignKey(cotizacion_servicio, on_delete=models.CASCADE, null=True, blank=True)
+    cotizacion = models.ForeignKey(Cotizacion_Servicio, on_delete=models.CASCADE, null=True, blank=True)
     result=[]
     for titulo in Nombre_servicio.objects.all():
         result.append((titulo.titulo,titulo.titulo))

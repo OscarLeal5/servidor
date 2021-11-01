@@ -13,7 +13,7 @@ from django.contrib import messages
 from reportlab.lib import colors
 from .forms import ClienteForm
 from datetime import datetime
-from .models import Cliente, Mantenimiento, Dispositivo, Precio, cotizacion_servicio
+from .models import Cliente, Cotizacion_Servicio, Mantenimiento, Dispositivo, Precio, Cotizacion_Servicio
 from datetime import date
 import io
 import os
@@ -28,22 +28,23 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 
 # ------ VIEWS COTIZACION ------ #
+
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
-    model = cotizacion_servicio
+    model = Cotizacion_Servicio
     fields = ['titulo','periodisidadxano','periodoextra']
-    template_name = 'mantenimientos/agregar_cotizacion.html'
+    template_name = 'cotizacion/agregar_cotizacion.html'
 
     def form_valid(self, form):
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Cotizacion, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('Mostrar_Cliente', kwargs={'pk':self.object.cliente.id})
 
 class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
-    model = cotizacion_servicio
+    model = Cotizacion_Servicio
     object = "cotizacion"
-    template_name = "mantenimientos/detalle_cotizacion.html"
+    template_name = "cotizacion/detalle_cotizacion.html"
     def get_context_data(self, **kwargs):
         ctx = super(Detalle_Cotizacion, self).get_context_data(**kwargs)
         # del diccionario de Key Word ARGumentS obtiene el valor de object
@@ -52,11 +53,18 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         ctx['dispositivos'] = Dispositivo.objects.filter(cotizacion = cat)
         return ctx
         
+class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
+    model = Cotizacion_Servicio
+    object = "cotizacion"
+    fields = ['titulo', 'periodisidadxano', 'periodoextra']
+    template_name = 'cotizacion/modificar_cotizacion.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
 class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
-    model = cotizacion_servicio
+    model = Cotizacion_Servicio
     context_object_name = "cotizacion"
-    template_name = "mantenimientos/confirm_delete.html"
+    template_name = "cotizacion/confirm_delete.html"
 
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -80,7 +88,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
         return super(Agregar_Dispositivo, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('Mostrar_Cliente', kwargs={'pk': self.object.cliente.id})
 
 
 class Update_Dispositivo(LoginRequiredMixin, UpdateView):
@@ -106,7 +114,7 @@ class Detalle_Dispositivo(LoginRequiredMixin, DetailView):
 
 # ------ VIEWS SERVICIOS ------ #
 
-class Agregar_Servicio(LoginRequiredMixin, CreateView):
+class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
@@ -114,10 +122,12 @@ class Agregar_Servicio(LoginRequiredMixin, CreateView):
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
+    # Cuando se confirma el mantenimiento
     def form_valid(self, form):
-        form.instance.usuario = self.request.user
+        # se agrega el usuario que se esta usando en la instancia de usuario
+        # form.instance.usuario = self.request.user
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
-        return super(Agregar_Servicio, self).form_valid(form)
+        return super(Agregar_Mantenimiento, self).form_valid(form)
     
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -195,7 +205,7 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/modificar_cliente.html'
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.pk})
+        return reverse('Mostrar_Cliente', kwargs={'pk': self.object.pk})
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente
@@ -240,9 +250,15 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
         cat = kwargs.get("object")
         # filtra los elemento de la clase y los determina en
         # el html con el nombre dado en ctx['cotizaciones']
-        ctx['cotizaciones'] = cotizacion_servicio.objects.filter(cliente = cat)
+        ctx['cotizaciones'] = Cotizacion_Servicio.objects.filter(cliente = cat)
         return ctx
 
+
+
+
+
+
+# --------- DESCARGA PDF ----------------------------
 
 def cotizacion_pdf(request, cliente_id):
 

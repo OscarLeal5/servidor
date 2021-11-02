@@ -26,6 +26,33 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 
+
+class CustomLoginView(LoginView):
+    # Esta clase se encarga de verificar que el usuario este autenticado antes de poder
+    # entrar a cualquier parte de la pagina.
+    template_name = 'mantenimientos/login.html'
+    fields = '__all__'
+    redirect_authenticated_user = True
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('lista_clientes')
+
+
+class Home(LoginRequiredMixin, ListView):
+    model = Cliente
+    context_object_name = 'Cliente'
+    template_name = 'mantenimientos/home.html'
+    # Se encarga de manejar los datos observables por el usuario
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # compara los usuarios con su informacion y projecta solo informacion de usuario
+        context['Cliente'] = context['Cliente'].filter(
+            usuario=self.request.user)
+        #context['count'] = context['mantenimientos'].filter(complete=False).count()
+        return context
+
+
 # ------ VIEWS COTIZACION ------ #
 
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
@@ -163,28 +190,6 @@ class Detalle_Servicio(LoginRequiredMixin, DetailView):
 
 # ------ VIEWS CLIENTE ------ #
 
-class CustomLoginView(LoginView):
-    # Esta clase se encarga de verificar que el usuario este autenticado antes de poder
-    # entrar a cualquier parte de la pagina.
-    template_name = 'mantenimientos/login.html'
-    fields = '__all__'
-    redirect_authenticated_user = True
-
-    def get_success_url(self) -> str:
-        return reverse_lazy('lista_clientes')
-
-class Home(LoginRequiredMixin, ListView):
-    model = Cliente
-    context_object_name = 'Cliente'
-    template_name = 'mantenimientos/home.html'
-    # Se encarga de manejar los datos observables por el usuario
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # compara los usuarios con su informacion y projecta solo informacion de usuario
-        context['Cliente'] = context['Cliente'].filter(usuario=self.request.user)
-        #context['count'] = context['mantenimientos'].filter(complete=False).count()
-        return context
-
 class Agregar_Cliente(LoginRequiredMixin, CreateView):
     model = Cliente
     fields = ['nombre', 'encargado', 'puesto_encargado', 
@@ -201,13 +206,12 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
 
 class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     model = Cliente
-    fields = ['nombre', 'encargado', 'puesto_encargado', 
-            'numero_contacto', 'correo_contacto', 
-            'fecha']
+    fields = ['nombre', 'encargado', 'puesto_encargado',
+              'numero_contacto', 'correo_contacto', ]
     success_url = reverse_lazy('lista_clientes')
     template_name = 'mantenimientos/modificar_cliente.html'
     def get_success_url(self):
-        return reverse('Mostrar_Cliente', kwargs={'pk': self.object.pk})
+        return reverse('mostrar_cliente', kwargs={'pk': self.object.pk})
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente

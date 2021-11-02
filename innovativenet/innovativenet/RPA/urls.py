@@ -25,6 +25,7 @@ urlpatterns = [
     path('agregar_cliente', Agregar_Cliente.as_view(), name='agregar_cliente'),
 
     path('eliminar_cliente/<int:pk>', Eliminar_Cliente.as_view(), name='eliminar_cliente'),
+
     path('buscar_clientes', views.buscar_clientes, name='buscar_clientes'),
 
     # -------------- SERVICIO -------------------

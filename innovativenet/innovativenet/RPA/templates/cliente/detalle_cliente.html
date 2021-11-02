@@ -2,6 +2,11 @@
 {% block body %}
 
 <div class="container">
+    <right>
+        <a href="{% url 'lista_clientes' %}">
+            <button type=button class="btn btn-outline-dark btn-sm" style="margin:20px">Regresar a la lista de clientes</button>
+        </a>
+    </right>
     <div style="text-align: center;">
         <h1> Cotizaciones {{ cliente }} </h1>
     </div>

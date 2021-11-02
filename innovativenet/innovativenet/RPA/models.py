@@ -77,9 +77,6 @@ class Cotizacion(models.Model):
 class Mantenimiento(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
     cotizacion = models.ForeignKey(Cotizacion, on_delete=models.CASCADE, null=True, blank=True)
-    result=[]
-    for titulo in Nombre_servicio.objects.all():
-        result.append((titulo.titulo,titulo.titulo))
     titulonombre = models.ForeignKey(Nombre_servicio,on_delete=models.CASCADE, null=True, blank=True)
     encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE,null=True)
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
@@ -98,7 +95,6 @@ class Mantenimiento(models.Model):
                 if str(self.titulonombre) == titulo.titulo:
                     # se asigna las variables con las de la base de datos Nombre_Servicio
                     print("\n\nencontro Servicio\n\n")
-                    self.titulo = titulo.titulo
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
                     # self.cantidaddispositivos = titulo.cantidaddedispositivos

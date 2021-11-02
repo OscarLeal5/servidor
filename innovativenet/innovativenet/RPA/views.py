@@ -89,7 +89,7 @@ class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
 class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
     model = Cotizacion
     context_object_name = "cotizacion"
-    template_name = "cotizacion/confirm_delete.html"
+    template_name = "cotizacion/eliminar_cotizacion.html"
 
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -105,7 +105,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
     # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
     success_url = reverse_lazy('lista_clientes')
     # Busca un html en especifico
-    template_name = 'mantenimientos/agregar_dispositivo.html'
+    template_name = 'dispositivos/agregar_dispositivo.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
@@ -119,7 +119,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
 class Update_Dispositivo(LoginRequiredMixin, UpdateView):
     model = Dispositivo
     fields =['marca','titulo','cantidad','actividad','plan']
-    template_name = 'mantenimientos/modificar_dispositivo.html'
+    template_name = 'dispositivos/modificar_dispositivo.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
@@ -127,7 +127,7 @@ class Update_Dispositivo(LoginRequiredMixin, UpdateView):
 class Eliminar_Dispositivo(LoginRequiredMixin, DeleteView):
     model = Dispositivo
     context_object_name = 'dispositivo'
-    template_name = 'mantenimientos/eliminar_dispositivo.html'
+    template_name = 'dispositivos/eliminar_dispositivo.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
@@ -135,7 +135,7 @@ class Eliminar_Dispositivo(LoginRequiredMixin, DeleteView):
 class Detalle_Dispositivo(LoginRequiredMixin, DetailView):
     model = Dispositivo
     context_object_name = 'dispositivo'
-    template_name = 'mantenimientos/detalle_dispositivo.html'
+    template_name = 'dispositivos/detalle_dispositivo.html'
 
 # ------ VIEWS SERVICIOS ------ #
 
@@ -195,7 +195,7 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
     fields = ['nombre', 'encargado', 'puesto_encargado', 
             'numero_contacto', 'correo_contacto',]
     success_url = reverse_lazy('lista_clientes')
-    template_name = 'mantenimientos/agregar_cliente.html'
+    template_name = 'cliente/agregar_cliente.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
@@ -209,7 +209,7 @@ class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     fields = ['nombre', 'encargado', 'puesto_encargado',
               'numero_contacto', 'correo_contacto', ]
     success_url = reverse_lazy('lista_clientes')
-    template_name = 'mantenimientos/modificar_cliente.html'
+    template_name = 'cliente/modificar_cliente.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk': self.object.pk})
 
@@ -217,12 +217,13 @@ class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente
     context_object_name = "cliente"
     success_url = reverse_lazy("lista_clientes")
-    template_name = "mantenimientos/confirm_delete.html"
+    template_name = "cliente/eliminar_cliente.html"
 
+# Esta clase se encarga de visualizar los clientes de cada usuario
 class Todos_Clientes(LoginRequiredMixin, ListView):
     model = Cliente
     context_object_name = 'lista_clientes'
-    template_name = 'mantenimientos/Clientes.html'
+    template_name = 'cliente/lista_clientes.html'
     # Se encarga de manejar los datos observables por el usuario
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -243,7 +244,7 @@ def buscar_clientes(request):
                        'clientes':clientes,
                        })
     else:
-        return render(request, 'mantenimientos/buscar_clientes.html',{})
+        return render(request, 'cliente/buscar_clientes.html',{})
 
 
 class Mostrar_Cliente(LoginRequiredMixin, DetailView):

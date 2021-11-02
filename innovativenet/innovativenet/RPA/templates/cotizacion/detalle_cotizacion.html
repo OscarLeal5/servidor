@@ -8,11 +8,25 @@
             <h2> {{cotizacion.titulo}} </h2>
         </center>
     </div>
-    {% for servicio in cotizacion.mantenimientos.all %}
-    <div class="card" style="width:300px">
-        <h6> {{ servicio }} </h6>
+    <div class="container" style="max-width: 650px;">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mantenimientos</th>
+                    <!-- <th>Num. Dispositivos</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for servicio in cotizacion.mantenimientos.all %}
+                <tr>
+                    <td><a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id %}">{{ servicio }}</a></td>
+                    <!-- <td> {{ servicio.cantidaddedispositivos }} </td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    {% endfor %}
     <div>
         <center>
         <a href="{% url 'crear_servicio' cotizacion.cliente.id cotizacion.id  %}">

@@ -81,7 +81,6 @@ class Mantenimiento(models.Model):
     for titulo in Nombre_servicio.objects.all():
         result.append((titulo.titulo,titulo.titulo))
     titulonombre = models.ForeignKey(Nombre_servicio,on_delete=models.CASCADE, null=True, blank=True)
-    Titulo = models.CharField(max_length=200,choices=result,blank=True)
     encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE,null=True)
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
     periodisidadadicional = models.FloatField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
@@ -92,11 +91,13 @@ class Mantenimiento(models.Model):
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
     def save(self, *args, **kwargs):
+            titulo_nombre = str(self.titulonombre)
             # Para los titulos dentro de la base de datos Nombre_Servicio
             for titulo in Nombre_servicio.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
                 if str(self.titulonombre) == titulo.titulo:
                     # se asigna las variables con las de la base de datos Nombre_Servicio
+                    print("\n\nencontro Servicio\n\n")
                     self.titulo = titulo.titulo
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
@@ -107,6 +108,7 @@ class Mantenimiento(models.Model):
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
+                    print('\n\n',self.cantidaddedispositivos )
                     super(Mantenimiento, self).save(*args, **kwargs)
                     return 
     def __str__(self):

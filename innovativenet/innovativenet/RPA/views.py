@@ -155,6 +155,11 @@ class Detalle_Servicio(LoginRequiredMixin, DetailView):
     model = Mantenimiento
     context_object_name = 'servicio'
     template_name = 'mantenimientos/detalle_servicio.html'
+    def form_valid(self, form):
+        # se agrega el usuario que se esta usando en la instancia de usuario
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['pk'])
+        return super(Agregar_Mantenimiento, self).form_valid(form)
 
 # ------ VIEWS CLIENTE ------ #
 

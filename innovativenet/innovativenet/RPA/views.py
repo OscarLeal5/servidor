@@ -54,7 +54,7 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
 class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
     model = Cotizacion
     object = "cotizacion"
-    fields = ['titulo', 'periodisidadxano', 'periodoextra']
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
     template_name = 'cotizacion/modificar_cotizacion.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -116,7 +116,9 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'cantidaddedispositivos', 'cantidaddispositivosextras']
+    fields = ['titulonombre', 'periodisidadactividades', 'periodisidadadicional',
+                'cantidaddedispositivos', 'cantidaddispositivosextras',
+                ]
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 

@@ -97,6 +97,7 @@ class Mantenimiento(models.Model):
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
                 if self.titulonombre == titulo.titulo:
                     # se asigna las variables con las de la base de datos Nombre_Servicio
+                    self.titulo = titulo.titulo
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
                     # self.cantidaddispositivos = titulo.cantidaddedispositivos
@@ -107,9 +108,9 @@ class Mantenimiento(models.Model):
                     self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     super(Mantenimiento, self).save(*args, **kwargs)
-                return 
+                    return 
     def __str__(self):
-        return self.Titulo
+        return self.titulonombre
 
     class Meta:
         ordering = ['titulonombre']

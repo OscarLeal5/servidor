@@ -1,0 +1,87 @@
+{% extends "mantenimientos/base.html" %}
+{% block body %}
+
+<div class="container">
+    <div style="text-align: center;">
+        <h1> Cotizaciones {{ cliente }} </h1>
+    </div>
+    <div class="container p-3">
+        <div class="container">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Nombre del Encargado: </th>
+                        <td>{{ cliente.encargado }}</td>
+                    </tr>
+                    <tr>
+                        <th>Puesto: </th>
+                        <td>{{ cliente.puesto_encargado }}</td>
+                    </tr>
+                    <tr>
+                        <th> Numero de Contacto: </th>
+                        <td>{{ cliente.numero_contacto }}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo de contacto: </th>
+                        <td>{{ cliente.correo_contacto }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="container p-3">
+            <center>
+                <a href="{% url 'modificar_cliente' cliente.id %}">
+                    <button type="button" class="btn btn-outline-success" style="margin:10px">Modificar detalles</button>
+                </a>
+                <a href="{% url 'eliminar_cliente' cliente.id %}">
+                    <button type="button" class="btn btn-outline-danger" style="margin:10px">Eliminar cliente</button>
+                </a>
+            </center>
+        </div>
+        <div class="container">
+            <div class="container-fluid" style="margin-top: 20px;">
+                <div class="row">
+                    {% for cotizacion in cotizaciones %}
+                    <div class="col-*-* card"
+                        style="width: 300px; height: 200px; padding: 25px; margin: 50px; box-shadow: 2px 3px 5px;">
+                        <div class="container-fluid" style="margin-bottom: 15px;">
+                            <h4>
+                                <a href="{% url 'detalle_cotizacion' cotizacion.cliente.id cotizacion.id %}">
+                                    {{ cotizacion.titulo }}
+                                </a>
+                            </h4>
+                            <p>Fecha: {{ cotizacion.fecha }}</p>
+                            <div>
+                                <center>
+                                    <a href="{% url 'modificar_cotizacion' cotizacion.id %}">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                    </a>
+                                    <a href="{% url 'eliminar_cotizacion' cotizacion.id%}">
+                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                                    </a>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="container-fluid" style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+                        <h2> No hay ninguna cotizacion </h2>
+                    </div>
+                    {% endfor %}
+                </div>
+            
+                <div>
+                    <center>
+                        <a href="{% url 'agregar_cotizacion' cliente.id %}">
+                            <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
+                        </a>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

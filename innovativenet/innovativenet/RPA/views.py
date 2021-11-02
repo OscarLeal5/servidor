@@ -26,6 +26,33 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 
+
+class CustomLoginView(LoginView):
+    # Esta clase se encarga de verificar que el usuario este autenticado antes de poder
+    # entrar a cualquier parte de la pagina.
+    template_name = 'mantenimientos/login.html'
+    fields = '__all__'
+    redirect_authenticated_user = True
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('lista_clientes')
+
+
+class Home(LoginRequiredMixin, ListView):
+    model = Cliente
+    context_object_name = 'Cliente'
+    template_name = 'mantenimientos/home.html'
+    # Se encarga de manejar los datos observables por el usuario
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # compara los usuarios con su informacion y projecta solo informacion de usuario
+        context['Cliente'] = context['Cliente'].filter(
+            usuario=self.request.user)
+        #context['count'] = context['mantenimientos'].filter(complete=False).count()
+        return context
+
+
 # ------ VIEWS COTIZACION ------ #
 
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
@@ -54,7 +81,7 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
 class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
     model = Cotizacion
     object = "cotizacion"
-    fields = ['titulo', 'periodisidadxano', 'periodoextra']
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
     template_name = 'cotizacion/modificar_cotizacion.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -62,7 +89,7 @@ class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
 class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
     model = Cotizacion
     context_object_name = "cotizacion"
-    template_name = "cotizacion/confirm_delete.html"
+    template_name = "cotizacion/eliminar_cotizacion.html"
 
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -78,7 +105,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
     # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
     success_url = reverse_lazy('lista_clientes')
     # Busca un html en especifico
-    template_name = 'mantenimientos/agregar_dispositivo.html'
+    template_name = 'dispositivos/agregar_dispositivo.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
@@ -92,7 +119,7 @@ class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
 class Update_Dispositivo(LoginRequiredMixin, UpdateView):
     model = Dispositivo
     fields =['marca','titulo','cantidad','actividad','plan']
-    template_name = 'mantenimientos/modificar_dispositivo.html'
+    template_name = 'dispositivos/modificar_dispositivo.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
@@ -100,7 +127,7 @@ class Update_Dispositivo(LoginRequiredMixin, UpdateView):
 class Eliminar_Dispositivo(LoginRequiredMixin, DeleteView):
     model = Dispositivo
     context_object_name = 'dispositivo'
-    template_name = 'mantenimientos/eliminar_dispositivo.html'
+    template_name = 'dispositivos/eliminar_dispositivo.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
@@ -108,7 +135,7 @@ class Eliminar_Dispositivo(LoginRequiredMixin, DeleteView):
 class Detalle_Dispositivo(LoginRequiredMixin, DetailView):
     model = Dispositivo
     context_object_name = 'dispositivo'
-    template_name = 'mantenimientos/detalle_dispositivo.html'
+    template_name = 'dispositivos/detalle_dispositivo.html'
 
 # ------ VIEWS SERVICIOS ------ #
 
@@ -116,7 +143,9 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
     model = Mantenimiento
     # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional', 'cantidaddedispositivos', 'cantidaddispositivosextras']
+    fields = ['titulonombre', 'periodisidadactividades', 'periodisidadadicional',
+                'cantidaddedispositivos', 'cantidaddispositivosextras',
+                ]
     # Busca un html en especifico
     template_name = 'mantenimientos/agregar_servicio.html'
 
@@ -153,37 +182,20 @@ class Detalle_Servicio(LoginRequiredMixin, DetailView):
     model = Mantenimiento
     context_object_name = 'servicio'
     template_name = 'mantenimientos/detalle_servicio.html'
+    def form_valid(self, form):
+        # se agrega el usuario que se esta usando en la instancia de usuario
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['pk'])
+        return super(Agregar_Mantenimiento, self).form_valid(form)
 
 # ------ VIEWS CLIENTE ------ #
-
-class CustomLoginView(LoginView):
-    # Esta clase se encarga de verificar que el usuario este autenticado antes de poder
-    # entrar a cualquier parte de la pagina.
-    template_name = 'mantenimientos/login.html'
-    fields = '__all__'
-    redirect_authenticated_user = True
-
-    def get_success_url(self) -> str:
-        return reverse_lazy('lista_clientes')
-
-class Home(LoginRequiredMixin, ListView):
-    model = Cliente
-    context_object_name = 'Cliente'
-    template_name = 'mantenimientos/home.html'
-    # Se encarga de manejar los datos observables por el usuario
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # compara los usuarios con su informacion y projecta solo informacion de usuario
-        context['Cliente'] = context['Cliente'].filter(usuario=self.request.user)
-        #context['count'] = context['mantenimientos'].filter(complete=False).count()
-        return context
 
 class Agregar_Cliente(LoginRequiredMixin, CreateView):
     model = Cliente
     fields = ['nombre', 'encargado', 'puesto_encargado', 
             'numero_contacto', 'correo_contacto',]
     success_url = reverse_lazy('lista_clientes')
-    template_name = 'mantenimientos/agregar_cliente.html'
+    template_name = 'cliente/agregar_cliente.html'
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
@@ -194,24 +206,24 @@ class Agregar_Cliente(LoginRequiredMixin, CreateView):
 
 class Modificar_Cliente (LoginRequiredMixin, UpdateView):
     model = Cliente
-    fields = ['nombre', 'encargado', 'puesto_encargado', 
-            'numero_contacto', 'correo_contacto', 
-            'fecha']
+    fields = ['nombre', 'encargado', 'puesto_encargado',
+              'numero_contacto', 'correo_contacto', ]
     success_url = reverse_lazy('lista_clientes')
-    template_name = 'mantenimientos/modificar_cliente.html'
+    template_name = 'cliente/modificar_cliente.html'
     def get_success_url(self):
-        return reverse('Mostrar_Cliente', kwargs={'pk': self.object.pk})
+        return reverse('mostrar_cliente', kwargs={'pk': self.object.pk})
 
 class Eliminar_Cliente(LoginRequiredMixin, DeleteView):
     model = Cliente
     context_object_name = "cliente"
     success_url = reverse_lazy("lista_clientes")
-    template_name = "mantenimientos/confirm_delete.html"
+    template_name = "cliente/eliminar_cliente.html"
 
+# Esta clase se encarga de visualizar los clientes de cada usuario
 class Todos_Clientes(LoginRequiredMixin, ListView):
     model = Cliente
     context_object_name = 'lista_clientes'
-    template_name = 'mantenimientos/Clientes.html'
+    template_name = 'cliente/lista_clientes.html'
     # Se encarga de manejar los datos observables por el usuario
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -232,13 +244,13 @@ def buscar_clientes(request):
                        'clientes':clientes,
                        })
     else:
-        return render(request, 'mantenimientos/buscar_clientes.html',{})
+        return render(request, 'cliente/buscar_clientes.html',{})
 
 
 class Mostrar_Cliente(LoginRequiredMixin, DetailView):
     model = Cliente
     object = "cliente"
-    template_name = "mantenimientos/detalle_cliente.html"
+    template_name = "cliente/detalle_cliente.html"
     def get_context_data(self, **kwargs):
         ctx = super(Mostrar_Cliente, self).get_context_data(**kwargs)
         # del diccionario de Key Word ARGumentS obtiene el valor de object

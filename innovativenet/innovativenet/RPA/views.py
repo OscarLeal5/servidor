@@ -238,7 +238,7 @@ def buscar_clientes(request):
 class Mostrar_Cliente(LoginRequiredMixin, DetailView):
     model = Cliente
     object = "cliente"
-    template_name = "mantenimientos/detalle_cliente.html"
+    template_name = "cliente/detalle_cliente.html"
     def get_context_data(self, **kwargs):
         ctx = super(Mostrar_Cliente, self).get_context_data(**kwargs)
         # del diccionario de Key Word ARGumentS obtiene el valor de object

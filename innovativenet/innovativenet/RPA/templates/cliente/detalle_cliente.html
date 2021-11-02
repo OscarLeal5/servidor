@@ -57,7 +57,7 @@
                                     <a href="{% url 'modificar_cotizacion' cotizacion.id %}">
                                         <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
                                     </a>
-                                    <a href="{% url 'eliminar_cotizacion' cotizacion.id%}">
+                                    <a href="{% url 'eliminar_cotizacion' cotizacion.cliente.id cotizacion.id%}">
                                         <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
                                     </a>
                                 </center>
@@ -74,7 +74,7 @@
                 <div>
                     <center>
                         <a href="{% url 'agregar_cotizacion' cliente.id %}">
-                            <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
+                            <button type=button class="btn btn-primary" style="margin:5px">Agregar Cotización</button>
                         </a>
                     </center>
                 </div>

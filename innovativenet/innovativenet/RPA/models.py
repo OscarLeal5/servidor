@@ -95,7 +95,7 @@ class Mantenimiento(models.Model):
             # Para los titulos dentro de la base de datos Nombre_Servicio
             for titulo in Nombre_servicio.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
-                if self.titulonombre == titulo.titulo:
+                if str(self.titulonombre) == titulo.titulo:
                     # se asigna las variables con las de la base de datos Nombre_Servicio
                     self.titulo = titulo.titulo
                     self.encargadoTrabajo1 = titulo.encargado

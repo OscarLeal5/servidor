@@ -23,10 +23,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for servicio in cotizacion.mantenimientos.all %}
+                {% for servicio in servicios %}
                 <tr>
-                    <td><a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id %}">{{ servicio }}</a></td>
-                    <!-- <td> {{ servicio.cantidaddedispositivos }} </td> -->
+                    <td><a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a></td>
                 </tr>
                 {% empty %}
                 <tr>

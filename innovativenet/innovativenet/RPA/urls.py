@@ -36,7 +36,7 @@ urlpatterns = [
 
     path('<int:cotizacion>/modificar_servicio>', MttoUpdate.as_view(), name='modificar_servicio'),
 
-    path('<int:cliente>/<int:pk>/detalle_servicio', Detalle_Servicio.as_view(), name='detalle_servicio'),
+    path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/detalle_servicio', Detalle_Servicio.as_view(), name='detalle_servicio'),
 
     # -------------- DISPOSITIVO -------------------
 

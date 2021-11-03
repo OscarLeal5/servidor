@@ -33,14 +33,7 @@ class Cliente(models.Model):
     numero_contacto=models.CharField('Numero de telefono para contactar',max_length
     =10)
     correo_contacto=models.EmailField('Correo para contactar',blank=True)
-    # dispositivos = models.ManyToManyField(Dispositivo, blank = True)
-
-    # def save(self, *args, **kwargs):
-    #     super(Cliente, self).save(*args, **kwargs)
-    #     opciones = Dispositivo.objects.all()
-    #     for opcion in opciones:
-    #         self.dispositivos.add(opcion)
-    #     super(Cliente, self).save(*args, **kwargs)
+    
 
     def __str__(self):
         return self.nombre
@@ -58,13 +51,16 @@ class Cotizacion(models.Model):
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
     dispositivos = models.ManyToManyField('Dispositivo', blank = True)
     mantenimientos = models.ManyToManyField(Nombre_servicio,through="Mantenimiento")
+    mmtos = models.ManyToManyField('Mantenimiento',related_name='mantenimientosCotizacion',null=True,blank=True)
+
 
 
     def save(self, *args, **kwargs):
         super(Cotizacion, self).save(*args, **kwargs)
         opciones = Nombre_servicio.objects.all()
         for opcion in opciones:
-            self.mantenimientos.add(opcion)
+            #self.mantenimientos.add(opcion)
+            creado = Mantenimiento()
         super(Cotizacion, self).save(*args, **kwargs)
 
     def __str__(self):

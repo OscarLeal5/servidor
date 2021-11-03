@@ -18,7 +18,7 @@ class Nombre_servicio(models.Model):
     tiempodeejecucion = models.FloatField(verbose_name="Tiempo de Ejecucion", null=True)
     #dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
     def __str__(self):
-        return self.titulo
+        return str(self.titulo)
     
     class Meta:
         ordering = ['titulo']
@@ -108,7 +108,7 @@ class Mantenimiento(models.Model):
                     super(Mantenimiento, self).save(*args, **kwargs)
                     return 
     def __str__(self):
-        return self.titulonombre
+        return str(self.titulonombre)
 
     class Meta:
         ordering = ['titulonombre']

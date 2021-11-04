@@ -51,7 +51,7 @@ class Cotizacion(models.Model):
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
     dispositivos = models.ManyToManyField('Dispositivo', blank = True)
     mantenimientos = models.ManyToManyField(Nombre_servicio,through="Mantenimiento")
-    mmtos = models.ManyToManyField('Mantenimiento',related_name='mantenimientosCotizacion',null=True,blank=True)
+    mmtos = models.ManyToManyField('Mantenimiento',related_name='mantenimientosCotizacion',blank=True)
 
 
 
@@ -76,7 +76,7 @@ class Mantenimiento(models.Model):
     titulonombre = models.ForeignKey(Nombre_servicio,on_delete=models.CASCADE, null=True, blank=True)
     encargadoTrabajo1 = models.ForeignKey(Precio,verbose_name="Encargado del trabajo" ,on_delete=models.CASCADE,null=True)
     periodisidadactividades = models.IntegerField(verbose_name="Periodicidad regular de actividad de mtto por año", blank=True, null=True )
-    periodisidadadicional = models.FloatField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
+    periodisidadadicional = models.IntegerField(verbose_name="Periodicidad adicional de actividad de mtto  a la regular", blank=True, null=True)
     tiempoejecucion = models.FloatField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)
     cantidaddedispositivos = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True)
     cantidaddispositivosextras = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad Extra", blank=True, null=True)

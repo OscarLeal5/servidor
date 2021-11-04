@@ -1,8 +1,12 @@
 {% extends "mantenimientos/base.html" %}
 {% block body %}
 
-
 <div class="container-fluid p-4">
+        <right>
+                <a href="{% url 'detalle_cotizacion' servicio.cliente.id servicio.cotizacion.id %}">
+                        <button type=button class="btn btn-outline-dark btn-sm" style="margin:20px">Regresar a la cotizacion</button>
+                </a>
+        </right>
         <h1> Servicio de Mantenimiento {{ servicio.titulonombre }}</h1>
 </div>
 
@@ -12,7 +16,7 @@
                 <div class="row">
                         <div class="col-6">
 
-                                <ul>Servicio: </ul>
+                                <ul>Mantenimiento: </ul>
 
                                 <ul>Periodicidad regular de actividad de mtto por año: </ul>
 
@@ -32,9 +36,9 @@
                                         Tiempo de ejecucion:</ul>
 
                         </div>
-                        <div class="col-4">
+                        <div class="col-6">
 
-                                <ul>{{ servicio.Titulo }}</ul>
+                                <ul>{{ servicio.titulonombre }}</ul>
 
                                 <ul>{{ servicio.periodisidadactividades }}</ul>
 
@@ -42,14 +46,12 @@
 
                                 <ul>{{ servicio.tiempoejecucion }}</ul>
 
-                                <ul>{{ servicio.cantidaddispositivos }}</ul>
+                                <ul>{{ servicio.cantidaddedispositivos }}</ul>
 
                                 <ul>{{ servicio.horasactividad }}</ul>
-                                <br/>
-
+                                <br>
                                 <ul>{{ servicio.costomantenimientoadicional }}</ul>
-
-                                <br />
+                                <br>
                                 <ul>{{ servicio.costomantenimientoregular }}</ul>
 
                         </div>

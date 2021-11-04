@@ -19,13 +19,35 @@
             <thead>
                 <tr>
                     <th>Mantenimientos</th>
-                    <!-- <th>Num. Dispositivos</th> -->
+                    <th align="right">Dispositivos</th>
+                    <th align="right">PAR</th>
+                    <th align="right">PAAR</th>
                 </tr>
             </thead>
             <tbody>
                 {% for servicio in servicios %}
                 <tr>
-                    <td><a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a></td>
+                    <td>
+                        <a 
+                            href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}
+                        </a>
+                    </td>
+
+                    <td>
+                        <a>
+                            {{ servicio.cantidaddedispositivos }}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{ servicio.periodisidadactividades }}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{ servicio.periodisidadadicional }}
+                        </a>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -46,6 +68,4 @@
         </center>
     </div>
 </div>
-
-
 {% endblock %}

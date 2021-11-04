@@ -58,7 +58,7 @@ class Home(LoginRequiredMixin, ListView):
 
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
     model = Cotizacion
-    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion','periodoregular','preguntaperiodoadicional','periodoadicional']
     template_name = 'cotizacion/agregar_cotizacion.html'
 
     def form_valid(self, form):

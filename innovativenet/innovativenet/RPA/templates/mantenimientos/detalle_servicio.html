@@ -11,54 +11,73 @@
 </div>
 
 <div class="container">
-
-        <div class="container">
-                <div class="row">
-                        <div class="col-6">
-
-                                <ul>Mantenimiento: </ul>
-
-                                <ul>Periodicidad regular de actividad de mtto por año: </ul>
-
-                                <ul>Periodicidad adicional de actividad de mtto a la regular: </ul>
-
-                                <ul>Tiempo de ejecucion del mantenimiento: </ul>
-
-
-                                <ul>Cantidad de dispositivos a considerar en periodicidad regular: </ul>
-
-                                <ul>horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion:
-                                </ul>
-
-                                <ul>Costo adicional = horas por actividad de mantenimiento adicional = importe de cantidad * tiempo de ejecucion</ul>
-
-                                <ul>Costo Regular = horas por actividad de mtto adicional =Importe de cantidad x
-                                        Tiempo de ejecucion:</ul>
-
-                        </div>
-                        <div class="col-6">
-
-                                <ul>{{ servicio.titulonombre }}</ul>
-
-                                <ul>{{ servicio.periodisidadactividades }}</ul>
-
-                                <ul>{{ servicio.periodisidadadicional }}</ul>
-
-                                <ul>{{ servicio.tiempoejecucion }}</ul>
-
-                                <ul>{{ servicio.cantidaddedispositivos }}</ul>
-
-                                <ul>{{ servicio.horasactividad }}</ul>
-                                <br>
-                                <ul>{{ servicio.costomantenimientoadicional }}</ul>
-                                <br>
-                                <ul>{{ servicio.costomantenimientoregular }}</ul>
-
-                        </div>
-                        <div class="col">
-
-                        </div>
-                </div>
-        </div>
+        <table class="table">
+                <tbody>
+                        <tr>
+                                <td>
+                                        Mantenimiento:
+                                </td>
+                                <td>
+                                        {{ servicio.titulonombre }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Periodicidad regular de actividad de mtto por año:
+                                </td>
+                                <td>
+                                        {{ servicio.periodisidadactividades }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Periodicidad adicional de actividad de mtto a la regular:
+                                </td>
+                                <td>
+                                        {{ servicio.periodisidadadicional }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Tiempo de ejecucion del mantenimiento:
+                                </td>
+                                <td>
+                                        {{ servicio.tiempoejecucion }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Cantidad de dispositivos a considerar en periodicidad regular:
+                                </td>
+                                <td>
+                                        {{ servicio.cantidaddedispositivos }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion:
+                                </td>
+                                <td>
+                                        {{ servicio.horasactividad }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Costo Regular = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion:
+                                </td>
+                                <td>
+                                        {{ servicio.costomantenimientoregular }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Costo adicional = horas por actividad de mantenimiento adicional = importe de cantidad * Tiempo de ejecucion:
+                                </td>
+                                <td>
+                                        {{ servicio.costomantenimientoadicional }}
+                                </td>
+                        </tr>
+                </tbody>
+        </table>
 
 {% endblock %}

@@ -49,18 +49,16 @@ class Cotizacion(models.Model):
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=dateutil.utils.today())
-    dispositivos = models.ManyToManyField('Dispositivo', blank = True)
+    periodoregular = models.IntegerField('Periodicidad regular de mmto al año',choices=num_list,null=True)
+    preguntaperiodoadicional = models.BooleanField('Quieres agregar periodicidad adicional a la regular?',default=False)
+    periodoadicional=models.IntegerField('Periodicidad adicional a la regular',choices=num_list,null=True)
     mantenimientos = models.ManyToManyField(Nombre_servicio,through="Mantenimiento")
-    mmtos = models.ManyToManyField('Mantenimiento',related_name='mantenimientosCotizacion',blank=True)
-
-
 
     def save(self, *args, **kwargs):
         super(Cotizacion, self).save(*args, **kwargs)
         opciones = Nombre_servicio.objects.all()
         for opcion in opciones:
-            #self.mantenimientos.add(opcion)
-            creado = Mantenimiento()
+            self.mantenimientos.add(opcion,through_defaults={'cotizacion':self,'cliente':self.cliente,'periodisidadactividades':self.periodoregular,'periodisidadadicional':self.periodoadicional})
         super(Cotizacion, self).save(*args, **kwargs)
 
     def __str__(self):

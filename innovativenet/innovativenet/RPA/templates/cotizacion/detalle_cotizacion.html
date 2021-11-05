@@ -13,7 +13,7 @@
             <h2> {{cotizacion.titulo}} </h2>
         </center>
     </div>
-    <div class="container" style="max-width: 650px;">
+    <div class="container" style="max-width: 850px;">
 
         <table class="table">
             <thead>
@@ -49,17 +49,33 @@
                         </td>
                         <td>
                             <a>
-                                {{ servicio.cantidaddedispositivos }}
+                                {% if servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is null %}
+                                    N/A
+                                {% elif servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is not null %}
+                                    Agregar dispositivos adicionales
+                                {% else %}
+                                    {{ servicio.cantidaddedispositivos }}
+                                {% endif %}
                             </a>
                         </td>
                         <td>
                             <a>
-                                {{ servicio.periodisidadadicional }}
+                                {% if servicio.periodisidadadicional is null %}
+                                    N/A
+                                {% else %}
+                                    {{ servicio.periodisidadadicional }}
+                                {% endif %}
                             </a>
                         </td>
                         <td>
                             <a>
-                                {{ servicio.cantidaddispositivosextras }}
+                                {% if servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is null %}
+                                    N/A
+                                {% elif servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is not null %}
+                                    Agregar dispositivos adicionales
+                                {% else %}
+                                    {{ servicio.cantidaddispositivosextras }}
+                                {% endif %}
                             </a>
                         </td>
                     </tr>

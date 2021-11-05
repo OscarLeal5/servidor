@@ -13,15 +13,16 @@
             <h2> {{cotizacion.titulo}} </h2>
         </center>
     </div>
-    <div class="container" style="max-width: 650px;">
+    <div class="container" style="max-width: 850px;">
 
         <table class="table">
             <thead>
                 <tr>
                     <th>Mantenimientos</th>
-                    <th align="right">Dispositivos</th>
                     <th align="right">PAR</th>
-                    <th align="right">PAAR</th>
+                    <th align="right">CD</th>
+                    <th align="right">PAaR</th>
+                    <th align="right">CDA</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,12 +32,14 @@
                         <td>
                             <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
                                 {{ servicio }}
-                            </a>
-                        </td>
-
-                        <td>
-                            <a>
-                                {{ servicio.cantidaddedispositivos }}
+                                <div>
+                                    <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                        <button type=button class="btn btn-outline-secondary" style="margin:5px">Modificar</button>
+                                    </a>
+                                    <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                        <button type=button class="btn btn-outline-danger" style="margin:5px">Eliminar</button>
+                                    </a>
+                                </div>
                             </a>
                         </td>
                         <td>
@@ -46,22 +49,33 @@
                         </td>
                         <td>
                             <a>
-                                {{ servicio.cantidaddispositivosextras }}
+                                {% if servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is null %}
+                                    N/A
+                                {% elif servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is not null %}
+                                    Agregar dispositivos adicionales
+                                {% else %}
+                                    {{ servicio.cantidaddedispositivos }}
+                                {% endif %}
                             </a>
                         </td>
                         <td>
                             <a>
-                                {{ servicio.periodisidadadicional }}
+                                {% if servicio.periodisidadadicional is null %}
+                                    N/A
+                                {% else %}
+                                    {{ servicio.periodisidadadicional }}
+                                {% endif %}
                             </a>
                         </td>
                         <td>
-                            <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
-                                Modificar
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
-                                Eliminar
+                            <a>
+                                {% if servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is null %}
+                                    N/A
+                                {% elif servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is not null %}
+                                    Agregar dispositivos adicionales
+                                {% else %}
+                                    {{ servicio.cantidaddispositivosextras }}
+                                {% endif %}
                             </a>
                         </td>
                     </tr>

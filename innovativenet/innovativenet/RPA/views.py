@@ -162,11 +162,11 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
 
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
-    fields = ['Titulo','periodisidadactividades', 'periodisidadadicional']
+    fields = ['titulonombre','periodisidadactividades', 'periodisidadadicional','cantidaddedispositivos', 'cantidaddispositivosextras',]
     template_name = 'mantenimientos/modificar_servicio.html'
 
     def get_success_url(self):
-        return reverse('detalle_cotizacion', kwargs={'cotizacion':self.object.cotizacion.id})
+        return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
 
 
@@ -176,7 +176,7 @@ class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     template_name = 'mantenimientos/eliminar_servicio.html'
     
     def get_success_url(self):
-        return reverse('detalle_cotizacion', kwargs={'cotizacion':self.object.cotizacion.id})
+        return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
 
 class Detalle_Servicio(LoginRequiredMixin, DetailView):

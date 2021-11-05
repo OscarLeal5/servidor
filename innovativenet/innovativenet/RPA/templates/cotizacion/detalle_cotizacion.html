@@ -19,9 +19,10 @@
             <thead>
                 <tr>
                     <th>Mantenimientos</th>
-                    <th align="right">Dispositivos</th>
                     <th align="right">PAR</th>
-                    <th align="right">PAAR</th>
+                    <th align="right">CD</th>
+                    <th align="right">PAaR</th>
+                    <th align="right">CDA</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,12 +32,14 @@
                         <td>
                             <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
                                 {{ servicio }}
-                            </a>
-                        </td>
-
-                        <td>
-                            <a>
-                                {{ servicio.cantidaddedispositivos }}
+                                <div>
+                                    <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                        <button type=button class="btn btn-outline-secondary" style="margin:5px">Modificar</button>
+                                    </a>
+                                    <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                        <button type=button class="btn btn-outline-danger" style="margin:5px">Eliminar</button>
+                                    </a>
+                                </div>
                             </a>
                         </td>
                         <td>
@@ -46,7 +49,7 @@
                         </td>
                         <td>
                             <a>
-                                {{ servicio.cantidaddispositivosextras }}
+                                {{ servicio.cantidaddedispositivos }}
                             </a>
                         </td>
                         <td>
@@ -55,13 +58,8 @@
                             </a>
                         </td>
                         <td>
-                            <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
-                                Modificar
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
-                                Eliminar
+                            <a>
+                                {{ servicio.cantidaddispositivosextras }}
                             </a>
                         </td>
                     </tr>

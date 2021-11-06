@@ -176,7 +176,7 @@ class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     template_name = 'mantenimientos/eliminar_servicio.html'
     
     def get_success_url(self):
-        return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
+        return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cotizacion.cliente.id,'pk':self.object.cotizacion.id})
 
 
 class Detalle_Servicio(LoginRequiredMixin, DetailView):

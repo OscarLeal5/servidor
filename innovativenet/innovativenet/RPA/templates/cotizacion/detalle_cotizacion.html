@@ -17,12 +17,12 @@
 
         <table class="table">
             <thead>
-                <tr>
+                <tr style="text-align: center;">
                     <th>Mantenimientos</th>
-                    <th align="right">PAR</th>
-                    <th align="right">CD</th>
-                    <th align="right">PAaR</th>
-                    <th align="right">CDA</th>
+                    <th>PAR</th>
+                    <th>CD</th>
+                    <th>PAaR</th>
+                    <th>CDA</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,12 +42,12 @@
                                 </div>
                             </a>
                         </td>
-                        <td>
+                        <td style="text-align: center;">
                             <a>
                                 {{ servicio.periodisidadactividades }}
                             </a>
                         </td>
-                        <td>
+                        <td style="text-align: center;">
                             <a>
                                 {% if servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is null %}
                                     N/A
@@ -58,7 +58,7 @@
                                 {% endif %}
                             </a>
                         </td>
-                        <td>
+                        <td style="text-align: center;">
                             <a>
                                 {% if servicio.periodisidadadicional is null %}
                                     N/A
@@ -67,8 +67,8 @@
                                 {% endif %}
                             </a>
                         </td>
-                        <td>
-                            <a>
+                        <td style="text-align: center;">
+                            <p>
                                 {% if servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is null %}
                                     N/A
                                 {% elif servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is not null %}
@@ -76,7 +76,7 @@
                                 {% else %}
                                     {{ servicio.cantidaddispositivosextras }}
                                 {% endif %}
-                            </a>
+                            </p>
                         </td>
                     </tr>
                     {% endif %}

@@ -3,13 +3,13 @@
 
 {% block body %}
 
-<div class="container">
+<div class="container card p-3 mb-5 mt-3" style="max-width:55%;border-color: black; box-shadow:8px 8px 3px grey; border-width: 4px black;">
     <center>
         <div>
             <h2> Agregar Cotizacion </h2>
         </div>
     </center>
-    <div class="container" style="text-align:center;">
+    <div class="container card-body" style="text-align:center;">
         {% if submitted %}
         <p> Se agrego la cotizacion exitosamente! </p>
         
@@ -44,8 +44,8 @@
 
             <div class="fieldWrapper">
                 {{ form.preguntaperiodoadicional.errors }}
-                <label  for="{{ form.preguntaperiodoadicional.id_for_label }}">Quiere PAAR? </label>
-                    <input type="checkbox" onclick="myFunction()" value="{{ form.preguntaperiodoadicional.value }}">
+                <label  for="{{ form.preguntaperiodoadicional.id_for_label }}">Quiere PAAR:  <input type="checkbox" onclick="myFunction()" value="{{ form.preguntaperiodoadicional.value }}"> </label>
+                    
             </div>
             <div id="myDIV" style="display:none" class="fieldWrapper">
                 {{ form.periodoadicional.errors }}

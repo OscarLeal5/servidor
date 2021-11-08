@@ -83,69 +83,73 @@ class Mantenimiento(models.Model):
     tiempoejecucion = models.FloatField(verbose_name="Tiempo de ejecucion del mtto", blank=True, null=True)
     cantidaddedispositivos = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad regular", blank=True, null=True,default=1)
     cantidaddispositivosextras = models.IntegerField(verbose_name="Cantidad de dispositivos a considerar en periodicidad Extra", blank=True, null=True,default=1)
-    horasactividad = models.IntegerField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
+    horasactividad = models.FloatField(verbose_name="horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
+    horasactividadadicional = models.FloatField(verbose_name="horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
     
-    # def total_cambiar(self):
-    #     elif self.titulonombre == Nombre_servicio.objects.get(pk=13):
-    #                 todoslosservicios = Mantenimiento.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
-    #                 todoslosservicios = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
-    #                 todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
-    #                 totalperiodoadicional = todoslosservicios.aggregate(Sum('periodisidadadicional'))
-    #                 totalperiodoadicional = totalperiodoadicional["periodisidadadicional__sum"] 
-    #                 if totalperiodoadicional is None:
-    #                     if self.periodisidadadicional is None:
-    #                         self.cantidaddispositivosextras = None
-    #                         totaldispositivosregular = todoslosservicios.aggregate(Sum('cantidaddedispositivos'))
-    #                         totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
-    #                         self.encargadoTrabajo1 = titulo.encargado
-    #                         self.tiempoejecucion = titulo.tiempodeejecucion
-    #                         self.cantidaddedispositivos = totaldispositivosregular
-    #                         super(Mantenimiento, self).save(*args, **kwargs)
-    #                         print(totaldispositivosregular)
-    #                 else:
-    #                     print(totalperiodoadicional)
-    #                     totaldispositivosregular = todoslosservicios.aggregate(Sum('cantidaddedispositivos'))
-    #                     totaldispositivosadicional = todoslosservicios.aggregate(Sum('cantidaddispositivosextras'))
-    #                     totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
-    #                     totaldispositivosadicional = totaldispositivosadicional['cantidaddispositivosextras__sum']
-    #                     self.encargadoTrabajo1 = titulo.encargado
-    #                     self.tiempoejecucion = titulo.tiempodeejecucion
-    #                     self.cantidaddedispositivos = totaldispositivosregular
-    #                     self.cantidaddispositivosextras = totaldispositivosadicional
-    #                     totaldispositivos = self.cantidaddispositivosextras + self.cantidaddedispositivos
-    #                     super(Mantenimiento, self).save(*args, **kwargs)
-    #                     print(totaldispositivosregular)
-    #                     print(totaldispositivosadicional)
-    #                     #self.horasactividad = self.tiempoejecucion * totaldispositivos
-    #                     return
-    
-    def save(self, *args, **kwargs):
-            def total_cambio(self):
+    def total_cambio(self):
                 print("prueba")
+                titulo = Nombre_servicio.objects.get(pk=13)
+                cambio = Mantenimiento.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
+                return cambio.save()
+
+    def save(self, *args, **kwargs):
             # Para los titulos dentro de la base de datos Nombre_Servicio
             for titulo in Nombre_servicio.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
-                if str(self.titulonombre) == titulo.titulo:
+                if str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio.objects.get(pk=13):
                     # se asigna las variables con las de la base de datos Nombre_Servicio
                     print("\n\nencontro Servicio\n\n")
                     if self.periodisidadadicional is None:
-                        self.cantidaddispositivosextras = None
+                        self.cantidaddispositivosextras = 0
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
                     # Se obtienen varioles finales con variables previamente asignadas por medio de multiplicaciones.
                     self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
-                    # self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
-                    # self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
+                    self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
+                    self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
+                    self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
-                    print('\n\n',self.cantidaddedispositivos )
-                    total_cambio(self)
                     super(Mantenimiento, self).save(*args, **kwargs)
+                    Mantenimiento.total_cambio(self)
+                    return
 
                 #13 es el pk del titulo cambiar herramientas
                 elif self.titulonombre == Nombre_servicio.objects.get(pk=13):
-                    total_cambio(self)
+                    todoslosservicios = Mantenimiento.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
+                    todoslosservicios = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
+                    totalperiodoadicional = todoslosservicios.aggregate(Sum('periodisidadadicional'))
+                    totalperiodoadicional = totalperiodoadicional["periodisidadadicional__sum"] 
+                    if totalperiodoadicional is None:
+                        if self.periodisidadadicional is None:
+                            self.cantidaddispositivosextras = 0
+                            totaldispositivosregular = todoslosservicios.aggregate(Sum('cantidaddedispositivos'))
+                            totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
+                            self.encargadoTrabajo1 = titulo.encargado
+                            self.tiempoejecucion = titulo.tiempodeejecucion
+                            self.cantidaddedispositivos = totaldispositivosregular
+                            print(totaldispositivosregular)
+                            totaldispositivos = self.cantidaddispositivosextras + self.cantidaddedispositivos
+                            self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
+                            super(Mantenimiento, self).save(*args, **kwargs)
+                            return
+                    else:
+                        print(totalperiodoadicional)
+                        totaldispositivosregular = todoslosservicios.aggregate(Sum('cantidaddedispositivos'))
+                        totaldispositivosadicional = todoslosservicios.aggregate(Sum('cantidaddispositivosextras'))
+                        totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
+                        totaldispositivosadicional = totaldispositivosadicional['cantidaddispositivosextras__sum']
+                        self.encargadoTrabajo1 = titulo.encargado
+                        self.tiempoejecucion = titulo.tiempodeejecucion
+                        self.cantidaddedispositivos = totaldispositivosregular
+                        self.cantidaddispositivosextras = totaldispositivosadicional
+                        totaldispositivos = self.cantidaddispositivosextras + self.cantidaddedispositivos
+                        self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
+                        self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
+                        super(Mantenimiento, self).save(*args, **kwargs)
+                        return
 
     def __str__(self):
         return str(self.titulonombre)

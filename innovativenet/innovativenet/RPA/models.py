@@ -107,15 +107,22 @@ class Mantenimiento(models.Model):
                         self.periodisidadadicional = 0
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
-                    # Se obtienen varioles finales con variables previamente asignadas por medio de multiplicaciones.
+                    # Se calculan las horas de actividad regular multiplicando el timepo de ejecucion del servicio con la cantidad de dispositivos regulares
                     self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
-                    self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
-                    self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
+                    # Se obtiene el costo regular multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
+                    #calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
+                    self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # dispositivos adicionales registrados por las periodicidades adicionales registradas
+                    self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
+                    # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
+                    self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
+                    #Calcular el costo total sumando los valores del costo regular y costo adicional
                     self.costototal = self.costomantenimientoregular + self.costomantenimientoadicional
-                    self.cantidaddispositivosextras = None
-                    self.periodisidadadicional = None
+                    if self.periodisidadadicional == 0:
+                        self.cantidaddispositivosextras = None
+                        self.periodisidadadicional = None
                     super(Mantenimiento, self).save(*args, **kwargs)
                     Mantenimiento.total_cambio(self)
                     return

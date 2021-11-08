@@ -38,7 +38,7 @@
             <thead>
                 <tr style="text-align: center;">
                     <th>Mantenimientos</th>
-                    <th>PAR</th>
+                    <th>PR</th>
                     <th>CD</th>
                     <th>PAaR</th>
                     <th>CDA</th>
@@ -73,7 +73,7 @@
                                 {% if servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is null %}
                                     N/A
                                 {% elif servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is not null %}
-                                    Agregar dispositivos adicionales
+                                    Agregar dispositivos
                                 {% else %}
                                     {{ servicio.cantidaddedispositivos }}
                                 {% endif %}

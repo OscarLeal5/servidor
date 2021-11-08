@@ -87,7 +87,8 @@ class Mantenimiento(models.Model):
     horasactividadadicional = models.FloatField(verbose_name="horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion", blank=True, null=True)
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
-    
+    costototal = models.FloatField(verbose_name="Costo total = Costo regular + costo adicional",null=True,blank=True)
+
     def total_cambio(self):
                 print("prueba")
                 titulo = Nombre_servicio.objects.get(pk=13)
@@ -103,6 +104,7 @@ class Mantenimiento(models.Model):
                     print("\n\nencontro Servicio\n\n")
                     if self.periodisidadadicional is None:
                         self.cantidaddispositivosextras = 0
+                        self.periodisidadadicional = 0
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
                     # Se obtienen varioles finales con variables previamente asignadas por medio de multiplicaciones.
@@ -111,6 +113,9 @@ class Mantenimiento(models.Model):
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
+                    self.costototal = self.costomantenimientoregular + self.costomantenimientoadicional
+                    self.cantidaddispositivosextras = None
+                    self.periodisidadadicional = None
                     super(Mantenimiento, self).save(*args, **kwargs)
                     Mantenimiento.total_cambio(self)
                     return
@@ -125,6 +130,7 @@ class Mantenimiento(models.Model):
                     if totalperiodoadicional is None:
                         if self.periodisidadadicional is None:
                             self.cantidaddispositivosextras = 0
+                            self.costomantenimientoadicional = 0
                             totaldispositivosregular = todoslosservicios.aggregate(Sum('cantidaddedispositivos'))
                             totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
                             self.encargadoTrabajo1 = titulo.encargado
@@ -133,6 +139,7 @@ class Mantenimiento(models.Model):
                             print(totaldispositivosregular)
                             totaldispositivos = self.cantidaddispositivosextras + self.cantidaddedispositivos
                             self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
+                            self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                             super(Mantenimiento, self).save(*args, **kwargs)
                             return
                     else:
@@ -148,6 +155,9 @@ class Mantenimiento(models.Model):
                         totaldispositivos = self.cantidaddispositivosextras + self.cantidaddedispositivos
                         self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
                         self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
+                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras 
+                        self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
+                        self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         super(Mantenimiento, self).save(*args, **kwargs)
                         return
 

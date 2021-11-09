@@ -2,7 +2,47 @@
 {% load static %}
 
 {% block body %}
-        <center>
+<div class="container">
+        <div class="card">
+                <div class="container-fluid border border-top-0">
+                        <h2> Modificar {{servicio}} </h2>
+                </div>
+                <div class="container">
+                        <form action="" method="POST">
+                                {% csrf_token %}
+                                <div class="mb-3 mt-3">
+                                        {{ form.periodisidadactividades.errors }}
+                                        <label for="{{ form.periodisidadactividades.id_for_label }}" class="form-label">Periodicidad Anual Regular:</label>
+                                        <input type="number" class="form-control" value="{{ form.periodisidadactividades.value }}">
+                                </div>
+                                <div class="mb-3">
+                                        {{ form.cantidaddedispositivos.errors }}
+                                        <label for="{{ form.periodisidadactividades.id_for_label }}" class="form-label">Password:</label>
+                                        <input type="number" class="form-control" value="{{ form.periodisidadactividades.value }}">
+                                </div>
+
+                                <div class="fieldWrapper">
+                                        
+                                        <label for="{{ form.descripcion_cotizacion.id_for_label }}">Descripcion de Cotizacion: </label>
+                                        {{ form.descripcion_cotizacion }}
+                                </div>
+
+                                <div class="fieldWrapper">
+                                        {{ form.periodoregular.errors }}
+                                        <label for="{{ form.periodoregular.id_for_label }}">Periodo Regular: </label>
+                                        {{ form.periodoregular }}
+                                </div>
+                                <div>
+                                        <input type="submit" value="Actualizar" class="btn btn-secondary">
+                                </div>
+                                
+                        </form>
+                </div>
+
+        </div>
+
+</div>
+        <!-- <center>
                 <h1> Modificar {{servicio}} </h1>
                 <br/>
                 <form action="" method="POST">
@@ -13,5 +53,15 @@
 
                 </form>
                 <br/>
-        </center>
+        </center> -->
+<script>
+    function myFunction() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+</script>
 {% endblock %}

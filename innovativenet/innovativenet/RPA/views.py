@@ -162,7 +162,8 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
 
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
-    fields = ['titulonombre','periodisidadactividades', 'periodisidadadicional','cantidaddedispositivos', 'cantidaddispositivosextras',]
+    context_object_name = 'servicio'
+    fields = ['periodisidadactividades', 'periodisidadadicional','cantidaddedispositivos', 'cantidaddispositivosextras',]
     template_name = 'mantenimientos/modificar_servicio.html'
 
     def get_success_url(self):

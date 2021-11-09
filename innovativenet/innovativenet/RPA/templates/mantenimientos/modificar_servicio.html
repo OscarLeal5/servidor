@@ -33,18 +33,19 @@
                                                 </label>
                                         </div>
 
-                                        <div class="mb-3" id="myDIV" style="display:none">
-                                                {{ form.cantidaddedispositivos.errors }}
-                                                <label for="{{ form.cantidaddedispositivos.id_for_label }}"
-                                                        class="form-label">Cantidad de Dispositivos:</label>
-                                                {{ form.cantidaddedispositivos }}
-                                        </div>
                                         <div class="mb-3" id="myDIV1" style="display:none">
-                                                {{ form.cantidaddedispositivos.errors }}
-                                                <label for="{{ form.cantidaddedispositivos.id_for_label }}"
-                                                        class="form-label">Cantidad de Dispositivos:</label>
-                                                {{ form.cantidaddedispositivos }}
+                                                {{ form.periodisidadadicional.errors }}
+                                                <label for="{{ form.periodisidadadicional.id_for_label }}" class="form-label">Periodicidad Adicional Anual
+                                                        Regular:</label>
+                                                {{ form.periodisidadadicional }}
                                         </div>
+                                        <div class="mb-3" id="myDIV" style="display:none">
+                                                {{ form.cantidaddispositivosextras.errors }}
+                                                <label for="{{ form.cantidaddispositivosextras.id_for_label }}"
+                                                        class="form-label">Cantidad de Dispositivos:</label>
+                                                {{ form.cantidaddispositivosextras }}
+                                        </div>
+
                                         <div class="mb-3">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                         </div>

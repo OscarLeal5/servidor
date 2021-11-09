@@ -49,7 +49,7 @@
                 <!-- ---------------------- Servicio List ---------------------------------- -->
             <tbody>
             {% for servicio in servicios %}
-                {% if servicio.cantidaddedispositivos is not None %}
+                {% if servicio.cantidaddedispositivos is not 0 %}
                     <tr class="table-success">
                         <td style="min-width: 120px;">
                             
@@ -102,7 +102,7 @@
                         </td>
                     </tr>
                 {% endif %}
-                {% if servicio.cantidaddedispositivos == None %}
+                {% if servicio.cantidaddedispositivos == 0 %}
                     <tr class="table-secondary">
                         <td style="min-width: 120px;">
                     

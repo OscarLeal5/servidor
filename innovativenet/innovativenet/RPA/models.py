@@ -98,8 +98,8 @@ class Mantenimiento(models.Model):
                 if self.titulonombre == Nombre_servicio.objects.get(pk=13):
                     print("entro al if de cambiar herramientas")
                     todoslosservicios = Mantenimiento.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
-                    todoslosservicios = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
+                    todoslosservicios = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
                     totalperiodoadicional = todoslosservicios.aggregate(Sum('periodisidadadicional'))
                     totalperiodoadicional = totalperiodoadicional["periodisidadadicional__sum"] 
                     if totalperiodoadicional is None or totalperiodoadicional == 0 :
@@ -125,10 +125,13 @@ class Mantenimiento(models.Model):
                             return super(Mantenimiento, self).save(*args, **kwargs)
                     else:
                         print("entro al else de totalperiodicidad")
-                        totaldispositivosregular = todoslosservicios.aggregate(Sum('cantidaddedispositivos'))
-                        totaldispositivosadicional = todoslosservicios.aggregate(Sum('cantidaddispositivosextras'))
-                        totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
-                        totaldispositivosadicional = totaldispositivosadicional['cantidaddispositivosextras__sum']
+                        totaldispositivosregular = 0
+                        totaldispositivosregular = 0
+                        todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
+                        totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
+                        totaldispositivosadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp_adi=Sum('cantidaddispositivosextras'))
+                        totaldispositivosregular = totaldispositivosregular['cantidad_disp']
+                        totaldispositivosadicional = totaldispositivosadicional['cantidad_disp_adi']
                         self.encargadoTrabajo1 = titulo.encargado
                         self.tiempoejecucion = titulo.tiempodeejecucion
                         self.cantidaddedispositivos = totaldispositivosregular
@@ -143,7 +146,7 @@ class Mantenimiento(models.Model):
                         super(Mantenimiento, self).save(*args, **kwargs)
                         return
                     
-                else:
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio.objects.get(pk=13):
                     # se asigna las variables con las de la base de datos Nombre_Servicio
                     print("\n\nencontro Servicio\n\n")
                     if self.periodisidadadicional is None:

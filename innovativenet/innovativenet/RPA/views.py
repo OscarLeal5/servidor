@@ -264,20 +264,21 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
 
 # --------- DESCARGA PDF ----------------------------
 
-def cotizacion_pdf(request, cliente_id):
+def cotizacion_pdf(request, cliente_id,cotizacion_id):
 
     cliente = Cliente.objects.get(pk=cliente_id)
+    cotizacion = Cotizacion.objects.get(pk=cotizacion_id,cliente=cliente_id)
     # mantenimientos = Cliente.mantenimiento.through.objects.
     buf = io.BytesIO()
 
     nombre=cliente.nombre
     encargado=cliente.encargado
-    puesto_encargado=cliente.puesto_encargado
-    numero_contacto=cliente.numero_contacto
-    correo_contacto=cliente.correo_contacto
-    lugar_de_mantenimiento=cliente.lugar_de_mantenimiento
-    descripcion_cotizacion=cliente.descripcion_cotizacion
-    fecha=cliente.fecha
+    puesto_encargado = cliente.puesto_encargado
+    numero_contacto = cliente.numero_contacto
+    correo_contacto = cliente.correo_contacto
+    lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
+    descripcion_cotizacion = cotizacion.descripcion_cotizacion
+    fecha = cotizacion.fecha
 
     dateTimeObj = datetime.now()
     dateObj = dateTimeObj.date()
@@ -385,6 +386,8 @@ def cotizacion_pdf(request, cliente_id):
         cliente = Cliente.objects.get(pk=cliente_id)
         mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id)
         dispositivos = Dispositivo.objects.filter(cliente = cliente_id)
+        cliente = Cliente.objects.get(pk=cliente_id)
+        cotizacion = Cotizacion.objects.get(pk=cotizacion_id,cliente=cliente_id)
         doc = SimpleDocTemplate(buf, pagesize=letter,
                                 rightMargin=inch, leftMargin=inch,
                                 topMargin=2 * inch, bottomMargin=inch)

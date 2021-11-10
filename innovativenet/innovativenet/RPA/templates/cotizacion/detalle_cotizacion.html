@@ -169,7 +169,7 @@
         <a href="{% url 'crear_servicio' cotizacion.cliente.id cotizacion.id  %}">
             <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
         </a>
-        <a href="{% url 'cotizacion_pdf' cotizacion.id %}" download="cotizacion.pdf">
+        <a href="{% url 'cotizacion_pdf' cotizacion.cliente.id cotizacion.id %}" download="cotizacion.pdf">
             <button type="button" class="btn btn-primary" style="margin:5px"><img src="https://img.icons8.com/ios/24/000000/download-2--v2.png" /></button>
         </a>
         </center>

@@ -19,7 +19,7 @@ class Nombre_servicio(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
     encargado = models.ForeignKey(Precio, on_delete=models.CASCADE, null=True)
     tiempodeejecucion = models.FloatField(verbose_name="Tiempo de Ejecucion", null=True)
-    #dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
+    dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
     def __str__(self):
         return str(self.titulo)
     

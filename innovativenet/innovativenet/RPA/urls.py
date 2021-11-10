@@ -14,7 +14,7 @@ urlpatterns = [
 
     path('clientes',Todos_Clientes.as_view(), name='lista_clientes'),
 
-    path('cotizacion_pdf/<cliente_id>', views.cotizacion_pdf, name='cotizacion_pdf'),
+    path('cotizacion_pdf/<cliente_id>/<cotizacion_id>', views.cotizacion_pdf, name='cotizacion_pdf'),
 
     # -------------- CLIENTE -------------------
 

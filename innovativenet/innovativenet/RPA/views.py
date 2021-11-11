@@ -287,7 +287,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id):
     actyear = str(date.today().year)
     sigyear = str(date.today().year + 1)
 
-    PAGE_HEIGHT = defaultPageSize[1];
+    PAGE_HEIGHT = defaultPageSize[1]
     PAGE_WIDTH = defaultPageSize[0]
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Normal_R',
@@ -384,8 +384,10 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id):
 
     def go():
         cliente = Cliente.objects.get(pk=cliente_id)
-        mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id)
-        dispositivos = Dispositivo.objects.filter(cliente = cliente_id)
+        mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id,cotizacion=cotizacion_id)
+        for mantenimiento in mantenimientos:
+            listdisp = []
+            listdisp.append(mantenimiento.dispositivo)
         cliente = Cliente.objects.get(pk=cliente_id)
         cotizacion = Cotizacion.objects.get(pk=cotizacion_id,cliente=cliente_id)
         doc = SimpleDocTemplate(buf, pagesize=letter,
@@ -433,21 +435,37 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id):
         p14 = Paragraph("A continuación, se muestra una visión general de los equipos y condiciones actuales. Se presenta una lista de equipos instalados actualmente en el lugar.",styleN)
         p15 = Paragraph("1.1 Politica de mantenimiento preventivo",styleHB)
         p16 = Paragraph("Para aplicar el mantenimiento preventivo se entenderá que el sistema de detección de incendios debe estar en operación al 100%, si esto no se cumpliera así deberá realizarse primero el mantenimiento correctivo",styleN)
-        listadispositivos = ''
-        listdisp = list(dispositivos)
-        lastdisp = listdisp[-1]
         
-        for dispositivo in dispositivos:
-            if len(dispositivos) == 1:
-                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+'.'
+        #checar si lleva columna "plan"
+        listdisp = [["Dispositivo","Cantidad","Plan","Dispositivos en periodicidad adcional"]]
+        mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id,cotizacion=cotizacion_id)
+        for mantenimiento in mantenimientos:
+            if mantenimiento.periodisidadadicional != None or mantenimiento.periodisidadadicional != 0:
+                if mantenimiento.dispositivo is not None:
+                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos," ",mantenimiento.cantidaddispositivosextras]
+                    listdisp.append(info_disp)
+            else:
+                if mantenimiento.dispositivo is not None:
+                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos]
+                    listdisp.append(info_disp)
+
+        listadispositivos = ''
+        lastdisp = listdisp[-1]
+
+        for mantenimiento in mantenimientos:
+            if len(listdisp) == 1:
+                if mantenimiento.dispositivo is not None:
+                    listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+'.'
             
-            elif dispositivo != lastdisp:
-                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+","
+            elif mantenimiento.dispositivo != lastdisp:
+                if mantenimiento.dispositivo is not None:
+                    listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
                 
-            elif dispositivo == lastdisp:
-                listadispositivos = listadispositivos+" "+str(dispositivo.cantidad)+" "+str(dispositivo.titulo)+","
-                listadispositivos = listadispositivos[:-1]
-                listadispositivos = listadispositivos+"."
+            else:
+                if mantenimiento.dispositivo is not None:
+                    listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
+                    listadispositivos = listadispositivos[:-1]
+                    listadispositivos = listadispositivos+"."
 
 
             
@@ -477,7 +495,14 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id):
         ppolitica1 = Paragraph("Teléfono móvil disponible para emergencias durante las horas contratadas.",styleN,bulletText="•")
         ppolitica2 = Paragraph("Soporte técnico telefónico con un tiempo de respuesta de 4 horas.",styleN,bulletText="•")
         ppolitica3 = Paragraph("Soporte técnico in situ 4 horas de tiempo de respuesta, 5 días a la semana (de lunes a viernes de 8:00am a 5:00pm).",styleN,bulletText="•")
-        ppolitica4 = Paragraph("30 (treinta) horas de servicio técnico incluyen por un período de 12 meses, Si el cliente hace uso de las 30 hrs de servicio, deberá renovarse la Póliza en una nueva cotización",styleN,bulletText="•")
+        
+        suma_horas = 0
+        for mantenimiento in mantenimientos:
+            if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
+                suma_horas = mantenimiento.tiempoejecucion
+        suma_horas_palabra = num2words(suma_horas,lang='es')
+        
+        ppolitica4 = Paragraph(str(suma_horas)+" ("+suma_horas_palabra+") horas de servicio técnico incluyen por un período de 12 meses, Si el cliente hace uso de las "+str(suma_horas)+" hrs de servicio, deberá renovarse la Póliza en una nueva cotización",styleB,bulletText="•")
         ppolitica5 = Paragraph("El alcance es sólo para el sistema de detección de incendios, hardware de DCI mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
         ppolitica6 = Paragraph("Para la atención de:",styleN,bulletText="•")
         ppolitica7 = Paragraph("Fallos y diagnóstico",styleN,bulletText="-")
@@ -493,48 +518,60 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id):
 
 
 
-
-        td_dispositivos =[["Nombre","Cantidad","Plan"]] 
-        for dispositivo in dispositivos:
-            data_dispositivos = [dispositivo.titulo,dispositivo.cantidad,dispositivo.plan]
-            td_dispositivos.append(data_dispositivos)
-        table_dis = Table(td_dispositivos)
+        table_dis = Table(listdisp)
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
         table_dis.setStyle(ts)
 
-        td_mantenimientos = [["Mantenimiento","Acts. de mmnto por año",
-                            "Acts. adicionales/Renta de equipo"
-                            ,"Tiempo de ejecucion"]]
+        td_mantenimientos = [["Mantenimiento",Paragraph("Acts. de mmnto por año"),
+                            Paragraph("Acts. adicionales")
+                            ,Paragraph("Tiempo de ejecucion")]]
         for mantenimiento in mantenimientos:
-            data_mantenimientos = [mantenimiento.Titulo,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
-            td_mantenimientos.append(data_mantenimientos)
-        table_man = Table(td_mantenimientos)
+            if str(mantenimiento.titulonombre) != "Servicio de soporte técnico -Horas de servicios generales adicionales":
+                data_mantenimientos = [Paragraph(str(mantenimiento.titulonombre)),mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
+                td_mantenimientos.append(data_mantenimientos)
+        table_man = Table(td_mantenimientos,colWidths=[3*inch,1*inch,1*inch , 1*inch])
         table_man.setStyle(ts)
 
-        td_total = [["Total de HRS de servicio de soporte técnico de poliza",""]]
-        suma_horas = 0
-        for mantenimiento in mantenimientos:
-            suma_horas = suma_horas + mantenimiento.horasactividad
-
-        data_mantenimientos = ["", suma_horas]
-        td_total.append(data_mantenimientos)
+        td_total = [["Total de HRS de servicio de soporte técnico de poliza","HRS",suma_horas]]
         table_tot = Table(td_total)
         ts_tot = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,-1),colors.yellow)])
         table_tot.setStyle(ts_tot)
 
         preciofinal = 0
+        preciofinalincadicional = 0
         for mantenimiento in mantenimientos:
             preciofinal = preciofinal + mantenimiento.costomantenimientoregular
+            preciofinalincadicional = preciofinalincadicional + mantenimiento.costomantenimientoregular + mantenimiento.costomantenimientoadicional
         preciofinal = float(round(preciofinal))
         preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
+        preciofinalincadicional = float(round(preciofinalincadicional))
+        preciofinalincadicional1 = num2words(preciofinalincadicional, to="currency", lang='es', currency='USD').upper()
         
-        td_precio = [["Description","QTY","Unit","Amount"]]
-        data_precio = ["Cuota anual del contrato de  mantenimiento", "1","Lot","${}".format(preciofinal)]
-        td_precio.append(data_precio)
-        table_pre = Table(td_precio)
+        
         ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,0),colors.lightsteelblue)])
+        td_precio = [["Description","QTY","Unit","Amount"]]
+        td_precioadicional = [["Description","QTY","Unit","Amount"]]
+
+        data_precio = [Paragraph("Cuota anual del contrato de  mantenimiento"), "1","Lot","${}".format(preciofinal)]
+        data_precioadicional = [Paragraph("Cuota anual del contrato de  mantenimiento incluyendo periodicidad adicional"), "1","Lot","${}".format(preciofinalincadicional)]
+        td_precio.append(data_precio)
+        listmanteniminientos = []
+        for mantenimiento in mantenimientos:
+            if mantenimiento.costomantenimientoadicional != 0 and mantenimiento.costomantenimientoadicional != None:
+                listmanteniminientos.append(mantenimiento.costomantenimientoadicional)
+        if any(listmanteniminientos):
+            td_precioadicional.append(data_precioadicional)
+            table_preadicional = Table(td_precioadicional)
+            table_preadicional.setStyle(ts_pre)
+            ppreciotextoadicional = Paragraph(preciofinalincadicional1+" USD + IVA",styleNRight)
+            p22adicional = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual incluyendo periodicidad adicional",styleB)
+            p23adicional = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo incluyendo periodicidad adicional",styleHBC)
+            p24adicional = Paragraph("Mmto.....................................................${}".format(preciofinalincadicional),styleNY)
+            p25adicional = Paragraph(preciofinalincadicional1+" USD + IVA",styleNY)
+
+        table_pre = Table(td_precio)
         table_pre.setStyle(ts_pre)
         ppreciotexto = Paragraph(preciofinal1+" USD + IVA",styleNRight)
         p21 = Paragraph("3.0 Resumen de la propuesta económica",styleHB)
@@ -668,7 +705,22 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id):
         Story.append(p23)
         Story.append(p24)
         Story.append(p25)
+        if any(listmanteniminientos):
+            Story.append(pblank)
+            Story.append(pblank)
+            Story.append(p22adicional)
+            Story.append(pblank)
+            Story.append(table_preadicional)
+            Story.append(ppreciotextoadicional)
+            Story.append(pblank)
+            Story.append(pblank)
+            Story.append(p23adicional) 
+            Story.append(p24adicional)
+            Story.append(p25adicional)
+            Story.append(pblank)
+            Story.append(pblank)
         Story.append(p26)
+
 
 
         Story.append(PageBreak())

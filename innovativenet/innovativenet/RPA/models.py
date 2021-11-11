@@ -88,7 +88,7 @@ class Mantenimiento(models.Model):
     costomantenimientoregular = models.FloatField(verbose_name="Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion",null=True,blank=True)
     costomantenimientoadicional = models.FloatField(verbose_name="Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ", blank=True, null=True)
     costototal = models.FloatField(verbose_name="Costo total = Costo regular + costo adicional",null=True,blank=True)
-
+    dispositivo = models.CharField("Dispositivo al que se le da mantenimiento",null=True,blank=True,max_length=200)
 
     def save(self, *args, **kwargs):
             # Para los titulos dentro de la base de datos Nombre_Servicio
@@ -154,6 +154,7 @@ class Mantenimiento(models.Model):
                         self.periodisidadadicional = 0
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
+                    self.dispositivo = titulo.dispositivo
                     # Se calculan las horas de actividad regular multiplicando el timepo de ejecucion del servicio con la cantidad de dispositivos regulares
                     self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
                     # Se obtiene el costo regular multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento

@@ -2,7 +2,7 @@ import dateutil
 from django.db import models
 from django.contrib.auth.models import User
 from dateutil import utils
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q,F
 
 from django.db.models.fields import NullBooleanField
 
@@ -187,7 +187,7 @@ class Mantenimiento(models.Model):
         return str(self.titulonombre)
 
     class Meta:
-        ordering = ['encargadoTrabajo1']
+        ordering = ['encargadoTrabajo1','cantidaddedispositivos']
 
         
 class Dispositivo(models.Model):

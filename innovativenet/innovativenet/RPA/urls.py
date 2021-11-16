@@ -38,16 +38,6 @@ urlpatterns = [
 
     path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/detalle_servicio', Detalle_Servicio.as_view(), name='detalle_servicio'),
 
-    # -------------- DISPOSITIVO -------------------
-
-    path('agregar_dispositivo/<int:pk>', Agregar_Dispositivo.as_view(), name='crear_dispositivo'),
-
-    path('eliminar_dispositivo/<int:pk>', Eliminar_Dispositivo.as_view(), name='eliminar_dispositivo'),
-
-    path('modificar_dispositivo/<int:pk>', Update_Dispositivo.as_view(), name='modificar_dispositivo'),
-
-    path('detalle_dispositivo/<int:pk>', Detalle_Dispositivo.as_view(), name='detalle_dispositivo'),
-
     # -------------- COTIZACION -------------------
 
     path('<int:cliente>/agregar_cotizacion', Agregar_Cotizacion.as_view(), name='agregar_cotizacion'),

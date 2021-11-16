@@ -95,49 +95,6 @@ class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
-
-# ------ VIEWS DISPOSITIVOS ------ #
-
-class Agregar_Dispositivo(LoginRequiredMixin, CreateView):
-    # Manda a llamar el Modelo Mantenimiento
-    model = Dispositivo
-    # Hace la eleccion de que inputs del Modelo tomar en cuenta
-    fields = ['titulo','cantidad','actividad','plan']
-    # Se utiliza para regresar al usuario a una pagina en especifico despues de terminar
-    success_url = reverse_lazy('lista_clientes')
-    # Busca un html en especifico
-    template_name = 'dispositivos/agregar_dispositivo.html'
-
-    def form_valid(self, form):
-        form.instance.usuario = self.request.user
-        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['pk'])
-        return super(Agregar_Dispositivo, self).form_valid(form)
-    
-    def get_success_url(self):
-        return reverse('Mostrar_Cliente', kwargs={'pk': self.object.cliente.id})
-
-
-class Update_Dispositivo(LoginRequiredMixin, UpdateView):
-    model = Dispositivo
-    fields =['marca','titulo','cantidad','actividad','plan']
-    template_name = 'dispositivos/modificar_dispositivo.html'
-    def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
-
-
-class Eliminar_Dispositivo(LoginRequiredMixin, DeleteView):
-    model = Dispositivo
-    context_object_name = 'dispositivo'
-    template_name = 'dispositivos/eliminar_dispositivo.html'
-    def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
-
-
-class Detalle_Dispositivo(LoginRequiredMixin, DetailView):
-    model = Dispositivo
-    context_object_name = 'dispositivo'
-    template_name = 'dispositivos/detalle_dispositivo.html'
-
 # ------ VIEWS SERVICIOS ------ #
 
 class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):

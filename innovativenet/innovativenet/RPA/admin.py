@@ -6,7 +6,6 @@ from .models import *
 
 admin.site.register(Mantenimiento)
 admin.site.register(Cliente)
-admin.site.register(Dispositivo)
 admin.site.register(Precio)
 admin.site.register(Nombre_servicio)
 admin.site.register(Cotizacion)

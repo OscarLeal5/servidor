@@ -68,13 +68,17 @@ class Cotizacion(models.Model):
     def save(self, *args, **kwargs):
         # Se guarda la cotizacion primero
         super(Cotizacion, self).save(*args, **kwargs)
+        self.descripcion_cotizacion = "Propuesta de servicios profesionales para mantenimiento preventivo del sistema de alarmas de deteccion de incendios "+"("+str(self.periodoregular)+" periodo/s al año) "+str(self.cliente)
         # Se almacena en una variable la lista de todos los nombres de mantenimientos
         opciones = Nombre_servicio.objects.all()
         # Ciclo para agregar automaticamente los mantenimientos por medio de los nombres que estan almacenados en Nombre_Servicio
         for opcion in opciones:
-            # Se declaran los valores que se quieren tener en todos los mantenimientos
-            Mantenimiento.objects.create(titulonombre=opcion,cotizacion=self,cliente=self.cliente,periodisidadactividades=self.periodoregular,
-            periodisidadadicional=self.periodoadicional)
+            try:
+                cambio = Mantenimiento.objects.get(cotizacion=self,cliente=self.cliente,titulonombre=opcion)
+            except:
+                # Se declaran los valores que se quieren tener en todos los mantenimientos
+                Mantenimiento.objects.create(titulonombre=opcion,cotizacion=self,cliente=self.cliente,periodisidadactividades=self.periodoregular,
+                periodisidadadicional=self.periodoadicional)
         super(Cotizacion, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -249,9 +253,12 @@ class Mantenimiento(models.Model):
         # Se obtiene el titulo de cambio de herramientas
         titulo = Nombre_servicio.objects.get(pk=13)
         # Se busca o crea el mantenimiento con el titulo, cotizacion y cliente que se este actualizando
-        Mantenimiento.objects.get_or_create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
+        # Mantenimiento.objects.get_or_create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         # Se busca el mantenimiento creado y se almacena en una variable
-        cambio = Mantenimiento.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
+        try:
+            cambio = Mantenimiento.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
+        except:
+            cambio = Mantenimiento.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)     
         # Se manda llamar la funcion save para guardar y recalcular el total de dispositivos
         cambio.save()
         return 

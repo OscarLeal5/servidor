@@ -66,7 +66,7 @@ class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
         return super(Agregar_Cotizacion, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+        return reverse('detalle_cotizacion', kwargs={'pk':self.object.id,'cliente':self.object.cotizacion.cliente.id})
 
 class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
     model = Cotizacion

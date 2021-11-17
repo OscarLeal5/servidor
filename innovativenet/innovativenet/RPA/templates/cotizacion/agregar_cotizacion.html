@@ -31,12 +31,6 @@
             </div>
 
             <div class="fieldWrapper">
-                {{ form.descripcion_cotizacion.errors }}
-                <label for="{{ form.descripcion_cotizacion.id_for_label }}">Descripcion de Cotizacion: </label>
-                {{ form.descripcion_cotizacion }}
-            </div>
-
-            <div class="fieldWrapper">
                 {{ form.periodoregular.errors }}
                 <label for="{{ form.periodoregular.id_for_label }}">Periodo Regular: </label>
                 {{ form.periodoregular }}
@@ -45,7 +39,7 @@
             <div class="fieldWrapper">
                 {{ form.preguntaperiodoadicional.errors }}
                 <label  for="{{ form.preguntaperiodoadicional.id_for_label }}">
-                    Quiere PAAR:  <input type="checkbox" onclick="myFunction()" value="{{ form.preguntaperiodoadicional.value }}"> 
+                    Periodo Adicional al Regular:  <input type="checkbox" onclick="myFunction()" value="{{ form.preguntaperiodoadicional.value }}"> 
                 </label>
                     
             </div>

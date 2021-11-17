@@ -77,6 +77,9 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
+        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        #ctx['']
         return ctx
         
 class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):

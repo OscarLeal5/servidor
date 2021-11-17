@@ -66,7 +66,7 @@ class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
         return super(Agregar_Cotizacion, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('detalle_cotizacion', kwargs={'pk':self.object.id,'cliente':self.object.cotizacion.cliente.id})
+        return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cliente.pk,'pk':self.object.pk})
 
 class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
     model = Cotizacion
@@ -221,7 +221,7 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
 
 # --------- DESCARGA PDF ----------------------------
 
-def cotizacion_pdf(request, cliente_id,cotizacion_id):
+def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
     cliente = Cliente.objects.get(pk=cliente_id)
     cotizacion = Cotizacion.objects.get(pk=cotizacion_id,cliente=cliente_id)
@@ -550,9 +550,13 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id):
         pterminos7 = Paragraph("Para proceder con el mantenimiento preventivo, es necesario cubrir la anualidad de la póliza al 100% el primer día de la primera visita programada.",styleN,bulletText="-")
         pterminos8 = Paragraph("Los precios indicados son ofrecidos por el Total de la Propuesta aquí citado, cualquier cambio de condiciones o equipo seleccionado debe ser citado de nuevo.",styleN,bulletText="-")
 
+
+        info = InformacionPersonal.objects.get(user=usuario)
+        nombrecontitulo = str(info.titulo)+" "+str(info.nombre)+" "+str(info.apellido)
+
         pfin = Paragraph("Fin del documento",styleNC)
         pregards = Paragraph("Regards",styleNC)
-        pdanieljara = Paragraph("Ing. Daniel Jara Osuna",styleNC)
+        pdanieljara = Paragraph(nombrecontitulo,styleNC)
         pdirector = Paragraph("Director General",styleNC)
 
         Story.append(p0)

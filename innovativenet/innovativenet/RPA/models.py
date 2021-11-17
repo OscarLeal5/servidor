@@ -6,6 +6,14 @@ from django.db.models import Sum
 
 from django.db.models.fields import NullBooleanField
 
+class InformacionPersonal(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    titulo = models.CharField("Titulo Ej: Lic., Ing.",max_length=3, blank=True)
+    nombre = models.CharField("Nombre",max_length=20, blank=True)
+    apellido = models.CharField("Apellido",max_length=20, blank=True)
+    
+
+
 class Precio(models.Model):
     encargado = models.CharField(max_length=50, verbose_name='Encargado del trabajo',blank=True, null=True)
     precio = models.FloatField("Precio por hora",blank=True, null=True)

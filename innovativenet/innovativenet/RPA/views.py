@@ -555,7 +555,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
 
         info = InformacionPersonal.objects.get(user=usuario)
-        nombrecontitulo = str(info.titulo)+" "+str(info.nombre)+" "+str(info.apellido)
+        nombrecontitulo = str(info.titulo)+"."+" "+str(info.nombre)+" "+str(info.apellido)
 
         pfin = Paragraph("Fin del documento",styleNC)
         pregards = Paragraph("Regards",styleNC)

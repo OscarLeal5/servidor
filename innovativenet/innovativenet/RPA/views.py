@@ -66,7 +66,7 @@ class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
         return super(Agregar_Cotizacion, self).form_valid(form)
     
     def get_success_url(self):
-        return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cliente.pk,'pk':self.object.pk})
+        return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cliente.pk, 'pk':self.object.pk})
 
 class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
     model = Cotizacion
@@ -77,6 +77,9 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         # del diccionario de Key Word ARGumentS obtiene el valor de object
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
+        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        #ctx['']
         return ctx
         
 class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):

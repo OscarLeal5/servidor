@@ -397,12 +397,12 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p16 = Paragraph("Para aplicar el mantenimiento preventivo se entenderá que el sistema de detección de incendios debe estar en operación al 100%, si esto no se cumpliera así deberá realizarse primero el mantenimiento correctivo",styleN)
         
         #checar si lleva columna "plan"
-        listdisp = [["Dispositivo","Cantidad","Plan","Dispositivos en periodicidad adcional"]]
+        listdisp = [["Dispositivo","Cantidad",Paragraph("Visitas por año"),Paragraph("Visitas adicionales por año"),Paragraph("Dispositivos en periodicidad adcional")]]
         mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id,cotizacion=cotizacion_id)
         for mantenimiento in mantenimientos:
             if mantenimiento.periodisidadadicional != None or mantenimiento.periodisidadadicional != 0:
                 if mantenimiento.dispositivo is not None:
-                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos," ",mantenimiento.cantidaddispositivosextras]
+                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
                 if mantenimiento.dispositivo is not None:

@@ -8,6 +8,7 @@ from django.db.models.fields import NullBooleanField
 
 class InformacionPersonal(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    puesto =  models.CharField("Puesto del usuario dentro de la empresa",max_length=20, blank=True)
     titulo = models.CharField("Titulo Ej: Lic., Ing.",max_length=3, blank=True)
     nombre = models.CharField("Nombre",max_length=20, blank=True)
     apellido = models.CharField("Apellido",max_length=20, blank=True)

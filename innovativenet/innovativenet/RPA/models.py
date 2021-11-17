@@ -168,7 +168,7 @@ class Mantenimiento(models.Model):
                         super(Mantenimiento, self).save(*args, **kwargs)
                         return
                     
-                #Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
+                # Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
                 # y tambien con que sea distinto al titulo de Cambiar Herramientas
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio.objects.get(pk=13):
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
@@ -179,6 +179,39 @@ class Mantenimiento(models.Model):
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
                     self.dispositivo = titulo.dispositivo
+                    # Se calculan las horas de actividad regular multiplicando el timepo de ejecucion del servicio con la cantidad de dispositivos regulares
+                    self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
+                    # Se obtiene el costo regular multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
+                    self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
+                    # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
+                    self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # dispositivos adicionales registrados por las periodicidades adicionales registradas
+                    self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
+                    # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
+                    self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
+                    # Calcular el costo total sumando los valores del costo regular y costo adicional
+                    self.costototal = self.costomantenimientoregular + self.costomantenimientoadicional
+                    # Se regresan los valores a Null para que sigan los valores originales de la base de datos
+                    if self.periodisidadadicional == 0:
+                        self.cantidaddispositivosextras = None
+                        self.periodisidadadicional = None
+                    # Se manda llamar la funcion superior de save del modelo, es decir es el save original del modelo.
+                    super(Mantenimiento, self).save(*args, **kwargs)
+                    # Se manda llamar la funcion total_cambio
+                    Mantenimiento.total_cambio(self)
+                    return
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio.objects.get(pk=13) and self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
+                    # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
+                    if self.periodisidadadicional is None:
+                        self.cantidaddispositivosextras = 0
+                        self.periodisidadadicional = 0
+                    # Se asigna las variables con las de la base de datos Nombre_Servicio
+                    self.encargadoTrabajo1 = titulo.encargado
+                    self.tiempoejecucion = titulo.tiempodeejecucion
+                    self.dispositivo = titulo.dispositivo
+                    self.cantidaddedispositivos = self.periodisidadactividades
+                    self.cantidaddispositivosextras = self.periodisidadadicional
                     # Se calculan las horas de actividad regular multiplicando el timepo de ejecucion del servicio con la cantidad de dispositivos regulares
                     self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
                     # Se obtiene el costo regular multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento

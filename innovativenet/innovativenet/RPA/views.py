@@ -384,7 +384,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p4 = Paragraph(texto_asunto, styleH2)
         p5 = Paragraph("""<u>"""+descripcion_cotizacion+"""</u>""", styleCB)
         p6 = Paragraph("Estimados señores, ", styleN)
-        p7 = Paragraph("Según su solicitud, nos complace presentar la propuesta de mantenimiento, diagnóstico del sistema detección de incendios. en el documento, se especifican los requisitos generales para "+lugar_de_mantenimiento+" de "+nombre, styleN)
+        p7 = Paragraph("Según su solicitud, nos complace presentar la propuesta de mantenimiento del sistema detección de incendios. en el documento, se especifican los requisitos generales para "+nombre+" ubicada en la ciudad de "+lugar_de_mantenimiento, styleN)
         pblank = Paragraph("""<para> <br/> </para>""")
         p8 = Paragraph("Índice de propuesta:, ", styleN)
         p9 = Paragraph("1.0 Fondo", styleN)
@@ -400,9 +400,12 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         listdisp = [["Dispositivo","Cantidad",Paragraph("Visitas por año"),Paragraph("Visitas adicionales por año"),Paragraph("Dispositivos en periodicidad adcional")]]
         mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id,cotizacion=cotizacion_id)
         for mantenimiento in mantenimientos:
-            if mantenimiento.periodisidadadicional != None or mantenimiento.periodisidadadicional != 0:
+            if mantenimiento.periodisidadadicional is not None or mantenimiento.periodisidadadicional != 0:
                 if mantenimiento.dispositivo is not None:
-                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
+                    if mantenimiento.periodisidadadicional is None:
+                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
+                    else:    
+                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
                 if mantenimiento.dispositivo is not None:
@@ -430,7 +433,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
             
         p17 = Paragraph("Una politica de mantenimiento preventivo se considera valida para "+str(listadispositivos),styleN)
-        p18 = Paragraph("Vigencia **"+actyear+"-"+sigyear+"**",styleB)
+        p18 = Paragraph("Periodo de cobertura "+actyear+"-"+sigyear,styleB)
         p19 = Paragraph("En la siguiente tabla se muestran las actividades que se consideran.",styleB)
         p20 = Paragraph("2.0 Alcance de la descripción del trabajo",styleHB)
         palcances1 = Paragraph("Cada actividad de servicio de 1 año",styleNR)
@@ -487,12 +490,16 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
                             ,Paragraph("Tiempo de ejecucion")]]
         for mantenimiento in mantenimientos:
             if str(mantenimiento.titulonombre) != "Servicio de soporte técnico -Horas de servicios generales adicionales":
-                data_mantenimientos = [Paragraph(str(mantenimiento.titulonombre)),mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
+                if mantenimiento.periodisidadadicional is None:
+                    data_mantenimientos = [Paragraph(str(mantenimiento.titulonombre)),mantenimiento.periodisidadactividades,0,mantenimiento.tiempoejecucion]
+                else:
+                    data_mantenimientos = [Paragraph(str(mantenimiento.titulonombre)),mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
+
                 td_mantenimientos.append(data_mantenimientos)
         table_man = Table(td_mantenimientos,colWidths=[3*inch,1*inch,1*inch , 1*inch])
         table_man.setStyle(ts)
 
-        td_total = [["Total de HRS de servicio de soporte técnico de poliza","HRS",suma_horas]]
+        td_total = [["Total de horas de servicio de soporte técnico incluidas en esta poliza","Horas",suma_horas]]
         table_tot = Table(td_total)
         ts_tot = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,-1),colors.yellow)])
@@ -539,17 +546,17 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
 
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
-        p24 = Paragraph("Mmto.....................................................${}".format(preciofinal),styleNY)
+        p24 = Paragraph("Poliza de mantenimiento "+actyear+"-"+sigyear+".............................${}".format(preciofinal),styleNY)
         p25 = Paragraph(preciofinal1+" USD + IVA",styleNY)
         p26 = Paragraph("**Incluye maquinaria de elevacion**",styleCB)
 
         ptitulotermino = Paragraph("4.0 Términos y condiciones",styleHB)
         pterminos1 = Paragraph("Los precios cotizados se expresan en dólares americanos.",styleN,bulletText="-")
         pterminos2 = Paragraph("El IVA del 16% no está incluido.",styleN,bulletText="-")
-        pterminos3 = Paragraph("El tipo de cambio será el de Santander a la venta en la ventanilla vigente el día de la operación de pago efectivo. LOS PAGOS NO SE ACEPTAN UTILIZANDO EL TIPO DE CAMBIO DEL DIARIO OFICIAL DE LA FEDERACIÓN.",styleN,bulletText="-")
+        pterminos3 = Paragraph("El tipo de cambio será el de Banco BBVA a la venta en la ventanilla vigente el día de la operación de pago efectivo. LOS PAGOS NO SE ACEPTAN UTILIZANDO EL TIPO DE CAMBIO DEL DIARIO OFICIAL DE LA FEDERACIÓN.",styleN,bulletText="-")
         pterminos4 = Paragraph("Válido de la oferta: 30 días naturales, posteriormente los precios están sujetos a cambios sin previo aviso.",styleN,bulletText="-")
         pterminos5 = Paragraph("El proceso comienza confirmando su pago total o anticipo según sea el caso y su colocación del pedido de compra.",styleN,bulletText="-")
-        pterminos6 = Paragraph("Para proceder con el mantenimiento correctivo, es necesario cubrir la póliza anual al 100% en el primer día de atención.",styleN,bulletText="-")
+        #pterminos6 = Paragraph("Para proceder con el mantenimiento correctivo, es necesario cubrir la póliza anual al 100% en el primer día de atención.",styleN,bulletText="-")
         pterminos7 = Paragraph("Para proceder con el mantenimiento preventivo, es necesario cubrir la anualidad de la póliza al 100% el primer día de la primera visita programada.",styleN,bulletText="-")
         pterminos8 = Paragraph("Los precios indicados son ofrecidos por el Total de la Propuesta aquí citado, cualquier cambio de condiciones o equipo seleccionado debe ser citado de nuevo.",styleN,bulletText="-")
 
@@ -696,7 +703,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         Story.append(pterminos3)
         Story.append(pterminos4)
         Story.append(pterminos5)
-        Story.append(pterminos6)
+        #Story.append(pterminos6)
         Story.append(pterminos7)
         Story.append(pterminos8)
         Story.append(pblank)

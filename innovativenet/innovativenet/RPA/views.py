@@ -321,6 +321,14 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
                               fontName="Helvetica-bold",
                               backColor = colors.yellow,
                               ))
+    styles.add(ParagraphStyle(name='Normal_Center',
+                            parent=styles['Normal'],
+                            wordWrap='CJK',
+                            alignment=TA_CENTER,
+                            fontSize=12,
+                            textColor=colors.black,
+                            fontName="Helvetica-bold",
+                            ))
 
 
     def myFirstPage(canvas, doc):
@@ -372,7 +380,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         styleNR = styles[("Normal_Red")]
         styleNY = styles[("Normal_Ye")]
         styleNRight = styles[("Normal_Right")]
-
+        styleNBC = styles[("Normal_Center")]
         texto_fecha = ("Tijuana, B.C. a " + dateStr)
         texto_encargado = ("Attn. " + encargado)
         texto_asunto = ("Asunto:")
@@ -436,7 +444,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p18 = Paragraph("Periodo de cobertura "+actyear+"-"+sigyear,styleB)
         p19 = Paragraph("En la siguiente tabla se muestran las actividades que se consideran.",styleB)
         p20 = Paragraph("2.0 Alcance de la descripción del trabajo",styleHB)
-        palcances1 = Paragraph("Cada actividad de servicio de 1 año",styleNR)
+        palcances1 = Paragraph("Actividades a realizar en cada evento de servicio en el periodo de un año",styleNR)
         palcances2 = Paragraph("Limpieza de dispositivos 12-20 pies de altura.",styleN,bulletText="•")
         palcances3 = Paragraph("Limpieza de Panel (Pantallas lcd, conectores, terminales de cableado, limpieza,sellos silicón, limpiezageneral del Panel en sus partes de funcionalidad revisión de conectividad a panel o y actividad en lazo)",styleN,bulletText="•")
         palcances4 = Paragraph("Limpieza del sistema de gestión de energía exterior (filtros de aire, CSI· C., sellos de silicona de gabinete, conectores de conducto de ajuste, fuente de alimentación, baterías, cables de alimentación y conectores).",styleN,bulletText="•")
@@ -447,7 +455,10 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
         palcances9 = Paragraph("Monitoreo de revisiones de los puntos anteriores.",styleN,bulletText="•")
         palcances10 = Paragraph("Servicio profesional para aplicar los conocimientos de ingeniería especializada en Detección de incendios",styleN,bulletText="•")
-        palcances11= Paragraph("De forma programada, una vez al año el equipo mencionado anteriormente se realizará el mmtto Preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
+        if cotizacion.periodoregular == 1:
+            palcances11= Paragraph("De forma programada, "+cotizacion.periodoregular+" vez al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
+        else:
+            palcances11= Paragraph("De forma programada, "+cotizacion.periodoregular+" veces al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
         palcances12= Paragraph("El alcance es sólo para el sistema de detección de incendios, Panel y equipos instalados previamente en sitio mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
         palcances13= Paragraph("Una vez completado el mantenimiento, el informe se entrega con la información resultante, el formato que especifica el estado actual de cada equipo.",styleN,bulletText="•")
         palcances14= Paragraph("El informe hará la recomendación de corrección, reparación o sustitución de cualquiera de los equipos.",styleN,bulletText="•")
@@ -466,7 +477,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         suma_horas_palabra = num2words(suma_horas,lang='es')
         
         ppolitica4 = Paragraph(str(suma_horas)+" ("+suma_horas_palabra+") horas de servicio técnico incluyen por un período de 12 meses, Si el cliente hace uso de las "+str(suma_horas)+" hrs de servicio, deberá renovarse la Póliza en una nueva cotización",styleB,bulletText="•")
-        ppolitica5 = Paragraph("El alcance es sólo para el sistema de detección de incendios, hardware de DCI mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
+        ppolitica5 = Paragraph("El alcance es sólo para el sistema de detección de incendios, hardware de Deteccion Contra Incendios mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
         ppolitica6 = Paragraph("Para la atención de:",styleN,bulletText="•")
         ppolitica7 = Paragraph("Fallos y diagnóstico",styleN,bulletText="-")
         ppolitica8 = Paragraph("Ajustes",styleN,bulletText="-")
@@ -532,7 +543,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             td_precioadicional.append(data_precioadicional)
             table_preadicional = Table(td_precioadicional)
             table_preadicional.setStyle(ts_pre)
-            ppreciotextoadicional = Paragraph(preciofinalincadicional1+" USD + IVA",styleNRight)
+            ppreciotextoadicional = Paragraph(preciofinalincadicional1+" USD + IVA",styleNBC)
             p22adicional = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual incluyendo periodicidad adicional",styleB)
             p23adicional = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo incluyendo periodicidad adicional",styleHBC)
             p24adicional = Paragraph("Mmto.....................................................${}".format(preciofinalincadicional),styleNY)
@@ -626,7 +637,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         Story.append(palcances8)
         Story.append(pblank)
         Story.append(pblank)
-        Story.append(palcances1)
+        # Story.append(palcances1)
         Story.append(pblank)
         Story.append(palcances9)
         Story.append(palcances10)

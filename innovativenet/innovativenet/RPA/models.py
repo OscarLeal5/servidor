@@ -129,7 +129,7 @@ class Mantenimiento(models.Model):
                             self.cantidaddispositivosextras = 0
                             self.costomantenimientoadicional = 0
                             # Realiza la suma de la cantidad de dispositivos regulares de todos los servicios
-                            totaldispositivosregular = todoslosservicios.aggregate(Sum('cantidaddedispositivos'))
+                            totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(Sum('cantidaddedispositivos'))
                             totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
                             # Se igualan las variables a los valores dentro de Nombre_Servicio
                             self.encargadoTrabajo1 = titulo.encargado
@@ -149,10 +149,11 @@ class Mantenimiento(models.Model):
                             if self.periodisidadadicional is None or 0:    
                                 self.cantidaddispositivosextras = None
                             return super(Mantenimiento, self).save(*args, **kwargs)
+
                     else:
                         # Se igualan variables a cero para que se puedan hacer calculos numericos sin problema
                         totaldispositivosregular = 0
-                        totaldispositivosregular = 0
+                        totaldispositivosadicional = 0
                         # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
                         todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
                         # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
@@ -178,8 +179,8 @@ class Mantenimiento(models.Model):
                         self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
-                        super(Mantenimiento, self).save(*args, **kwargs)
-                        return
+                        print(totaldispositivosregular)
+                        return super(Mantenimiento, self).save(*args, **kwargs)
                     
                 # Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
                 # y tambien con que sea distinto al titulo de Cambiar Herramientas
@@ -192,6 +193,9 @@ class Mantenimiento(models.Model):
                     self.encargadoTrabajo1 = titulo.encargado
                     self.tiempoejecucion = titulo.tiempodeejecucion
                     self.dispositivo = titulo.dispositivo
+                    if self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
+                        self.cantidaddedispositivos = self.periodisidadactividades
+                        self.cantidaddispositivosextras = self.periodisidadadicional
                     # Se calculan las horas de actividad regular multiplicando el timepo de ejecucion del servicio con la cantidad de dispositivos regulares
                     self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
                     # Se obtiene el costo regular multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -214,7 +218,9 @@ class Mantenimiento(models.Model):
                     # Se manda llamar la funcion total_cambio
                     Mantenimiento.total_cambio(self)
                     return
+
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio.objects.get(pk=13) and self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
+                    print("entro al if de mantenimientos de ingeniero")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
                     if self.periodisidadadicional is None:
                         self.cantidaddispositivosextras = 0
@@ -247,7 +253,6 @@ class Mantenimiento(models.Model):
                     # Se manda llamar la funcion total_cambio
                     Mantenimiento.total_cambio(self)
                     return
-
 
 # Funcion para calcular el total de dispositivos cada que se actualiza un mantenimiento
     def total_cambio(self):

@@ -457,7 +457,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         if cotizacion.periodoregular == 1:
             palcances11= Paragraph("De forma programada, "+str(cotizacion.periodoregular)+" vez al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
         else:
-            palcances11= Paragraph("De forma programada, "+cotizacion.periodoregular+" veces al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
+            palcances11= Paragraph("De forma programada, "+str(cotizacion.periodoregular)+" veces al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
         palcances12= Paragraph("El alcance es sólo para el sistema de detección de incendios, Panel y equipos instalados previamente en sitio mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
         palcances13= Paragraph("Una vez completado el mantenimiento, el informe se entrega con la información resultante, el formato que especifica el estado actual de cada equipo.",styleN,bulletText="•")
         palcances14= Paragraph("El informe hará la recomendación de corrección, reparación o sustitución de cualquiera de los equipos.",styleN,bulletText="•")
@@ -570,7 +570,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
         table_pre = Table(td_precio)
         table_pre.setStyle(ts_pre)
-        ppreciotexto = Paragraph(preciofinal1+" USD + IVA",styleNRight)
+        ppreciotexto = Paragraph(preciofinal1+" USD + IVA",styleNBC)
         p21 = Paragraph("3.0 Resumen de la propuesta económica",styleHB)
         p22 = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual",styleB)
 
@@ -693,6 +693,8 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
 
         Story.append(PageBreak())
+        Story.append(Indenter("-1cm"))
+        Story.append(Indenter("-1cm"))
 
         #Sexta pagina
         Story.append(p21)

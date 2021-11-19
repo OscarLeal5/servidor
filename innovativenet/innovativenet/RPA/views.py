@@ -1,5 +1,5 @@
 from django.utils.translation import templatize
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table,TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table, TableStyle, Indenter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.rl_config import defaultPageSize
@@ -404,7 +404,6 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p15 = Paragraph("1.1 Politica de mantenimiento preventivo",styleHB)
         p16 = Paragraph("Para aplicar el mantenimiento preventivo se entenderá que el sistema de detección de incendios debe estar en operación al 100%, si esto no se cumpliera así deberá realizarse primero el mantenimiento correctivo",styleN)
         
-        #checar si lleva columna "plan"
         listdisp = [["Dispositivo","Cantidad",Paragraph("Visitas por año"),Paragraph("Visitas adicionales por año"),Paragraph("Dispositivos en periodicidad adcional")]]
         mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id,cotizacion=cotizacion_id)
         for mantenimiento in mantenimientos:
@@ -456,7 +455,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         palcances9 = Paragraph("Monitoreo de revisiones de los puntos anteriores.",styleN,bulletText="•")
         palcances10 = Paragraph("Servicio profesional para aplicar los conocimientos de ingeniería especializada en Detección de incendios",styleN,bulletText="•")
         if cotizacion.periodoregular == 1:
-            palcances11= Paragraph("De forma programada, "+cotizacion.periodoregular+" vez al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
+            palcances11= Paragraph("De forma programada, "+str(cotizacion.periodoregular)+" vez al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
         else:
             palcances11= Paragraph("De forma programada, "+cotizacion.periodoregular+" veces al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
         palcances12= Paragraph("El alcance es sólo para el sistema de detección de incendios, Panel y equipos instalados previamente en sitio mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
@@ -477,17 +476,36 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         suma_horas_palabra = num2words(suma_horas,lang='es')
         
         ppolitica4 = Paragraph(str(suma_horas)+" ("+suma_horas_palabra+") horas de servicio técnico incluyen por un período de 12 meses, Si el cliente hace uso de las "+str(suma_horas)+" hrs de servicio, deberá renovarse la Póliza en una nueva cotización",styleB,bulletText="•")
-        ppolitica5 = Paragraph("El alcance es sólo para el sistema de detección de incendios, hardware de Deteccion Contra Incendios mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
-        ppolitica6 = Paragraph("Para la atención de:",styleN,bulletText="•")
-        ppolitica7 = Paragraph("Fallos y diagnóstico",styleN,bulletText="-")
-        ppolitica8 = Paragraph("Ajustes",styleN,bulletText="-")
-        ppolitica9 = Paragraph("Actualizaciones",styleN,bulletText="-")
-        ppolitica10 = Paragraph("Panel, configuraciones de equipo de detección",styleN,bulletText="-")
-        ppolitica11 = Paragraph("Soporte técnico para problemas con el Panel",styleN,bulletText="-")
-        ppolitica12 = Paragraph("Soporte técnico para problemas con los dispositivos",styleN,bulletText="-")
-        ppolitica13 = Paragraph("Tarjetas loops, panel, estrobos, sensores fotoeléctricos, fuentes de poder, módulos de control. Monitores de flujo, resistencias de fin de línea.",styleN,bulletText="-")
-        ppolitica14 = Paragraph("Emergencias del sistemas (1 hora)",styleN,bulletText="-")
-        ppolitica15 = Paragraph("Si se detecta un dispositivo dañado durante el diagnóstico, se notificará en el relleno de informe para su posterior mmtto correctivo. ",styleN,bulletText="•")
+        ppolitica5 = Paragraph("El alcance es sólo para el sistema de detección de incendios, hardware de Deteccion Contra Incendios mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="1.")
+        ppolitica6 = Paragraph("Para la atención de:",styleN,bulletText="2.")
+        ppolitica7 = Paragraph("Fallos y diagnóstico",styleN,bulletText="a.")
+        ppolitica8 = Paragraph("Ajustes",styleN,bulletText="b.")
+        ppolitica9 = Paragraph("Actualizaciones",styleN,bulletText="c.")
+        ppolitica10 = Paragraph("Panel, configuraciones de equipo de detección",styleN,bulletText="d.")
+        ppolitica11 = Paragraph("Soporte técnico para problemas con el Panel",styleN,bulletText="e.")
+        listadispositivospol = ''
+        lastdisppol = listdisp[-1]
+
+        for mantenimiento in mantenimientos:
+            if len(listdisp) == 1:
+                if mantenimiento.dispositivo is not None:
+                    listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+'.'
+            
+            elif mantenimiento.dispositivo != lastdisppol:
+                if mantenimiento.dispositivo is not None:
+                    listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+","
+                
+            else:
+                if mantenimiento.dispositivo is not None:
+                    listadispositivospol = listadispositivos+" "+str(mantenimiento.dispositivo)+","
+                    listadispositivospol = listadispositivospol[:-1]
+                    listadispositivospol = listadispositivospol+"."
+
+
+        ppolitica12 = Paragraph("Soporte técnico para problemas con los dispositivos: "+listadispositivospol,styleN,bulletText="f.")
+        #ppolitica13 = Paragraph("Tarjetas loops, panel, estrobos, sensores fotoeléctricos, fuentes de poder, módulos de control. Monitores de flujo, resistencias de fin de línea.",styleN,bulletText="-")
+        ppolitica14 = Paragraph("Emergencias del sistemas (1 hora)",styleN,bulletText="g.")
+        ppolitica15 = Paragraph("Si se detecta un dispositivo dañado durante el diagnóstico, se notificará en el relleno de informe para su posterior mmtto correctivo. ",styleN,bulletText="h.")
         ppolitica16 = Paragraph("""<u>Sistema base web para mejorar sus servicios y registros de mantenimiento</u>""",styleN,bulletText="•")
 
 
@@ -523,17 +541,18 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             preciofinalincadicional = preciofinalincadicional + mantenimiento.costomantenimientoregular + mantenimiento.costomantenimientoadicional
         preciofinal = float(round(preciofinal))
         preciofinal1 = num2words(preciofinal, to="currency", lang='es', currency='USD').upper()
+        preciofinal = "${:,.2f}".format(preciofinal)
         preciofinalincadicional = float(round(preciofinalincadicional))
         preciofinalincadicional1 = num2words(preciofinalincadicional, to="currency", lang='es', currency='USD').upper()
-        
+        preciofinalincadicional = "${:,.2f}".format(preciofinalincadicional)
         
         ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,0),colors.lightsteelblue)])
-        td_precio = [["Description","QTY","Unit","Amount"]]
-        td_precioadicional = [["Description","QTY","Unit","Amount"]]
+        td_precio = [["Descripcion","Cantidad","Unidad","Costo"]]
+        td_precioadicional = [["Descripcion","Cantidad","Unidad","Costo"]]
 
-        data_precio = [Paragraph("Cuota anual del contrato de  mantenimiento"), "1","Lot","${}".format(preciofinal)]
-        data_precioadicional = [Paragraph("Cuota anual del contrato de  mantenimiento incluyendo periodicidad adicional"), "1","Lot","${}".format(preciofinalincadicional)]
+        data_precio = [Paragraph("Cuota anual del contrato de  mantenimiento"), Paragraph("1",styleNC),Paragraph("Lot",styleNC),Paragraph("{}".format(preciofinal),styleNC)]
+        data_precioadicional = [Paragraph("Cuota anual del contrato de  mantenimiento incluyendo periodicidad adicional"), Paragraph("1",styleNC),Paragraph("Lot",styleNC),Paragraph("{}".format(preciofinalincadicional),styleNC)]
         td_precio.append(data_precio)
         listmanteniminientos = []
         for mantenimiento in mantenimientos:
@@ -546,7 +565,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             ppreciotextoadicional = Paragraph(preciofinalincadicional1+" USD + IVA",styleNBC)
             p22adicional = Paragraph(actyear+"-"+sigyear+" Mantenimiento operativo regular y soporte técnico anual incluyendo periodicidad adicional",styleB)
             p23adicional = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo incluyendo periodicidad adicional",styleHBC)
-            p24adicional = Paragraph("Mmto.....................................................${}".format(preciofinalincadicional),styleNY)
+            p24adicional = Paragraph("Poliza de mantenimiento "+actyear+"-"+sigyear+".............................{}".format(preciofinalincadicional),styleNY)
             p25adicional = Paragraph(preciofinalincadicional1+" USD + IVA",styleNY)
 
         table_pre = Table(td_precio)
@@ -557,7 +576,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
 
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
-        p24 = Paragraph("Poliza de mantenimiento "+actyear+"-"+sigyear+".............................${}".format(preciofinal),styleNY)
+        p24 = Paragraph("Poliza de mantenimiento "+actyear+"-"+sigyear+".............................{}".format(preciofinal),styleNY)
         p25 = Paragraph(preciofinal1+" USD + IVA",styleNY)
         p26 = Paragraph("**Incluye maquinaria de elevacion**",styleCB)
 
@@ -654,28 +673,29 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
         Story.append(ppolitica)
         Story.append(ppolitica1)
+        Story.append(ppolitica16)
         Story.append(ppolitica2)
         Story.append(ppolitica3)
         Story.append(ppolitica4)
+        Story.append(Indenter("1cm"))
         Story.append(ppolitica5)
         Story.append(ppolitica6)
+        Story.append(Indenter("1cm"))
         Story.append(ppolitica7)
         Story.append(ppolitica8)
         Story.append(ppolitica9)
         Story.append(ppolitica10)
         Story.append(ppolitica11)
         Story.append(ppolitica12)
-        Story.append(ppolitica13)
+        # Story.append(ppolitica13)
         Story.append(ppolitica14)
         Story.append(ppolitica15)
-        Story.append(ppolitica16)
 
 
         Story.append(PageBreak())
 
         #Sexta pagina
         Story.append(p21)
-        Story.append(pblank)
         Story.append(pblank)
         Story.append(pblank)
         Story.append(p22)

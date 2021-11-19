@@ -69,7 +69,7 @@ class Cotizacion(models.Model):
     def save(self, *args, **kwargs):
         # Se guarda la cotizacion primero
         super(Cotizacion, self).save(*args, **kwargs)
-        self.descripcion_cotizacion = "Propuesta de servicios profesionales para mantenimiento preventivo del sistema de alarmas de deteccion de incendios "+"("+str(self.periodoregular)+" eventos o visitas al año) "+str(self.cliente)
+        self.descripcion_cotizacion = "Propuesta de servicios profesionales para mantenimiento preventivo del sistema de alarmas de deteccion de incendios "+"("+str(self.periodoregular)+" visitas al año) "+str(self.cliente)
         # Se almacena en una variable la lista de todos los nombres de mantenimientos
         opciones = Nombre_servicio.objects.all()
         # Ciclo para agregar automaticamente los mantenimientos por medio de los nombres que estan almacenados en Nombre_Servicio

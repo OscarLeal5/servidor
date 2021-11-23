@@ -257,6 +257,13 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
                               fontSize=12,
                               textColor=colors.black,
                               ))
+    styles.add(ParagraphStyle(name='Normal_J',
+                              parent=styles['Normal'],
+                              wordWrap='LTR',
+                              alignment=TA_JUSTIFY,
+                              fontSize=12,
+                              textColor=colors.black,
+                              ))
     styles.add(ParagraphStyle(name='Normal_C',
                               parent=styles['Normal'],
                               wordWrap='LTR',
@@ -368,6 +375,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         Story = []
 
         styleN = styles["Normal"]
+        styleN = styles["Normal_J"]
         styleH4 = styles["Heading4"]
         styleH2 = styles["Heading2"]
 
@@ -392,7 +400,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p4 = Paragraph(texto_asunto, styleH2)
         p5 = Paragraph("""<u>"""+descripcion_cotizacion+"""</u>""", styleCB)
         p6 = Paragraph("Estimados señores, ", styleN)
-        p7 = Paragraph("Según su solicitud, nos complace presentar la propuesta de mantenimiento del sistema detección de incendios. en el documento, se especifican los requisitos generales para "+nombre+" ubicada en la ciudad de "+lugar_de_mantenimiento, styleN)
+        p7 = Paragraph("En relación con su solicitud nos complace presentar la propuesta de mantenimiento del sistema de detección de incendios, en este documento se presenta la propuesta económica basados en las características de su edificio y sus equipos actuales en la compañía "+nombre+" ubicada en la ciudad de "+lugar_de_mantenimiento, styleN)
         pblank = Paragraph("""<para> <br/> </para>""")
         p8 = Paragraph("Índice de propuesta:, ", styleN)
         p9 = Paragraph("1.0 Fondo", styleN)
@@ -400,10 +408,11 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p11 = Paragraph("3.0 Resumen de propuestas económicas", styleN)
         p12 = Paragraph("4.0 Términos y condiciones", styleN)
         p13 = Paragraph("1.0 Fondo", styleHB)
-        p14 = Paragraph("A continuación, se muestra una visión general de los equipos y condiciones actuales. Se presenta una lista de equipos instalados actualmente en el lugar.",styleN)
+        p14 = Paragraph("A continuación en la tabla de abajo se muestra una visión general de los equipos , así como las visitas de mantenimiento anual consideradas en un año calendario, la columna cantidad indica el numero de dispositivos considerados a mantener en esta oferta económica de cada tipo de manera regular en base ya sea a nuestras recomendación o a las políticas de seguridad establecidas por el cliente.",styleN)
+        p1extra = Paragraph("Regularmente las visitas adicionales por año son aquellas visitas que proponemos realizar adicional a las visitas regulares  ya sea porque están sujetas a condiciones de clima, polvos, suciedad o químicos fuera de lo normal, pueden dispositivos en áreas en construcciones remodelaciones o presencia de químicos, si la columna esta en “0” esto significa que no se esta considerando ninguna zona como anteriormente se explica.",styleN)
         p15 = Paragraph("1.1 Politica de mantenimiento preventivo",styleHB)
-        p16 = Paragraph("Para aplicar el mantenimiento preventivo se entenderá que el sistema de detección de incendios debe estar en operación al 100%, si esto no se cumpliera así deberá realizarse primero el mantenimiento correctivo",styleN)
-        
+        p16 = Paragraph("Para proceder y aplicar un mantenimiento preventivo se entiende que el sistema de detección de incendios debe estar en operación al 100% sin ninguna falla o problema, si este no cumple deberá de realizarse primero un mantenimiento correctivo bajo presupuesto adicional que no forma parte de este presupuesto.",styleN)
+        p2extra = Paragraph("El mantenimiento preventivo considera un compromiso de la empresa para la ejecución de una serie de acciones a el panel y dispositivos de manera calendarizada bajo una fecha establecida con la finalidad de mantener la operación del sistema al 100% funcional desde el inicio de la fecha de contrato hasta 365 días después de la firma del mismo.",styleN)
         listdisp = [["Dispositivo","Cantidad",Paragraph("Visitas por año"),Paragraph("Visitas adicionales por año"),Paragraph("Dispositivos en periodicidad adcional")]]
         mantenimientos = Mantenimiento.objects.filter(cliente = cliente_id,cotizacion=cotizacion_id)
         for mantenimiento in mantenimientos:
@@ -437,52 +446,58 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
                     listadispositivos = listadispositivos[:-1]
                     listadispositivos = listadispositivos+"."
 
-
-            
-        p17 = Paragraph("Una politica de mantenimiento preventivo se considera valida para "+str(listadispositivos),styleN)
+        titulo = Nombre_servicio.objects.get(pk=13)
+        totaldisp = Mantenimiento.objects.get(titulonombre = titulo)
+        p17 = Paragraph("Se considera dentro de los dispositivos a mantener el equipo que actualmente cuentan considerándose "+str(listadispositivos),styleN)
+        p3extra = Paragraph("Total de dispositivos: "+str(totaldisp.cantidaddedispositivos), styleN)
+        p4extra = Paragraph("La maquinaria de elevación es necesaria utilizarse en dispositivos mas de 15 pies de altura, este tipo de equipo tienen un costo asociado por su traslado al sitio y recolección, su uso por día y es necesario recargarse bajo una toma eléctrica, esta maquinaria de elevación no esta considerada en su costo, por lo que queda por responsabilidad del cliente solicitar una de ser necesaria para este trabajo de mantenimiento en las visitas que sean necesaria de una manera programada, así como las facilidades eléctricas para la recarga del equipo.",styleN)
         p18 = Paragraph("Periodo de cobertura "+actyear+"-"+sigyear,styleB)
         p19 = Paragraph("En la siguiente tabla se muestran las actividades que se consideran.",styleB)
         p20 = Paragraph("2.0 Alcance de la descripción del trabajo",styleHB)
-        palcances1 = Paragraph("Actividades a realizar en cada evento de servicio en el periodo de un año",styleNR)
-        palcances2 = Paragraph("Limpieza de dispositivos 12-20 pies de altura.",styleN,bulletText="•")
-        palcances3 = Paragraph("Limpieza de Panel (Pantallas lcd, conectores, terminales de cableado, limpieza,sellos silicón, limpiezageneral del Panel en sus partes de funcionalidad revisión de conectividad a panel o y actividad en lazo)",styleN,bulletText="•")
-        palcances4 = Paragraph("Limpieza del sistema de gestión de energía exterior (filtros de aire, CSI· C., sellos de silicona de gabinete, conectores de conducto de ajuste, fuente de alimentación, baterías, cables de alimentación y conectores).",styleN,bulletText="•")
-        palcances5 = Paragraph("Revisión de la comunicación de dispositivos con el PANEL",styleN,bulletText="•")
-        palcances6 = Paragraph("Comprobar el funcionamiento de las fuentes de alimentación",styleN,bulletText="•")
-        palcances7 = Paragraph("Verificar la prueba del lazo",styleN,bulletText="•")
-        palcances8 = Paragraph("De forma programada, cada 1er día laborable de cada mes se limpiará el equipo antes mencionado.",styleN,bulletText="•")
-
-        palcances9 = Paragraph("Monitoreo de revisiones de los puntos anteriores.",styleN,bulletText="•")
-        palcances10 = Paragraph("Servicio profesional para aplicar los conocimientos de ingeniería especializada en Detección de incendios",styleN,bulletText="•")
+        p5extra = Paragraph("Que se Incluye en esta póliza de mantenimiento del sistema de detección de fuego?: ",styleB)
         if cotizacion.periodoregular == 1:
-            palcances11= Paragraph("De forma programada, "+str(cotizacion.periodoregular)+" vez al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
+            palcances1= Paragraph(str(cotizacion.periodoregular)+" visita de actividades de mantenimiento al año.",styleN,bulletText="•")
         else:
-            palcances11= Paragraph("De forma programada, "+str(cotizacion.periodoregular)+" veces al año el equipo mencionado anteriormente se realizará el mantenimiento preventivo. En caso de fallos en el sistema se propondrá realizar el Mmtto Correctivo ",styleN,bulletText="•")
-        palcances12= Paragraph("El alcance es sólo para el sistema de detección de incendios, Panel y equipos instalados previamente en sitio mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="•")
-        palcances13= Paragraph("Una vez completado el mantenimiento, el informe se entrega con la información resultante, el formato que especifica el estado actual de cada equipo.",styleN,bulletText="•")
-        palcances14= Paragraph("El informe hará la recomendación de corrección, reparación o sustitución de cualquiera de los equipos.",styleN,bulletText="•")
-        palcances15= Paragraph("El pago del mantenimiento es anual, debe ser pagado antes de ser realizado.",styleN,bulletText="•")
-        palcances16= Paragraph("Incluye Maquinaria de elevacion.",styleN,bulletText="•")
+            palcances1= Paragraph(str(cotizacion.periodoregular)+" visitas de actividades de mantenimiento al año.",styleN,bulletText="•")
+        ppolitica16 = Paragraph("Disponibilidad de portal WEB personalizado para el seguimiento por personal asignado del cliente con todo el Equipo técnico de la empresa para visualización de las actividades de mantenimiento y reportes.",styleN,bulletText="•")
+        palcances2 = Paragraph("Poner el sistema en modo de prueba.",styleN,bulletText="•")
+        palcances3 = Paragraph("De manera calendarizada cada Visita  se ejecutara la limpieza de los sensores y módulos físicamente. Los dispositivos para limpiar dando mayor jerarquía  son los que determine el reporte de mantenimiento y sensibilidad que indique un nivel de suciedad mayor al 35% después se procede con el resto.",styleN,bulletText="•")
+        palcances4 = Paragraph("Limpieza de panel de alarmas ( pantalla LCD, conectores, terminales de cableado, limpieza, sellos silicón, revisión de conectividad a panel remoto y actividad en el Lazo SLC de dispositivos).",styleN,bulletText="•")
+        palcances5 = Paragraph("Reporte de sensibilidad el cual nos indica que sensor está sucio de sus elementos internos para proceder a limpiarlos.",styleN,bulletText="•")
+        palcances6 = Paragraph("Limpieza de estrobos-cornetas y palancas.",styleN,bulletText="•")
+        palcances7 = Paragraph("Prueba de verificación de leds del panel , iluminar todos los leds.",styleN,bulletText="•")
+        palcances8 = Paragraph("Prueba de verificación de energía primaria, remover energía de AC, verificar que el panel funcione con baterías, verificar que el panel entre en modo de problema, restablecer energía y dejar todo en orden en modo normal.",styleN,bulletText="•")
 
-        ppolitica = Paragraph("2.1 Política de apoyo técnico y diagnóstico",styleHB)
-        ppolitica1 = Paragraph("Teléfono móvil disponible para emergencias durante las horas contratadas.",styleN,bulletText="•")
-        ppolitica2 = Paragraph("Soporte técnico telefónico con un tiempo de respuesta de 4 horas.",styleN,bulletText="•")
-        ppolitica3 = Paragraph("Soporte técnico in situ 4 horas de tiempo de respuesta, 5 días a la semana (de lunes a viernes de 8:00am a 5:00pm).",styleN,bulletText="•")
+        palcances9 = Paragraph("Prueba de señales de problema en panel  funcionen apropiadamente",styleN,bulletText="•")
+        palcances10 = Paragraph("Verificación bimestral que la pantalla LCD del panel marque la hora apropiada.",styleN,bulletText="•")
+        p6extra = Paragraph("""<u>¿Que no se incluye?:</u>""",styleB)
+
         
+        palcances12= Paragraph("Equipos Refacciones.",styleN,bulletText="1.")
+        palcances13= Paragraph("Materiales como cables o tuberías.",styleN,bulletText="2.")
+        palcances14= Paragraph("Maquinaria de elevación.",styleN,bulletText="3.")
+        palcances15= Paragraph("Trabajos en días Festivos",styleN,bulletText="4.")
+        palcances16= Paragraph("Trabajos fuera del horario establecido.",styleN,bulletText="5.")
         suma_horas = 0
         for mantenimiento in mantenimientos:
             if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 suma_horas = mantenimiento.tiempoejecucion
         suma_horas_palabra = num2words(suma_horas,lang='es')
         
-        ppolitica4 = Paragraph(str(suma_horas)+" ("+suma_horas_palabra+") horas de servicio técnico incluyen por un período de 12 meses, Si el cliente hace uso de las "+str(suma_horas)+" hrs de servicio, deberá renovarse la Póliza en una nueva cotización",styleB,bulletText="•")
-        ppolitica5 = Paragraph("El alcance es sólo para el sistema de detección de incendios, hardware de Deteccion Contra Incendios mencionado en esta propuesta en la sección inicial fondo de este documento",styleN,bulletText="1.")
-        ppolitica6 = Paragraph("Para la atención de:",styleN,bulletText="2.")
-        ppolitica7 = Paragraph("Fallos y diagnóstico",styleN,bulletText="a.")
-        ppolitica8 = Paragraph("Ajustes",styleN,bulletText="b.")
-        ppolitica9 = Paragraph("Actualizaciones",styleN,bulletText="c.")
-        ppolitica10 = Paragraph("Panel, configuraciones de equipo de detección",styleN,bulletText="d.")
-        ppolitica11 = Paragraph("Soporte técnico para problemas con el Panel",styleN,bulletText="e.")
+
+        ppolitica = Paragraph("2.1 Política de apoyo técnico y diagnóstico",styleHB)
+        ppoliticaextra1=Paragraph("""<u>¿Que se Incluye en las horas de Servicios de soporte Técnico, pruebas y servicios de reparación consideradas en esta propuesta?:</u>""",styleB)
+        ppolitica1 = Paragraph("Servicio de soporte técnico para diagnostico o corrección por "+str(suma_horas)+" horas o 12 meses, lo que suceda primero.  ",styleN,bulletText="•")
+        ppolitica2 = Paragraph("Días regular para Soporte técnico de Lunes a sábado (horarios de 8.00am – 6:00pm)",styleN,bulletText="•")
+        ppolitica3 = Paragraph("Atención técnica y reparación de fallas en los paneles o en los dispositivos en su red.",styleN,bulletText="•")
+        ppolitica4 = Paragraph("Tiempo de respuesta de servicios normal: siguiente día hábil.",styleN,bulletText="•")
+        ppolitica5 = Paragraph("Prueba semestral de palancas manuales, inspección visual, activar el mecanismo y confirmar respuesta en la zona apropiada.",styleN,bulletText="•")
+        ppolitica6 = Paragraph("Prueba semestral de detectores de calor, inspección visual, conducir una función de prueba para verificar la respuesta en la zona apropiada.",styleN,bulletText="•")
+        ppolitica7 = Paragraph("Prueba anual de detectores de humo, conducir una función de prueba para verificar la respuesta en la zona apropiada.",styleN,bulletText="•")
+        ppolitica8 = Paragraph("Prueba semestral de todos los dispositivos de iniciación de alarmas, activar los dispositivos y verificar que los circuitos de aplicación de notificación apropiados estén funcionando correctamente (NAC) así como información de zona y mensajes correspondientes, abrir el cableado de campo de los dispositivos de iniciación y verificar que el mensaje de problema se indique en el panel.",styleN,bulletText="•")
+        ppolitica9 = Paragraph("Prueba anual de Notificación en cornetas-estrobos, colocar el panel en alarma, drill o modo de prueba y verificar que todos los notificadores estén trabajando apropiadamente.",styleN,bulletText="•")
+        ppolitica10 = Paragraph("Prueba de energía secundaria en los paneles principales y remotos, remover energía primaria de AC, medir corrientes en modo “stand by” y  alarmado y comparar con cálculo de baterías para verificar una capacidad de batería adecuada, probar a plena carga por 5 minutos, medir voltajes de baterías a plena carga, restablecer energía primaria de AC al final de la prueba, restablecer y cerrar panel al final de la prueba.",styleN,bulletText="•")
+        ppolitica11 = Paragraph("Mano de obra por remplazo de cualquier refacción como módulos, sensores, tarjetas, paneles, fuentes de poder, cables",styleN,bulletText="•")
         listadispositivospol = ''
         lastdisppol = listdisp[-1]
 
@@ -502,11 +517,10 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
                     listadispositivospol = listadispositivospol+"."
 
 
-        ppolitica12 = Paragraph("Soporte técnico para problemas con los dispositivos: "+listadispositivospol,styleN,bulletText="f.")
+        ppolitica12 = Paragraph("Tiempo de  Programación y configuración de Paneles  sobre los equipos dentro de la póliza de mantenimiento.",styleN,bulletText="•")
         #ppolitica13 = Paragraph("Tarjetas loops, panel, estrobos, sensores fotoeléctricos, fuentes de poder, módulos de control. Monitores de flujo, resistencias de fin de línea.",styleN,bulletText="-")
-        ppolitica14 = Paragraph("Emergencias del sistemas (1 hora)",styleN,bulletText="g.")
-        ppolitica15 = Paragraph("Si se detecta un dispositivo dañado durante el diagnóstico, se notificará en el relleno de informe para su posterior mmtto correctivo. ",styleN,bulletText="h.")
-        ppolitica16 = Paragraph("""<u>Sistema base web para mejorar sus servicios y registros de mantenimiento</u>""",styleN,bulletText="•")
+        ppolitica14 = Paragraph("Atención a Emergencias en caso de falla total del panel principal y que la operación del 50% o mas del sistema este comprometida con un tiempo de respuesta en sitio de 4 hora.",styleN,bulletText="•")
+        ppolitica16 = Paragraph("Los costos asociados de un dispositivo dañado será tomado en cuenta de la lista de precios que se proporciona en este documento en conjunto con el contrato de esta manera cuando un dispositivo se dañen la facturación de la refacción sea en base a este precio.",styleN)
 
 
 
@@ -578,7 +592,6 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p23 = Paragraph("Total de Propuesta Económica de Mantenimiento Preventivo",styleHBC)
         p24 = Paragraph("Poliza de mantenimiento "+actyear+"-"+sigyear+".............................{}".format(preciofinal),styleNY)
         p25 = Paragraph(preciofinal1+" USD + IVA",styleNY)
-        p26 = Paragraph("**Incluye maquinaria de elevacion**",styleCB)
 
         ptitulotermino = Paragraph("4.0 Términos y condiciones",styleHB)
         pterminos1 = Paragraph("Los precios cotizados se expresan en dólares americanos.",styleN,bulletText="-")
@@ -589,7 +602,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         #pterminos6 = Paragraph("Para proceder con el mantenimiento correctivo, es necesario cubrir la póliza anual al 100% en el primer día de atención.",styleN,bulletText="-")
         pterminos7 = Paragraph("Para proceder con el mantenimiento preventivo, es necesario cubrir la anualidad de la póliza al 100% el primer día de la primera visita programada.",styleN,bulletText="-")
         pterminos8 = Paragraph("Los precios indicados son ofrecidos por el Total de la Propuesta aquí citado, cualquier cambio de condiciones o equipo seleccionado debe ser citado de nuevo.",styleN,bulletText="-")
-
+        pterminos9 = Paragraph("Tiempo de entrega: se coordinar con el área de operaciones para asignar la fecha y hora de ejecución, esta fecha no debe de ser mayor a 7 días calendarios después de la recepción de pago por la póliza.",styleN,bulletText="-")
 
         info = InformacionPersonal.objects.get(user=usuario)
         nombrecontitulo = str(info.titulo)+"."+" "+str(info.nombre)+" "+str(info.apellido)
@@ -625,12 +638,21 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         Story.append(pblank)
         Story.append(pblank)
         Story.append(table_dis)
+        Story.append(pblank)
+        Story.append(p1extra)
         Story.append(PageBreak())
 
         #Tercera pagina
         Story.append(p15)
+        Story.append(pblank)
         Story.append(p16)
+        Story.append(pblank)
+        Story.append(p2extra)
         Story.append(p17)
+        Story.append(pblank)
+        Story.append(p3extra)
+        Story.append(pblank)
+        Story.append(p4extra)
         Story.append(PageBreak())
 
         #Cuarta pagina
@@ -645,8 +667,9 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         #Quinta pagina
         Story.append(p20)
         Story.append(pblank)
-        Story.append(palcances1)
+        Story.append(p5extra)
         Story.append(pblank)
+        Story.append(palcances1)
         Story.append(palcances2)
         Story.append(palcances3)
         Story.append(palcances4)
@@ -654,13 +677,11 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         Story.append(palcances6)
         Story.append(palcances7)
         Story.append(palcances8)
-        Story.append(pblank)
-        Story.append(pblank)
-        # Story.append(palcances1)
-        Story.append(pblank)
         Story.append(palcances9)
         Story.append(palcances10)
-        Story.append(palcances11)
+        Story.append(pblank)
+        Story.append(p6extra)
+        Story.append(pblank)
         Story.append(palcances12)
         Story.append(palcances13)
         Story.append(palcances14)
@@ -672,15 +693,15 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
 
         Story.append(ppolitica)
+        Story.append(ppoliticaextra1)
+        Story.append(pblank)
         Story.append(ppolitica1)
         Story.append(ppolitica16)
         Story.append(ppolitica2)
         Story.append(ppolitica3)
         Story.append(ppolitica4)
-        Story.append(Indenter("1cm"))
         Story.append(ppolitica5)
         Story.append(ppolitica6)
-        Story.append(Indenter("1cm"))
         Story.append(ppolitica7)
         Story.append(ppolitica8)
         Story.append(ppolitica9)
@@ -689,12 +710,9 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         Story.append(ppolitica12)
         # Story.append(ppolitica13)
         Story.append(ppolitica14)
-        Story.append(ppolitica15)
 
 
         Story.append(PageBreak())
-        Story.append(Indenter("-1cm"))
-        Story.append(Indenter("-1cm"))
 
         #Sexta pagina
         Story.append(p21)
@@ -723,9 +741,6 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             Story.append(p25adicional)
             Story.append(pblank)
             Story.append(pblank)
-        Story.append(p26)
-
-
 
         Story.append(PageBreak())
 
@@ -739,6 +754,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         #Story.append(pterminos6)
         Story.append(pterminos7)
         Story.append(pterminos8)
+        Story.append(pterminos9)
         Story.append(pblank)
         Story.append(pfin)
         Story.append(pblank)

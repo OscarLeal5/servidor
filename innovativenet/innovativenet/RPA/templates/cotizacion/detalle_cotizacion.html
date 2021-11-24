@@ -155,12 +155,50 @@
                             </td>
                         </tr>
                     {% endif %}
+            
                 {% empty %}
                     <tr>
                         <td style="text-align: center;"> NO SE ENCUENTRA NINGUN SERVICIO </td>
                     </tr>
                 
             {% endfor %}
+            {% for servicio in serviciosplus %}
+                {% if servicio.titulonombre.pk == 16 %}
+                        </tbody>
+                        </table>
+                        <table class="table">
+                            <thead>
+                                <tr style="text-align: center;">
+                                    <th></th>
+                                    <th></th>
+                                    <th>Horas</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                <tr class="table-secondary">
+                                    <td style="min-width: 120px;">
+                                
+                                        <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                            <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
+                                
+                                        <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                            <button type=button class="btn btn-outline-danger" style="margin:5px"> &#9747; </button></a>
+                                
+                                
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <a>
+                                            {{ servicio.tiempoejecucion }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>                
+                        </table>
+                    {% endif %}
+                {% endfor %}
         <!-- ---------------------- End Servicio List ---------------------------------- -->    
             </tbody>
         </table>

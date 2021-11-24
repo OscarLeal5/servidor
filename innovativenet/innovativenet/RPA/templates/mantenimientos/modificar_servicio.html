@@ -13,6 +13,22 @@
                         <div class="card-body">
                                 <form action="" method="POST">
                                         {% csrf_token %}
+                                        {% if servicio.titulonombre.pk == 16 %}
+                                                {{ form.tiempoejecucion.errors }} 
+                                                <div class="mb-3 mt-3">
+                                                        {{ form.tiempoejecucion.errors }}
+                                                        <label for="{{ form.tiempoejecucion.id_for_label }}"
+                                                                class="form-label">Horas de servicio generales:</label>
+                                                        {{ form.tiempoejecucion }}
+                                                </div>
+                                        </form>
+                                </div>
+        
+                        </div>
+                        <div class="col"></div>
+                </div>
+                
+                                        {% else %}
                                         <div class="mb-3 mt-3">
                                                 {{ form.periodisidadactividades.errors }}
                                                 <label for="{{ form.periodisidadactividades.id_for_label }}"
@@ -57,7 +73,7 @@
                 <div class="col"></div>
         </div>
         
-
+        {% endif %}
 
         <!-- <center>
                 <h1> Modificar {{servicio}} </h1>

@@ -79,6 +79,8 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
         ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        ctx['serviciosplus'] = Mantenimiento.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio.objects.get(pk=16))
+
         #ctx['']
         return ctx
         
@@ -123,7 +125,7 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
 class MttoUpdate(LoginRequiredMixin, UpdateView):
     model = Mantenimiento
     context_object_name = 'servicio'
-    fields = ['periodisidadactividades', 'periodisidadadicional','cantidaddedispositivos', 'cantidaddispositivosextras',]
+    fields = ['periodisidadactividades', 'periodisidadadicional','cantidaddedispositivos', 'cantidaddispositivosextras','tiempoejecucion']
     template_name = 'mantenimientos/modificar_servicio.html'
 
     def get_success_url(self):
@@ -447,7 +449,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
                     listadispositivos = listadispositivos+"."
 
         titulo = Nombre_servicio.objects.get(pk=13)
-        totaldisp = Mantenimiento.objects.get(titulonombre = titulo)
+        totaldisp = Mantenimiento.objects.get(titulonombre = titulo,cotizacion=cotizacion_id,cliente=cliente_id)
         p17 = Paragraph("Se considera dentro de los dispositivos a mantener el equipo que actualmente cuentan considerándose "+str(listadispositivos),styleN)
         p3extra = Paragraph("Total de dispositivos: "+str(totaldisp.cantidaddedispositivos), styleN)
         p4extra = Paragraph("La maquinaria de elevación es necesaria utilizarse en dispositivos mas de 15 pies de altura, este tipo de equipo tienen un costo asociado por su traslado al sitio y recolección, su uso por día y es necesario recargarse bajo una toma eléctrica, esta maquinaria de elevación no esta considerada en su costo, por lo que queda por responsabilidad del cliente solicitar una de ser necesaria para este trabajo de mantenimiento en las visitas que sean necesaria de una manera programada, así como las facilidades eléctricas para la recarga del equipo.",styleN)

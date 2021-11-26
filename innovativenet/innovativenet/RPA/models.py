@@ -112,6 +112,7 @@ class Mantenimiento(models.Model):
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
                 # 13 es el pk del titulo cambiar herramientas
                 if self.titulonombre == Nombre_servicio.objects.get(pk=13):
+                    todoslosservicios = 0
                     # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
                     todoslosservicios = Mantenimiento.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero

@@ -475,7 +475,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         p6extra = Paragraph("""<u>¿Que no se incluye?:</u>""",styleB)
 
         
-        palcances12= Paragraph("Equipos Refacciones.",styleN,bulletText="1.")
+        palcances12= Paragraph("Equipos y Refacciones.",styleN,bulletText="1.")
         palcances13= Paragraph("Materiales como cables o tuberías.",styleN,bulletText="2.")
         palcances14= Paragraph("Maquinaria de elevación.",styleN,bulletText="3.")
         palcances15= Paragraph("Trabajos en días Festivos",styleN,bulletText="4.")
@@ -522,7 +522,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         ppolitica12 = Paragraph("Tiempo de  Programación y configuración de Paneles  sobre los equipos dentro de la póliza de mantenimiento.",styleN,bulletText="•")
         #ppolitica13 = Paragraph("Tarjetas loops, panel, estrobos, sensores fotoeléctricos, fuentes de poder, módulos de control. Monitores de flujo, resistencias de fin de línea.",styleN,bulletText="-")
         ppolitica14 = Paragraph("Atención a Emergencias en caso de falla total del panel principal y que la operación del 50% o mas del sistema este comprometida con un tiempo de respuesta en sitio de 4 hora.",styleN,bulletText="•")
-        ppolitica16 = Paragraph("Los costos asociados de un dispositivo dañado será tomado en cuenta de la lista de precios que se proporciona en este documento en conjunto con el contrato de esta manera cuando un dispositivo se dañen la facturación de la refacción sea en base a este precio.",styleN)
+        ppolitica16 = Paragraph("Los costos asociados de un dispositivo dañado será tomado en cuenta de la lista de precios que se proporciona en este documento en conjunto con el contrato, de esta manera cuando un dispositivo se dañen la facturación de la refacción sea en base a este precio.",styleN)
 
 
 
@@ -650,6 +650,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         Story.append(p16)
         Story.append(pblank)
         Story.append(p2extra)
+        Story.append(pblank)
         Story.append(p17)
         Story.append(pblank)
         Story.append(p3extra)

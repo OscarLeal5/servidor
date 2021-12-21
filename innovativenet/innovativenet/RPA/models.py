@@ -54,7 +54,7 @@ class Cliente(models.Model):
         ordering = ['nombre']
 
 class Cotizacion(models.Model):
-    num_list = [(1,"1"),(2,"2"),(4,"4"),(6,"6")]
+    num_list = [(1,"1"),(2,"2"),(3,"3"),(4,"4"),(6,"6")]
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True, blank=True)
     titulo = models.CharField(verbose_name="Nombre Cotizacion", null=True, blank=True,max_length=200)
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length

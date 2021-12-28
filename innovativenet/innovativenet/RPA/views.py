@@ -54,7 +54,7 @@ class Home(LoginRequiredMixin, ListView):
         return context
 
 
-# ------ VIEWS COTIZACION ------ #
+# ------ VIEWS COTIZACION DETECCION FUEGO------ #
 
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
     model = Cotizacion
@@ -100,7 +100,99 @@ class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
 
-# ------ VIEWS SERVICIOS ------ #
+# ------ VIEWS COTIZACION CCTV------ #
+
+class Agregar_Cotizacion_CCTV(LoginRequiredMixin, CreateView):
+    model = Cotizacion_CCTV
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion','periodoregular','preguntaperiodoadicional','periodoadicional']
+    template_name = 'cotizacion_cctv/agregar_cotizacion_cctv.html'
+
+    def form_valid(self, form):
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        return super(Agregar_Cotizacion_CCTV, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_cctv', kwargs={'cliente':self.object.cliente.pk, 'pk':self.object.pk})
+
+class Detalle_Cotizacion_CCTV(LoginRequiredMixin, DetailView):
+    model = Cotizacion_CCTV
+    object = "cotizacion_cctv"
+    template_name = "cotizacion_cctv/detalle_cotizacion_cctv.html"
+    def get_context_data(self, **kwargs):
+        ctx = super(Detalle_Cotizacion_CCTV, self).get_context_data(**kwargs)
+        # del diccionario de Key Word ARGumentS obtiene el valor de object
+        cat = kwargs.get("object")
+        ctx['servicios'] = Mantenimiento_CCTV.objects.filter(cotizacion = cat)
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
+        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        ctx['serviciosplus'] = Mantenimiento_CCTV.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
+
+        #ctx['']
+        return ctx
+        
+class Modificar_Cotizacion_CCTV(LoginRequiredMixin, UpdateView):
+    model = Cotizacion_CCTV
+    object = "cotizacion"
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
+    template_name = 'cotizacion_cctv/modificar_cotizacion_cctv.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+class Eliminar_Cotizacion_CCTV(LoginRequiredMixin, DeleteView):
+    model = Cotizacion_CCTV
+    context_object_name = "cotizacion_cctv"
+    template_name = "cotizacion_cctv/eliminar_cotizacion_cctv.html"
+
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+# ------ VIEWS COTIZACION CA------ #
+
+class Agregar_Cotizacion_CA(LoginRequiredMixin, CreateView):
+    model = Cotizacion_CA
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion','periodoregular','preguntaperiodoadicional','periodoadicional']
+    template_name = 'cotizacion_ca/agregar_cotizacion_ca.html'
+
+    def form_valid(self, form):
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        return super(Agregar_Cotizacion_CA, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_ca', kwargs={'cliente':self.object.cliente.pk, 'pk':self.object.pk})
+
+class Detalle_Cotizacion_CA(LoginRequiredMixin, DetailView):
+    model = Cotizacion_CA
+    object = "cotizacion_ca"
+    template_name = "cotizacion_ca/detalle_cotizacion_ca.html"
+    def get_context_data(self, **kwargs):
+        ctx = super(Detalle_Cotizacion_CA, self).get_context_data(**kwargs)
+        # del diccionario de Key Word ARGumentS obtiene el valor de object
+        cat = kwargs.get("object")
+        ctx['servicios'] = Mantenimiento_CA.objects.filter(cotizacion = cat)
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
+        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        ctx['serviciosplus'] = Mantenimiento_CA.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CA.objects.get(pk=2))
+
+        #ctx['']
+        return ctx
+        
+class Modificar_Cotizacion_CA(LoginRequiredMixin, UpdateView):
+    model = Cotizacion_CA
+    object = "cotizacion_ca"
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
+    template_name = 'cotizacion_ca/modificar_cotizacion_ca.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+class Eliminar_Cotizacion_CA(LoginRequiredMixin, DeleteView):
+    model = Cotizacion_CA
+    context_object_name = "cotizacion_ca"
+    template_name = "cotizacion_ca/eliminar_cotizacion_ca.html"
+
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+# ------ VIEWS MANTENIMIENTOS DETECCION FUEGO ------ #
 
 class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
     # Manda a llamar el Modelo Mantenimiento
@@ -131,8 +223,6 @@ class MttoUpdate(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
-
-
 class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     model = Mantenimiento
     context_object_name = 'servicio'
@@ -141,11 +231,98 @@ class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cotizacion.cliente.id,'pk':self.object.cotizacion.id})
 
-
 class Detalle_Servicio(LoginRequiredMixin, DetailView):
     model = Mantenimiento
     context_object_name = 'servicio'
     template_name = 'mantenimientos/detalle_servicio.html'
+
+# ------ VIEWS MANTENIMIENTOS CCTV ------ #
+
+class Agregar_Mantenimiento_CCTV(LoginRequiredMixin, CreateView):
+    # Manda a llamar el Modelo Mantenimiento
+    model = Mantenimiento_CCTV
+    # Hace la eleccion de que inputs del Modelo tomar en cuenta
+    fields = ['titulonombre', 'periodisidadactividades', 'periodisidadadicional',
+                'cantidaddedispositivos', 'cantidaddispositivosextras',
+                ]
+    # Busca un html en especifico
+    template_name = 'mantenimientos_cctv/agregar_servicio.html'
+
+    # Cuando se confirma el mantenimiento
+    def form_valid(self, form):
+        # se agrega el usuario que se esta usando en la instancia de usuario
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        form.instance.cotizacion = Cotizacion_CCTV.objects.get(pk=self.kwargs['pk'])
+        return super(Agregar_Mantenimiento_CCTV, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_cctv', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
+
+class MttoUpdate_CCTV(LoginRequiredMixin, UpdateView):
+    model = Mantenimiento_CCTV
+    context_object_name = 'servicio'
+    fields = ['periodisidadactividades', 'periodisidadadicional','cantidaddedispositivos', 'cantidaddispositivosextras','tiempoejecucion']
+    template_name = 'mantenimientos_cctv/modificar_servicio.html'
+
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_cctv', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
+
+class EliminarMantenimiento_CCTV(LoginRequiredMixin, DeleteView):
+    model = Mantenimiento_CCTV
+    context_object_name = 'servicio'
+    template_name = 'mantenimientos_cctv/eliminar_servicio.html'
+    
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_cctv', kwargs={'cliente':self.object.cotizacion.cliente.id,'pk':self.object.cotizacion.id})
+
+class Detalle_Servicio_CCTV(LoginRequiredMixin, DetailView):
+    model = Mantenimiento_CCTV
+    context_object_name = 'servicio'
+    template_name = 'mantenimientos_cctv/detalle_servicio.html'
+
+# ------ VIEWS MANTENIMIENTOS CA ------ #
+
+class Agregar_Mantenimiento_CA(LoginRequiredMixin, CreateView):
+    # Manda a llamar el Modelo Mantenimiento
+    model = Mantenimiento_CA
+    # Hace la eleccion de que inputs del Modelo tomar en cuenta
+    fields = ['titulonombre', 'periodisidadactividades', 'periodisidadadicional',
+                'cantidaddedispositivos', 'cantidaddispositivosextras',
+                ]
+    # Busca un html en especifico
+    template_name = 'mantenimientos_ca/agregar_servicio.html'
+
+    # Cuando se confirma el mantenimiento
+    def form_valid(self, form):
+        # se agrega el usuario que se esta usando en la instancia de usuario
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        form.instance.cotizacion = Cotizacion_CA.objects.get(pk=self.kwargs['pk'])
+        return super(Agregar_Mantenimiento_CA, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_ca', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
+
+class MttoUpdate_CA(LoginRequiredMixin, UpdateView):
+    model = Mantenimiento_CA
+    context_object_name = 'servicio'
+    fields = ['periodisidadactividades', 'periodisidadadicional','cantidaddedispositivos', 'cantidaddispositivosextras','tiempoejecucion']
+    template_name = 'mantenimientos_ca/modificar_servicio.html'
+
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_ca', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
+
+class EliminarMantenimiento_CA(LoginRequiredMixin, DeleteView):
+    model = Mantenimiento_CA
+    context_object_name = 'servicio'
+    template_name = 'mantenimientos_ca/eliminar_servicio.html'
+    
+    def get_success_url(self):
+        return reverse('detalle_cotizacion_ca', kwargs={'cliente':self.object.cotizacion.cliente.id,'pk':self.object.cotizacion.id})
+
+class Detalle_Servicio_CA(LoginRequiredMixin, DetailView):
+    model = Mantenimiento_CA
+    context_object_name = 'servicio'
+    template_name = 'mantenimientos_ca/detalle_servicio.html'
 
 # ------ VIEWS CLIENTE ------ #
 
@@ -217,6 +394,8 @@ class Mostrar_Cliente(LoginRequiredMixin, DetailView):
         # filtra los elemento de la clase y los determina en
         # el html con el nombre dado en ctx['cotizaciones']
         ctx['cotizaciones'] = Cotizacion.objects.filter(cliente = cat)
+        ctx['cotizaciones_cctv'] = Cotizacion_CCTV.objects.filter(cliente = cat)
+        ctx['cotizaciones_ca'] = Cotizacion_CA.objects.filter(cliente = cat)
         return ctx
 
 

@@ -1,0 +1,107 @@
+{% extends "mantenimientos/base.html" %}
+{% block body %}
+
+<div class="container-fluid p-4">
+        <right>
+                <a href="{% url 'detalle_cotizacion_ca' servicio.cliente.id servicio.cotizacion.id %}">
+                        <button type=button class="btn btn-outline-dark btn-sm" style="margin:20px">Regresar a la cotizacion</button>
+                </a>
+        </right>
+        <h1> Servicio de Mantenimiento {{ servicio.titulonombre }}</h1>
+</div>
+
+<div class="container">
+        <table class="table">
+                <tbody>
+                        <tr>
+                                <td>
+                                        Mantenimiento:
+                                </td>
+                                <td>
+                                        {{ servicio.titulonombre }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Periodicidad regular de actividad de mtto por año:
+                                </td>
+                                <td>
+                                        {{ servicio.periodisidadactividades }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Periodicidad adicional de actividad de mtto a la regular:
+                                </td>
+                                <td>
+                                        {{ servicio.periodisidadadicional }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Tiempo de ejecucion del mantenimiento:
+                                </td>
+                                <td>
+                                        {{ servicio.tiempoejecucion }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Cantidad de dispositivos a considerar en periodicidad regular:
+                                </td>
+                                <td>
+                                        {{ servicio.cantidaddedispositivos }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Cantidad de dispositivos a considerar en periodicidad adicional:
+                                </td>
+                                <td>
+                                        {{ servicio.cantidaddispositivosextras }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion:
+                                </td>
+                                <td>
+                                        {{ servicio.horasactividad }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion:
+                                </td>
+                                <td>
+                                        {{ servicio.horasactividadadicional }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Costo Regular = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion:
+                                </td>
+                                <td>
+                                        {{ servicio.costomantenimientoregular }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Costo adicional = horas por actividad de mantenimiento adicional = importe de cantidad * Tiempo de ejecucion:
+                                </td>
+                                <td>
+                                        {{ servicio.costomantenimientoadicional }}
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        Costo Total = Costo Periodicidad Regular + Costo Periodicidad Adicional:
+                                </td>
+                                <td>
+                                        {{ servicio.costototal }}
+                                </td>
+                        </tr>
+                </tbody>
+        </table>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'mantenimientos/base.html'%}
+{% load static %}
+
+{% block body %}
+    <center>
+            <h1> Modificar {{cotizacion_ca}} </h1>
+            <br/>
+            <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br/>
+                    <input type="submit" value="Actualizar" class="btn btn-secondary">
+
+            </form>
+            <br/>
+    </center>
+{% endblock %}

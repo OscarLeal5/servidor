@@ -13,15 +13,15 @@
 <div class="container">
     <div>
         <right>
-            <a href="{% url 'mostrar_cliente' cotizacion.cliente.id %}">
+            <a href="{% url 'mostrar_cliente' cotizacion_cctv.cliente.id %}">
                 <button type=button class="btn btn-outline-dark btn-sm" style="margin:20px">Regresar al cliente</button>
             </a>
         </right>
     </div>
     <div class="container mb-3">
         <center>
-            <h1> Cotizacion para {{cotizacion.cliente}} </h1>
-            <h2> {{cotizacion.titulo}} </h2>
+            <h1> Cotizacion para {{cotizacion_cctv.cliente}} </h1>
+            <h2> {{cotizacion_cctv.titulo}} </h2>
         </center>
         <div class="tips card container p-2">
             <div class="text-align">
@@ -53,16 +53,14 @@
                         <tr class="table-success">
                             <td style="min-width: 120px;">
                                 
-                                    <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                    <a href="{% url 'modificar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
                                         <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
                                     
-                                    <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                    <a href="{% url 'eliminar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
                                         <button type=button class="btn btn-outline-danger"> &#9747; </button></a>
-                                    
-
                             </td>
                             <td>
-                                <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a>
+                                <a href="{% url 'detalle_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">{{ servicio }}</a>
                             </td>
                             <td style="text-align: center;">
                                 <a>
@@ -90,7 +88,6 @@
                                 </a>
                             </td>
                             <td style="text-align: center;">
-                                <p>
                                     {% if servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is null %}
                                         N/A
                                     {% elif servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is not null %}
@@ -98,7 +95,6 @@
                                     {% else %}
                                         {{ servicio.cantidaddispositivosextras }}
                                     {% endif %}
-                                </p>
                             </td>
                         </tr>
                     {% endif %}
@@ -106,16 +102,15 @@
                         <tr class="table-secondary">
                             <td style="min-width: 120px;">
                         
-                                <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
-                                    <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
-                        
-                                <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
-                                    <button type=button class="btn btn-outline-danger"> &#9747; </button></a>
-                        
-                        
+                                <a href="{% url 'modificar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
+                                    <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button>
+                                </a>
+                                <a href="{% url 'eliminar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
+                                    <button type=button class="btn btn-outline-danger"> &#9747; </button>
+                                </a>
                             </td>
                             <td>
-                                <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a>
+                                <a href="{% url 'detalle_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">{{ servicio }}</a>
                             </td>
                             <td style="text-align: center;">
                                 <a>
@@ -163,7 +158,7 @@
                 
             {% endfor %}
             {% for servicio in serviciosplus %}
-                {% if servicio.titulonombre.pk == 16 %}
+                {% if servicio.titulonombre.pk == 6 %}
                         </tbody>
                         </table>
                         <table class="table">
@@ -178,16 +173,14 @@
                                 <tr class="table-secondary">
                                     <td style="min-width: 120px;">
                                 
-                                        <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                        <a href="{% url 'modificar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
                                             <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
                                 
-                                        <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
-                                            <button type=button class="btn btn-outline-danger"> &#9747; </button></a>
-                                
-                                
+                                        <a href="{% url 'eliminar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
+                                            <button type=button class="btn btn-outline-danger" > &#9747; </button></a>
                                     </td>
                                     <td>
-                                        <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a>
+                                        <a href="{% url 'detalle_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">{{ servicio }}</a>
                                     </td>
                                     <td style="text-align: center;">
                                         <a>
@@ -205,10 +198,10 @@
     </div>
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
         <center>
-        <a href="{% url 'crear_servicio' cotizacion.cliente.id cotizacion.id  %}">
+        <a href="{% url 'crear_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id  %}">
             <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
         </a>
-        <a href="{% url 'cotizacion_pdf' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
+        <a href="{% url 'cotizacion_pdf' cotizacion_cctv.cliente.id cotizacion_cctv.id cotizacion_cctv.cliente.usuario.pk %}" download="cotizacion.pdf">
             <button type="button" class="btn btn-primary" style="margin:5px"><img src="https://img.icons8.com/ios/24/000000/download-2--v2.png" /></button>
         </a>
         </center>

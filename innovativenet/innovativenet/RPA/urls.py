@@ -28,7 +28,7 @@ urlpatterns = [
 
     path('buscar_clientes', views.buscar_clientes, name='buscar_clientes'),
 
-    # -------------- SERVICIO -------------------
+    # -------------- MANTENIMIENTOS DETECCION FUEGO -------------------
 
     path('<int:cliente>/<int:pk>/agregar_servicio/', Agregar_Mantenimiento.as_view(), name='crear_servicio'),
 
@@ -37,6 +37,26 @@ urlpatterns = [
     path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/modificar_servicio>', MttoUpdate.as_view(), name='modificar_servicio'),
 
     path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/detalle_servicio', Detalle_Servicio.as_view(), name='detalle_servicio'),
+
+    # -------------- MANTENIMIENTOS CCTV -------------------
+
+    path('<int:cliente>/<int:pk>/agregar_servicio_cctv/', Agregar_Mantenimiento_CCTV.as_view(), name='crear_servicio_cctv'),
+
+    path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/eliminar_servicio_cctv>', EliminarMantenimiento_CCTV.as_view(), name='eliminar_servicio_cctv'),
+
+    path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/modificar_servicio_cctv>', MttoUpdate_CCTV.as_view(), name='modificar_servicio_cctv'),
+
+    path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/detalle_servicio_cctv', Detalle_Servicio_CCTV.as_view(), name='detalle_servicio_cctv'),
+
+    # -------------- MANTENIMIENTOS CA -------------------
+
+    path('<int:cliente>/<int:pk>/agregar_servicio_ca/', Agregar_Mantenimiento_CA.as_view(), name='crear_servicio_ca'),
+
+    path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/eliminar_servicio_ca>', EliminarMantenimiento_CA.as_view(), name='eliminar_servicio_ca'),
+
+    path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/modificar_servicio_ca>', MttoUpdate_CA.as_view(), name='modificar_servicio_ca'),
+
+    path('<int:cliente>/<int:pk_cotizacion>/<int:pk>/detalle_servicio_ca', Detalle_Servicio_CA.as_view(), name='detalle_servicio_ca'),
 
     # -------------- COTIZACION -------------------
 
@@ -47,5 +67,25 @@ urlpatterns = [
     path('<int:cliente>/<int:pk>/eliminar_cotizacion', Eliminar_Cotizacion.as_view(), name='eliminar_cotizacion'),
     
     path('modificar_cotizacion/<int:pk>', Modificar_Cotizacion.as_view(), name='modificar_cotizacion'), 
+    
+    # -------------- COTIZACION CCTV -------------------
+
+    path('<int:cliente>/agregar_cotizacion_cctv', Agregar_Cotizacion_CCTV.as_view(), name='agregar_cotizacion_cctv'),
+
+    path('<int:cliente>/<int:pk>/detalle_cotizacion_cctv', Detalle_Cotizacion_CCTV.as_view(), name='detalle_cotizacion_cctv'),
+
+    path('<int:cliente>/<int:pk>/eliminar_cotizacion_cctv', Eliminar_Cotizacion_CCTV.as_view(), name='eliminar_cotizacion_cctv'),
+    
+    path('modificar_cotizacion_cctv/<int:pk>', Modificar_Cotizacion_CCTV.as_view(), name='modificar_cotizacion_cctv'), 
+
+    # -------------- COTIZACION CA -------------------
+
+    path('<int:cliente>/agregar_cotizacion_ca', Agregar_Cotizacion_CA.as_view(), name='agregar_cotizacion_ca'),
+
+    path('<int:cliente>/<int:pk>/detalle_cotizacion_ca', Detalle_Cotizacion_CA.as_view(), name='detalle_cotizacion_ca'),
+
+    path('<int:cliente>/<int:pk>/eliminar_cotizacion_ca', Eliminar_Cotizacion_CA.as_view(), name='eliminar_cotizacion_ca'),
+    
+    path('modificar_cotizacion_ca/<int:pk>', Modificar_Cotizacion_CA.as_view(), name='modificar_cotizacion_ca'), 
 
 ]

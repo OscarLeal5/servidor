@@ -54,10 +54,10 @@
                         <div class="card-body" style="margin-bottom: 15px; transform: rotate(0)">
                             <h4>
                                 <a class="stretched-link" href="{% url 'detalle_cotizacion' cotizacion.cliente.id cotizacion.id %}">
-                                    {{ cotizacion.titulo }}
+                                    {{ cotizacion.titulo }}-Deteccion Fuego
                                 </a>
                             </h4>
-                            <p>Fecha: {{ cotizacion.fecha }}</p>
+                            <p>Fecha de creación: {{ cotizacion.fecha }}</p>
                         </div>
                         <div>
                             <center>
@@ -76,19 +76,95 @@
                     </div>
                     {% endfor %}
                 </div>
-                </a>
             
                 <div>
+                    <div class="container">
+                        <div class="container-fluid" style="margin-top: 20px;">
+                            <div class="container row">
+                                {% for cotizacion in cotizaciones_cctv %}
+                                <a href="{% url 'detalle_cotizacion_cctv' cotizacion.cliente.id cotizacion.id %}">
+                                <div class="col-*-* card"
+                                    style="max-width: 300px; min-height: 200px; max-height: 300px; padding: 25px; margin: 50px; box-shadow: 2px 3px 5px;">
+                                    <div class="card-body" style="margin-bottom: 15px; transform: rotate(0)">
+                                        <h4>
+                                            <a class="stretched-link" href="{% url 'detalle_cotizacion_cctv' cotizacion.cliente.id cotizacion.id %}">
+                                                {{ cotizacion.titulo }}-CCTV
+                                            </a>
+                                        </h4>
+                                        <p>Fecha de creación: {{ cotizacion.fecha }}</p>
+                                    </div>
+                                    <div>
+                                        <center>
+                                            <a href="{% url 'modificar_cotizacion_cctv' cotizacion.id %}">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                            </a>
+                                            <a href="{% url 'eliminar_cotizacion_cctv' cotizacion.cliente.id cotizacion.id %}">
+                                                <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                                            </a>
+                                        </center>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="container-fluid" style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+                                    <h2> No hay ninguna cotizacion de cctv</h2>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        
+                    <div>
+                        <div>
+                            <div class="container">
+                                <div class="container-fluid" style="margin-top: 20px;">
+                                    <div class="container row">
+                                        {% for cotizacion in cotizaciones_ca %}
+                                        <a href="{% url 'detalle_cotizacion_ca' cotizacion.cliente.id cotizacion.id %}">
+                                        <div class="col-*-* card"
+                                            style="max-width: 300px; min-height: 200px; max-height: 300px; padding: 25px; margin: 50px; box-shadow: 2px 3px 5px;">
+                                            <div class="card-body" style="margin-bottom: 15px; transform: rotate(0)">
+                                                <h4>
+                                                    <a class="stretched-link" href="{% url 'detalle_cotizacion_ca' cotizacion.cliente.id cotizacion.id %}">
+                                                        {{ cotizacion.titulo }}-CA
+                                                    </a>
+                                                </h4>
+                                                <p>Fecha de creación: {{ cotizacion.fecha }}</p>
+                                            </div>
+                                            <div>
+                                                <center>
+                                                    <a href="{% url 'modificar_cotizacion_ca' cotizacion.id %}">
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm">Modificar</button>
+                                                    </a>
+                                                    <a href="{% url 'eliminar_cotizacion_ca' cotizacion.cliente.id cotizacion.id %}">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                                                    </a>
+                                                </center>
+                                            </div>
+                                        </div>
+                                        {% empty %}
+                                        <div class="container-fluid" style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+                                            <h2> No hay ninguna cotizacion de ca</h2>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                
+                            <div>
                     <center>
                         <a href="{% url 'agregar_cotizacion' cliente.id %}">
-                            <button type=button class="btn btn-primary" style="margin:5px">Agregar Cotización</button>
+                            <button type=button class="btn btn-primary" style="margin:5px">Agregar Cotización Deteccion Fuego</button>
+                        </a>
+                        <a href="{% url 'agregar_cotizacion_cctv' cliente.id %}">
+                            <button type=button class="btn btn-primary" style="margin:5px">Agregar Cotización CCTV</button>
+                        </a>
+                        <a href="{% url 'agregar_cotizacion_ca' cliente.id %}">
+                            <button type=button class="btn btn-primary" style="margin:5px">Agregar Cotización CA</button>
                         </a>
                     </center>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
 </div>
+<br>
+
 
 
 {% endblock %}

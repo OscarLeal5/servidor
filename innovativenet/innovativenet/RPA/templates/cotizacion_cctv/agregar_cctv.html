@@ -1,0 +1,91 @@
+{% extends 'mantenimientos/base.html'%}
+{% load static %}
+
+{% block body %}
+
+<div class="container card p-3 mb-5 mt-3" style="max-width:55%;border-color: black; box-shadow:8px 8px 3px grey; border-width: 4px black;">
+    <center>
+        <div>
+            <h2> Agregar Cotizacion </h2>
+        </div>
+    </center>
+    <div class="container card-body" style="text-align:center;">
+        {% if submitted %}
+        <p> Se agrego la cotizacion exitosamente! </p>
+        
+        {% else %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="fieldWrapper">
+                {{ form.titulo.errors }}
+                <label for="{{ form.titulonombre.id_for_label }}">Nombre de proyecto: </label>
+                {{ form.titulo }}
+            </div>
+
+            <div class="fieldWrapper">
+                {{ form.lugar_de_mantenimiento.errors }}
+                <label for="{{ form.lugar_de_mantenimiento.id_for_label }}">Ciudad donde se realiza servicio: </label>
+                {{ form.lugar_de_mantenimiento }}
+            </div>
+
+            <div class="fieldWrapper">
+                {{ form.periodoregular.errors }}
+                <label for="{{ form.periodoregular.id_for_label }}">Periodo Regular: </label>
+                {{ form.periodoregular }}
+            </div>
+
+            <div class="fieldWrapper">
+                {{ form.preguntaperiodoadicional.errors }}
+                <label  for="{{ form.preguntaperiodoadicional.id_for_label }}">
+                    Periodo Adicional al Regular:  <input type="checkbox" onclick="myFunction()" value="{{ form.preguntaperiodoadicional.value }}"> 
+                </label>
+                    
+            </div>
+            <div id="myDIV" style="display:none" class="fieldWrapper">
+                {{ form.periodoadicional.errors }}
+                <label for="{{ form.periodoadicional.id_for_label }}">Periodicida adicional por año: </label>
+                {{ form.periodoadicional }}
+            </div>
+            <div class="container p-3">
+                <input type="submit" value="Agregar" class="btn btn-secondary">
+            </div>
+        </form>
+        <br />
+        {% endif %}
+            </form>
+    </div>
+</div>
+<script>
+    function myFunction() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+</script>
+
+<!-- <center>
+    <h1> Agregar Cotizacion Nueva </h1>
+    <br/>
+    <br/>
+    {% if submitted %}
+        <p> Se agrego la cotizacion exitosamente! </p>
+
+    {% else %}
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+            
+            <input type="submit" value="Agregar" class="btn btn-secondary">
+        </form>
+    <br/>
+    {% endif %}
+</center> -->
+
+
+{% endblock %}

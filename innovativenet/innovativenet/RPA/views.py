@@ -54,6 +54,55 @@ class Home(LoginRequiredMixin, ListView):
         return context
 
 
+# ------ VIEWS COTIZACION - CCTV ------ #
+
+class Agregar_Cotizacion_cctv(LoginRequiredMixin, CreateView):
+    model = Cotizacion
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion','periodoregular','preguntaperiodoadicional','periodoadicional']
+    template_name = 'cotizacion_cctv/agregar_cctv.html'
+
+    def form_valid(self, form):
+        form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
+        return super(Agregar_Cotizacion_cctv, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cliente.pk, 'pk':self.object.pk})
+
+class Detalle_Cotizacion_cctv(LoginRequiredMixin, DetailView):
+    model = Cotizacion
+    object = "cotizacion"
+    template_name = "cotizacion_cctv/detalle_cctv.html"
+    def get_context_data(self, **kwargs):
+        ctx = super(Detalle_Cotizacion, self).get_context_data(**kwargs)
+        # del diccionario de Key Word ARGumentS obtiene el valor de object
+        cat = kwargs.get("object")
+        ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=13))
+        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        ctx['serviciosplus'] = Mantenimiento.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=16))
+
+        #ctx['']
+        return ctx
+        
+class Modificar_Cotizacion_cctv(LoginRequiredMixin, UpdateView):
+    model = Cotizacion
+    object = "cotizacion"
+    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
+    template_name = 'cotizacion_cctv/modificar_cctv.html'
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+class Eliminar_Cotizacion_cctv(LoginRequiredMixin, DeleteView):
+    model = Cotizacion
+    context_object_name = "cotizacion"
+    template_name = "cotizacion_cctv/eliminar_cctv.html"
+
+    def get_success_url(self):
+        return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
+
+
+
+
 # ------ VIEWS COTIZACION ------ #
 
 class Agregar_Cotizacion(LoginRequiredMixin, CreateView):

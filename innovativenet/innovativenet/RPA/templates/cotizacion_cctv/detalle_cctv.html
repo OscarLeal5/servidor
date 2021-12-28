@@ -1,0 +1,217 @@
+{% extends "mantenimientos/base.html" %}
+{% block body %}
+<style>
+    div.tips{
+        line-height: 5px; 
+        background-color: lightgray; 
+        max-width: 35%; 
+        box-shadow: 4px 4px 1px; 
+        opacity: 0.7;
+    }
+</style>
+
+<div class="container">
+    <div>
+        <right>
+            <a href="{% url 'mostrar_cliente' cotizacion.cliente.id %}">
+                <button type=button class="btn btn-outline-dark btn-sm" style="margin:20px">Regresar al cliente</button>
+            </a>
+        </right>
+    </div>
+    <div class="container mb-3">
+        <center>
+            <h1> Cotizacion {{cotizacion.cliente}} </h1>
+            <h2> {{cotizacion.titulo}} </h2>
+        </center>
+        <div class="tips card container p-2">
+            <div class="text-align">
+                <p>PR: Periodicidad Regular</p>
+                <p>CD: Cantidad de Dispositivos en periodicidad regular</p>
+                <p>PAaR: Periodicidad Adicional a la Regular</p>
+                <p>CDA: Cantidad de Dispositivos Adicionales</p>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="max-width: 80%;">
+
+        <table class="table">
+            <thead>
+                <tr style="text-align: center;">
+                    <th></th>
+                    <th>Mantenimientos</th>
+                    <th>PR</th>
+                    <th>CD</th>
+                    <th>PAaR</th>
+                    <th>CDA</th>
+                </tr>
+            </thead>
+            
+                <!-- ---------------------- Servicio List ---------------------------------- -->
+            <tbody>
+            {% for servicio in servicios %}
+                    {% if servicio.cantidaddedispositivos is not 0 %}
+                        <tr class="table-success">
+                            <td style="min-width: 120px;">
+                                
+                                    <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                        <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
+                                    
+                                    <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                        <button type=button class="btn btn-outline-danger" style="margin:5px"> &#9747; </button></a>
+                                    
+
+                            </td>
+                            <td>
+                                <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a>
+                                    {{ servicio.periodisidadactividades }}
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a>
+                                    {% if servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is null %}
+                                        N/A
+                                    {% elif servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is not null %}
+                                        Agregar dispositivos
+                                    {% else %}
+                                        {{ servicio.cantidaddedispositivos }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a>
+                                    {% if servicio.periodisidadadicional is null %}
+                                        N/A
+                                    {% else %}
+                                        {{ servicio.periodisidadadicional }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <p>
+                                    {% if servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is null %}
+                                        N/A
+                                    {% elif servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is not null %}
+                                        Agregar dispositivos adicionales
+                                    {% else %}
+                                        {{ servicio.cantidaddispositivosextras }}
+                                    {% endif %}
+                                </p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if servicio.cantidaddedispositivos == 0 %}
+                        <tr class="table-secondary">
+                            <td style="min-width: 120px;">
+                        
+                                <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                    <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
+                        
+                                <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                    <button type=button class="btn btn-outline-danger" style="margin:5px"> &#9747; </button></a>
+                        
+                        
+                            </td>
+                            <td>
+                                <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a>
+                                    {{ servicio.periodisidadactividades }}
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a>
+                                    {% if servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is null %}
+                                    N/A
+                                    {% elif servicio.cantidaddedispositivos is null and servicio.periodisidadactividades is not null %}
+                                    Agregar dispositivos
+                                    {% else %}
+                                    {{ servicio.cantidaddedispositivos }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <a>
+                                    {% if servicio.periodisidadadicional is null %}
+                                    N/A
+                                    {% else %}
+                                    {{ servicio.periodisidadadicional }}
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td style="text-align: center;">
+                                <p>
+                                    {% if servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is null %}
+                                    N/A
+                                    {% elif servicio.cantidaddispositivosextras is null and servicio.periodisidadadicional is not null %}
+                                    Agregar dispositivos adicionales
+                                    {% else %}
+                                    {{ servicio.cantidaddispositivosextras }}
+                                    {% endif %}
+                                </p>
+                            </td>
+                        </tr>
+                    {% endif %}
+            
+                {% empty %}
+                    <tr>
+                        <td style="text-align: center;"> NO SE ENCUENTRA NINGUN SERVICIO </td>
+                    </tr>
+                
+            {% endfor %}
+            {% for servicio in serviciosplus %}
+                {% if servicio.titulonombre.pk == 16 %}
+                        </tbody>
+                        </table>
+                        <table class="table">
+                            <thead>
+                                <tr style="text-align: center;">
+                                    <th></th>
+                                    <th></th>
+                                    <th>Horas</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                <tr class="table-secondary">
+                                    <td style="min-width: 120px;">
+                                
+                                        <a href="{% url 'modificar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                            <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
+                                
+                                        <a href="{% url 'eliminar_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">
+                                            <button type=button class="btn btn-outline-danger" style="margin:5px"> &#9747; </button></a>
+                                
+                                
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'detalle_servicio' cotizacion.cliente.id cotizacion.id servicio.id %}">{{ servicio }}</a>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <a>
+                                            {{ servicio.tiempoejecucion }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>                
+                        </table>
+                    {% endif %}
+                {% endfor %}
+        <!-- ---------------------- End Servicio List ---------------------------------- -->    
+            </tbody>
+        </table>
+    </div>
+    <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
+        <center>
+        <a href="{% url 'crear_servicio' cotizacion.cliente.id cotizacion.id  %}">
+            <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
+        </a>
+        <a href="{% url 'cotizacion_pdf' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
+            <button type="button" class="btn btn-primary" style="margin:5px"><img src="https://img.icons8.com/ios/24/000000/download-2--v2.png" /></button>
+        </a>
+        </center>
+    </div>
+</div>
+{% endblock %}

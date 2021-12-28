@@ -48,4 +48,13 @@ urlpatterns = [
     
     path('modificar_cotizacion/<int:pk>', Modificar_Cotizacion.as_view(), name='modificar_cotizacion'), 
 
+    # -------------- COTIZACION - CCTV -------------------
+
+    path('<int:cliente>/agregar_cotizacion_cctv', Agregar_Cotizacion_cctv.as_view(), name='agregar_cotizacion_cctv'),
+
+    path('<int:cliente>/<int:pk>/detalle_cotizacion_cctv', Detalle_Cotizacion_cctv.as_view(), name='detalle_cotizacion_cctv'),
+
+    path('<int:cliente>/<int:pk>/eliminar_cotizacion_cctv', Eliminar_Cotizacion_cctv.as_view(), name='eliminar_cotizacion_cctv'),
+    
+    path('modificar_cotizacion_cctv/<int:pk>', Modificar_Cotizacion_cctv.as_view(), name='modificar_cotizacion_cctv'), 
 ]

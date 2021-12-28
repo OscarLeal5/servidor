@@ -447,15 +447,15 @@ class Mantenimiento_CCTV(models.Model):
 
     def save(self, *args, **kwargs):
             # Para los titulos dentro de la base de datos Nombre_Servicio
-           for titulo in Nombre_servicio_CA.objects.all():
+           for titulo in Nombre_servicio_CCTV.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
                 # 13 es el pk del titulo cambiar herramientas
-                if self.titulonombre == Nombre_servicio_CA.objects.get(pk=1):
+                if self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=5):
                     todoslosservicios = 0
                     # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
-                    todoslosservicios = Mantenimiento_CA.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
+                    todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
                     totalperiodoadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(periodo_adicional=Sum('periodisidadadicional'))
                     # Se iguala al valor de la suma 
                     totalperiodoadicional = totalperiodoadicional["periodo_adicional"] 
@@ -488,14 +488,14 @@ class Mantenimiento_CCTV(models.Model):
                             # Si la periodicidad es nulo o cero se iguala a Nulo la cantidad de dispositivos adicionales
                             if self.periodisidadadicional is None or 0:    
                                 self.cantidaddispositivosextras = None
-                            return super(Mantenimiento_CA, self).save(*args, **kwargs)
+                            return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
 
                     else:
                         # Se igualan variables a cero para que se puedan hacer calculos numericos sin problema
                         totaldispositivosregular = 0
                         totaldispositivosadicional = 0
                         # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
-                        todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
+                        todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
                         # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
                         totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
                         totaldispositivosadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp_adi=Sum('cantidaddispositivosextras'))
@@ -520,9 +520,9 @@ class Mantenimiento_CCTV(models.Model):
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         print(totaldispositivosregular)
-                        return super(Mantenimiento_CA, self).save(*args, **kwargs)
+                        return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
                     
-                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CA.objects.get(pk=1) and self.titulonombre == Nombre_servicio_CA.objects.get(pk=2):
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=6):
                     print("entro al if de mantenimientos de servicio horas")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
                     if self.periodisidadadicional is None:
@@ -553,18 +553,18 @@ class Mantenimiento_CCTV(models.Model):
                         self.cantidaddispositivosextras = None
                         self.periodisidadadicional = None
                     # Se manda llamar la funcion superior de save del modelo, es decir es el save original del modelo.
-                    super(Mantenimiento_CA, self).save(*args, **kwargs)
+                    super(Mantenimiento_CCTV, self).save(*args, **kwargs)
                     # Se manda llamar la funcion total_cambio
-                    Mantenimiento_CA.total_cambio(self)
+                    Mantenimiento_CCTV.total_cambio(self)
                     return
 
-                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CA.objects.get(pk=1) and self.titulonombre == Nombre_servicio_CA.objects.get(pk=3):
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=7):
                     print("entro al if de mantenimientos de update firmware")
                     todoslosservicios = 0
                     # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
-                    todoslosservicios = Mantenimiento_CA.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
+                    todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
                     totalperiodoadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(periodo_adicional=Sum('periodisidadadicional'))
                     # Se iguala al valor de la suma 
                     totalperiodoadicional = totalperiodoadicional["periodo_adicional"] 
@@ -578,9 +578,8 @@ class Mantenimiento_CCTV(models.Model):
                             self.cantidaddispositivosextras = 0
                             self.costomantenimientoadicional = 0
                             # Realiza la suma de la cantidad de dispositivos regulares de todos los servicios
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=5))
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=6))
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=7))
+                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
+                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
                             totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(Sum('cantidaddedispositivos'))
                             totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
                             # Se igualan las variables a los valores dentro de Nombre_Servicio
@@ -600,18 +599,17 @@ class Mantenimiento_CCTV(models.Model):
                             # Si la periodicidad es nulo o cero se iguala a Nulo la cantidad de dispositivos adicionales
                             if self.periodisidadadicional is None or 0:    
                                 self.cantidaddispositivosextras = None
-                            return super(Mantenimiento_CA, self).save(*args, **kwargs)
+                            return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
 
                     else:
                         # Se igualan variables a cero para que se puedan hacer calculos numericos sin problema
                         totaldispositivosregular = 0
                         totaldispositivosadicional = 0
                         # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
-                        todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
+                        todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
                         # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
-                        totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=5))
-                        totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=6))
-                        totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=7))
+                        totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
+                        totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
                         totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
                         totaldispositivosadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp_adi=Sum('cantidaddispositivosextras'))
                         # Asignar variable al total de dispositivos regulares y adicionales
@@ -635,13 +633,13 @@ class Mantenimiento_CCTV(models.Model):
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         print(totaldispositivosregular)
-                        return super(Mantenimiento_CA, self).save(*args, **kwargs)
+                        return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
                     
 
                 
                 # Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
                 # y tambien con que sea distinto al titulo de Cambiar Herramientas
-                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CA.objects.get(pk=1):
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5):
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
                     if self.periodisidadadicional is None:
                         self.cantidaddispositivosextras = 0
@@ -671,12 +669,12 @@ class Mantenimiento_CCTV(models.Model):
                         self.cantidaddispositivosextras = None
                         self.periodisidadadicional = None
                     # Se manda llamar la funcion superior de save del modelo, es decir es el save original del modelo.
-                    super(Mantenimiento_CA, self).save(*args, **kwargs)
+                    super(Mantenimiento_CCTV, self).save(*args, **kwargs)
                     # Se manda llamar la funcion total_cambio
-                    Mantenimiento_CA.total_cambio(self)
+                    Mantenimiento_CCTV.total_cambio(self)
                     return
 
-                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CA.objects.get(pk=1) and self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
                     print("entro al if de mantenimientos de ingeniero")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
                     if self.periodisidadadicional is None:
@@ -706,31 +704,31 @@ class Mantenimiento_CCTV(models.Model):
                         self.cantidaddispositivosextras = None
                         self.periodisidadadicional = None
                     # Se manda llamar la funcion superior de save del modelo, es decir es el save original del modelo.
-                    super(Mantenimiento_CA, self).save(*args, **kwargs)
+                    super(Mantenimiento_CCTV, self).save(*args, **kwargs)
                     # Se manda llamar la funcion total_cambio
-                    Mantenimiento_CA.total_cambio(self)
+                    Mantenimiento_CCTV.total_cambio(self)
                     return
 
     # Funcion para calcular el total de dispositivos cada que se actualiza un mantenimiento
     def total_cambio(self):
         # Se obtiene el titulo de cambio de herramientas
-        titulo = Nombre_servicio_CA.objects.get(pk=1)
+        titulo = Nombre_servicio_CCTV.objects.get(pk=5)
         # Se obtiene el titulo de update firmware
-        titulo2 = Nombre_servicio_CA.objects.get(pk=3)
+        titulo2 = Nombre_servicio_CCTV.objects.get(pk=7)
         # Se busca o crea el mantenimiento con el titulo, cotizacion y cliente que se este actualizando
         # Mantenimiento.objects.get_or_create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         # Se busca el mantenimiento creado y se almacena en una variable
         try:
-            cambio = Mantenimiento_CA.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
+            cambio = Mantenimiento_CCTV.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         except:
-            cambio = Mantenimiento_CA.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)     
+            cambio = Mantenimiento_CCTV.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)     
         # Se manda llamar la funcion save para guardar y recalcular el total de dispositivos
         cambio.save()
         #Tryexcept para la suma del update de firmware
         try:
-            cambio2 = Mantenimiento_CA.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)
+            cambio2 = Mantenimiento_CCTV.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)
         except:
-            cambio2 = Mantenimiento_CA.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)     
+            cambio2 = Mantenimiento_CCTV.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)     
         cambio2.save()
         return 
 

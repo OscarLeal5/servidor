@@ -15,9 +15,13 @@ class UserAdmin(BaseUserAdmin):
 # Register your models here.
 
 admin.site.register(Mantenimiento)
+admin.site.register(Mantenimiento_CCTV)
+admin.site.register(Mantenimiento_CA)
 admin.site.register(Cliente)
 admin.site.register(Precio)
 admin.site.register(Nombre_servicio)
+admin.site.register(Nombre_servicio_CCTV)
+admin.site.register(Nombre_servicio_CA)
 admin.site.register(Cotizacion)
 # Register your models here.
 

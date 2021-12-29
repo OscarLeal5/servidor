@@ -48,7 +48,7 @@
         <div class="container">
             <!-- ---------------------- Cotizacion Deteccion de Fuegos --------------------------------------- -->
             <div>
-                <h3> Cotizacion Deteccion de Fuegos </h3>
+                <h3> Cotizaciones Deteccion de Fuegos </h3>
             </div>
             <div style="display: flex; flex-direction: row; flex-wrap: wrap">
                 {% for cotizacion in cotizaciones %}
@@ -56,7 +56,11 @@
                 <div class="card" style="width: 18rem; margin: 10px">
                     <div class="card-body">
                         <div style="display: flex; flex-direction: row">
-                            <h5 class="card-title">{{ cotizacion.titulo }}</h5>
+                            <a class="stretched-link" href="{% url 'detalle_cotizacion' cotizacion.cliente.id cotizacion.id %}">
+                                <h5 class="card-title"></h5>
+                                    {{ cotizacion.titulo }}
+                                </h5>
+                                </a>
                         </div>
                         <p class="card-text">{{ cotizacion.fecha }}</p>
                         <a href="{% url 'modificar_cotizacion' cotizacion.id %}" class="btn btn-outline-secondary btn-sm"> Editar </a>
@@ -72,7 +76,7 @@
 
             <!-- ---------------------- Cotizacion CCTV --------------------------------------- -->
             <div>
-                <h3> Cotizacion CCTV </h3>
+                <h3> Cotizaciones CCTV </h3>
             </div>
             <div style="display: flex; flex-direction: row; flex-wrap: wrap">
                 {% for cotizacion in cotizaciones_cctv %}
@@ -80,11 +84,15 @@
                 <div class="card" style="width: 18rem; margin: 10px">
                     <div class="card-body">
                         <div style="display: flex; flex-direction: row">
-                            <h5 class="card-title">{{ cotizacion.titulo }}</h5>
+                            <a class="stretched-link" href="{% url 'detalle_cotizacion_cctv' cotizacion.cliente.id cotizacion.id %}">
+                                <h5 class="card-title"></h5>
+                                    {{ cotizacion.titulo }}
+                                </h5>
+                                </a>
                         </div>
                         <p class="card-text">{{ cotizacion.fecha }}</p>
-                        <a href="{% url 'modificar_cotizacion' cotizacion.id %}" class="btn btn-outline-secondary btn-sm"> Editar </a>
-                        <a href="{% url 'eliminar_cotizacion' cotizacion.cliente.id cotizacion.id %}" class="btn btn-outline-danger btn-sm"> Eliminar </a>
+                        <a href="{% url 'modificar_cotizacion_cctv' cotizacion.id %}" class="btn btn-outline-secondary btn-sm"> Editar </a>
+                        <a href="{% url 'eliminar_cotizacion_cctv' cotizacion.cliente.id cotizacion.id %}" class="btn btn-outline-danger btn-sm"> Eliminar </a>
                     </div>
                 </div>
                 {% empty %}
@@ -96,7 +104,7 @@
 
             <!-- ---------------------- Cotizacion CA --------------------------------------- -->
             <div>
-                <h3> Cotizacion Cotrol de Acceso </h3>
+                <h3> Cotizaciones Control de Acceso </h3>
             </div>
             <div style="display: flex; flex-direction: row; flex-wrap: wrap">
                 {% for cotizacion in cotizaciones_ca %}
@@ -105,7 +113,7 @@
                     <div class="card-body">
                         <div style="display: flex; flex-direction: row">
                             
-                            <a class="stretched-link" href="{% url 'detalle_cotizacion' cotizacion.cliente.id cotizacion.id %}">
+                            <a class="stretched-link" href="{% url 'detalle_cotizacion_ca' cotizacion.cliente.id cotizacion.id %}">
                             <h5 class="card-title"></h5>
                                 {{ cotizacion.titulo }}
                             </h5>
@@ -113,8 +121,8 @@
                             
                         </div>
                         <p class="card-text">{{ cotizacion.fecha }}</p>
-                        <a href="{% url 'modificar_cotizacion' cotizacion.id %}" class="btn btn-outline-secondary btn-sm"> Editar </a>
-                        <a href="{% url 'eliminar_cotizacion' cotizacion.cliente.id cotizacion.id %}" class="btn btn-outline-danger btn-sm"> Eliminar </a>
+                        <a href="{% url 'modificar_cotizacion_ca' cotizacion.id %}" class="btn btn-outline-secondary btn-sm"> Editar </a>
+                        <a href="{% url 'eliminar_cotizacion_ca' cotizacion.cliente.id cotizacion.id %}" class="btn btn-outline-danger btn-sm"> Eliminar </a>
                     </div>
                 </div>
                 {% empty %}

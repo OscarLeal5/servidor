@@ -14,7 +14,6 @@ urlpatterns = [
 
     path('clientes',Todos_Clientes.as_view(), name='lista_clientes'),
 
-    path('cotizacion_pdf/<cliente_id>/<cotizacion_id>/<usuario>', views.cotizacion_pdf, name='cotizacion_pdf'),
 
     # -------------- CLIENTE -------------------
 
@@ -68,6 +67,8 @@ urlpatterns = [
     
     path('modificar_cotizacion/<int:pk>', Modificar_Cotizacion.as_view(), name='modificar_cotizacion'), 
     
+    path('cotizacion_pdf/<cliente_id>/<cotizacion_id>/<usuario>', views.cotizacion_pdf, name='cotizacion_pdf'),
+    
     # -------------- COTIZACION CCTV -------------------
 
     path('<int:cliente>/agregar_cotizacion_cctv', Agregar_Cotizacion_CCTV.as_view(), name='agregar_cotizacion_cctv'),
@@ -78,6 +79,8 @@ urlpatterns = [
     
     path('modificar_cotizacion_cctv/<int:pk>', Modificar_Cotizacion_CCTV.as_view(), name='modificar_cotizacion_cctv'), 
 
+    path('cotizacion_pdf_cctv/<cliente_id>/<cotizacion_id>/<usuario>', views.cotizacion_pdf_cctv, name='cotizacion_pdf_cctv'),
+    
     # -------------- COTIZACION CA -------------------
 
     path('<int:cliente>/agregar_cotizacion_ca', Agregar_Cotizacion_CA.as_view(), name='agregar_cotizacion_ca'),
@@ -87,5 +90,7 @@ urlpatterns = [
     path('<int:cliente>/<int:pk>/eliminar_cotizacion_ca', Eliminar_Cotizacion_CA.as_view(), name='eliminar_cotizacion_ca'),
     
     path('modificar_cotizacion_ca/<int:pk>', Modificar_Cotizacion_CA.as_view(), name='modificar_cotizacion_ca'), 
+
+    path('cotizacion_pdf_ca/<cliente_id>/<cotizacion_id>/<usuario>', views.cotizacion_pdf_ca, name='cotizacion_pdf_ca'),
 
 ]

@@ -600,13 +600,13 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             if mantenimiento.periodisidadadicional is not None or mantenimiento.periodisidadadicional != 0:
                 if mantenimiento.dispositivo is not None:
                     if mantenimiento.periodisidadadicional is None:
-                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
+                        info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
                     else:    
-                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
+                        info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
                 if mantenimiento.dispositivo is not None:
-                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos]
+                    info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos]
                     listdisp.append(info_disp)
 
         listadispositivos = ''
@@ -705,7 +705,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
 
 
 
-        table_dis = Table(listdisp)
+        table_dis = Table(listdisp, colWidths=[3*inch,1*inch,1*inch , 1*inch])
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
         table_dis.setStyle(ts)
 
@@ -1151,13 +1151,13 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
             if mantenimiento.periodisidadadicional is not None or mantenimiento.periodisidadadicional != 0:
                 if mantenimiento.dispositivo is not None:
                     if mantenimiento.periodisidadadicional is None:
-                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
+                        info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
                     else:    
-                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
+                        info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
                 if mantenimiento.dispositivo is not None:
-                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos]
+                    info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos]
                     listdisp.append(info_disp)
 
         listadispositivos = ''
@@ -1256,7 +1256,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
 
 
 
-        table_dis = Table(listdisp)
+        table_dis = Table(listdisp,colWidths=[3*inch,1*inch,1*inch , 1*inch])
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
         table_dis.setStyle(ts)
 
@@ -1702,13 +1702,13 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
             if mantenimiento.periodisidadadicional is not None or mantenimiento.periodisidadadicional != 0:
                 if mantenimiento.dispositivo is not None:
                     if mantenimiento.periodisidadadicional is None:
-                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
+                        info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
                     else:    
-                        info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
+                        info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
                 if mantenimiento.dispositivo is not None:
-                    info_disp = [mantenimiento.dispositivo,mantenimiento.cantidaddedispositivos]
+                    info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos]
                     listdisp.append(info_disp)
 
         listadispositivos = ''
@@ -1807,7 +1807,7 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
 
 
 
-        table_dis = Table(listdisp)
+        table_dis = Table(listdisp,colWidths=[3*inch,1*inch,1*inch , 1*inch])
         ts = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black)])
         table_dis.setStyle(ts)
 

@@ -144,13 +144,42 @@ class Cotizacion_CCTV(models.Model):
     def save(self, *args, **kwargs):
         # Se guarda la cotizacion primero
         super(Cotizacion_CCTV, self).save(*args, **kwargs)
-        self.descripcion_cotizacion = "Propuesta de servicios profesionales para mantenimiento preventivo del sistema de CCTV "+"("+str(self.periodoregular)+" visitas al año) "+str(self.cliente)
+        self.descripcion_cotizacion = "Mantenimiento preventivo y de emergencia del sistema de CCTV - "
         # Se almacena en una variable la lista de todos los nombres de mantenimientos
         opciones = Nombre_servicio_CCTV.objects.all()
         # Ciclo para agregar automaticamente los mantenimientos por medio de los nombres que estan almacenados en Nombre_Servicio
         for opcion in opciones:
             try:
+                print("entro al primer try")
                 cambio = Mantenimiento_CCTV.objects.get(cotizacion=self,cliente=self.cliente,titulonombre=opcion)
+                try:
+                    print("entro al segundo try")
+                    todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self)
+                    print("obtuvo los mantenimientos ")
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=7))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=8))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=9))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=10))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=13))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=16))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=19))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=20))
+                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=21))
+                    print("paso por todos los servicios")
+                    totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))                    
+                    print("paso por todos los servicios")
+                    totaldispositivosregular = totaldispositivosregular['cantidad_disp']
+                    print("paso por todos los servicios")
+                    self.descripcion_cotizacion = "Mantenimiento preventivo y de emergencia del sistema de CCTV - {} camaras".format(totaldispositivosregular)
+                    super(Cotizacion_CCTV, self).save(*args, **kwargs)
+                    print("guardo la cotizacion con nueva descripcion")
+                except:
+                    print("entro al segundo except")
+                    return
             except:
                 # Se declaran los valores que se quieren tener en todos los mantenimientos
                 Mantenimiento_CCTV.objects.create(titulonombre=opcion,cotizacion=self,cliente=self.cliente,periodisidadactividades=self.periodoregular,
@@ -180,7 +209,7 @@ class Cotizacion_CA(models.Model):
     def save(self, *args, **kwargs):
         # Se guarda la cotizacion primero
         super(Cotizacion_CA, self).save(*args, **kwargs)
-        self.descripcion_cotizacion = "Propuesta de servicios profesionales para mantenimiento preventivo del sistema de CONTROL DE ACCESOS "+"("+str(self.periodoregular)+" visitas al año) "+str(self.cliente)
+        self.descripcion_cotizacion = "Mantenimiento preventivo del sistema de Control de Accesos "+"para "+str(self.cliente)
         # Se almacena en una variable la lista de todos los nombres de mantenimientos
         opciones = Nombre_servicio_CA.objects.all()
         # Ciclo para agregar automaticamente los mantenimientos por medio de los nombres que estan almacenados en Nombre_Servicio
@@ -224,7 +253,7 @@ class Mantenimiento(models.Model):
             for titulo in Nombre_servicio.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
                 # 13 es el pk del titulo cambiar herramientas
-                if self.titulonombre == Nombre_servicio.objects.get(pk=13):
+                if str(self.titulonombre) == titulo.titulo and self.titulonombre == Nombre_servicio.objects.get(pk=13):
                     todoslosservicios = 0
                     # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
                     todoslosservicios = Mantenimiento.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
@@ -447,10 +476,10 @@ class Mantenimiento_CCTV(models.Model):
 
     def save(self, *args, **kwargs):
             # Para los titulos dentro de la base de datos Nombre_Servicio
-           for titulo in Nombre_servicio_CCTV.objects.all():
+            for titulo in Nombre_servicio_CCTV.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
                 # 13 es el pk del titulo cambiar herramientas
-                if self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=5):
+                if str(self.titulonombre) == titulo.titulo and self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=5):
                     todoslosservicios = 0
                     # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
                     todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
@@ -578,8 +607,10 @@ class Mantenimiento_CCTV(models.Model):
                             self.cantidaddispositivosextras = 0
                             self.costomantenimientoadicional = 0
                             # Realiza la suma de la cantidad de dispositivos regulares de todos los servicios
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
+                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=13))
+                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=14))
+                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
+                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
                             totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(Sum('cantidaddedispositivos'))
                             totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
                             # Se igualan las variables a los valores dentro de Nombre_Servicio
@@ -608,8 +639,8 @@ class Mantenimiento_CCTV(models.Model):
                         # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
                         todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
                         # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
-                        totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
-                        totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
+                        todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
+                        todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
                         totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
                         totaldispositivosadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp_adi=Sum('cantidaddispositivosextras'))
                         # Asignar variable al total de dispositivos regulares y adicionales
@@ -711,6 +742,7 @@ class Mantenimiento_CCTV(models.Model):
 
     # Funcion para calcular el total de dispositivos cada que se actualiza un mantenimiento
     def total_cambio(self):
+        print("corrio funcion total cambio")
         # Se obtiene el titulo de cambio de herramientas
         titulo = Nombre_servicio_CCTV.objects.get(pk=5)
         # Se obtiene el titulo de update firmware
@@ -730,6 +762,7 @@ class Mantenimiento_CCTV(models.Model):
         except:
             cambio2 = Mantenimiento_CCTV.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)     
         cambio2.save()
+        self.cotizacion.save()
         return 
 
     def __str__(self):
@@ -758,10 +791,10 @@ class Mantenimiento_CA(models.Model):
 
     def save(self, *args, **kwargs):
             # Para los titulos dentro de la base de datos Nombre_Servicio
-           for titulo in Nombre_servicio_CA.objects.all():
+            for titulo in Nombre_servicio_CA.objects.all():
                 # Se busca el titulo que sea equivalente al titulo en Nombre_Servicio
-                # 13 es el pk del titulo cambiar herramientas
-                if self.titulonombre == Nombre_servicio_CA.objects.get(pk=1):
+                # 1 es el pk del titulo cambiar herramientas
+                if str(self.titulonombre) == titulo.titulo and self.titulonombre == Nombre_servicio_CA.objects.get(pk=1):
                     todoslosservicios = 0
                     # Se guarda en una variable la lista de mantenimientos excluyendo el de Cambiar herramientas
                     todoslosservicios = Mantenimiento_CA.objects.filter(cliente=self.cliente,cotizacion=self.cotizacion)
@@ -889,9 +922,9 @@ class Mantenimiento_CA(models.Model):
                             self.cantidaddispositivosextras = 0
                             self.costomantenimientoadicional = 0
                             # Realiza la suma de la cantidad de dispositivos regulares de todos los servicios
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=5))
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=6))
-                            totaldispositivosregular = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=7))
+                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=5))
+                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=6))
+                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=7))
                             totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(Sum('cantidaddedispositivos'))
                             totaldispositivosregular = totaldispositivosregular['cantidaddedispositivos__sum']
                             # Se igualan las variables a los valores dentro de Nombre_Servicio

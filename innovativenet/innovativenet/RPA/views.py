@@ -105,7 +105,9 @@ class Eliminar_Cotizacion(LoginRequiredMixin, DeleteView):
 
 class Agregar_Cotizacion_CCTV(LoginRequiredMixin, CreateView):
     model = Cotizacion_CCTV
-    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion','periodoregular','preguntaperiodoadicional','periodoadicional']
+    #cambios area de trabajo
+    fields = ['titulo', 'lugar_de_mantenimiento','area_de_mantenimiento', 'descripcion_cotizacion','periodoregular','preguntaperiodoadicional','periodoadicional']
+    #cambios    
     template_name = 'cotizacion_cctv/agregar_cotizacion_cctv.html'
 
     def form_valid(self, form):
@@ -134,7 +136,7 @@ class Detalle_Cotizacion_CCTV(LoginRequiredMixin, DetailView):
 class Modificar_Cotizacion_CCTV(LoginRequiredMixin, UpdateView):
     model = Cotizacion_CCTV
     object = "cotizacion"
-    fields = ['titulo', 'lugar_de_mantenimiento', 'descripcion_cotizacion']
+    fields = ['titulo', 'lugar_de_mantenimiento','area_de_mantenimiento' ,'descripcion_cotizacion']
     template_name = 'cotizacion_cctv/modificar_cotizacion_cctv.html'
     def get_success_url(self):
         return reverse('mostrar_cliente', kwargs={'pk':self.object.cliente.id})
@@ -972,10 +974,13 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
     numero_contacto = cliente.numero_contacto
     correo_contacto = cliente.correo_contacto
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
+    # cambios area de mantenimiento
+    area_de_mantenimiento = cotizacion.area_de_mantenimiento
+    # cambios 
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
     fecha = cotizacion.fecha
     
-    locale.setlocale(locale.LC_TIME, 'es_ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%d de %B del %Y ")
 
@@ -1135,7 +1140,9 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         p4 = Paragraph(texto_asunto, styleH2)
         p5 = Paragraph("""<u>"""+descripcion_cotizacion+"""</u>""", styleCB)
         p6 = Paragraph("Estimados señores, ", styleN)
-        p7 = Paragraph("En relación a su solicitud presentamos los costos asociados del servicio de mantenimiento preventivo del sistema de Circuito Cerrado de Televisión para "+nombre+" ubicada en "+lugar_de_mantenimiento, styleN)
+        #cambios para area de mantenimiento
+        p7 = Paragraph("En relación a su solicitud presentamos los costos asociados del servicio de mantenimiento preventivo del sistema de Circuito Cerrado de Televisión para "+nombre+" en el area del "+str(area_de_mantenimiento)+" ubicada en "+lugar_de_mantenimiento, styleN)
+        #cambios 
         p7extra2 = Paragraph("Para aplicar el mantenimiento preventivo es importante que el sistema se encuentre en operación, sin fallas, de lo contrario se aplicaría un mantenimiento correctivo y después procedería el preventivo.", styleN)
         p7extra3 = Paragraph("Se considera una póliza de mantenimiento preventivo con duración de 12 Meses", styleN)
         pblank = Paragraph("""<para> <br/> </para>""")

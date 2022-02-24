@@ -134,6 +134,9 @@ class Cotizacion_CCTV(models.Model):
     titulo = models.CharField(verbose_name="Nombre Cotizacion", null=True, blank=True,max_length=200)
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
+     # cambios para agregar area
+    area_de_mantenimiento = models.CharField('Area/Edificio donde se realizara el mantenimiento',max_length=120,blank=True,null=True)
+    # cambios 
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=datetime.now())
     periodoregular = models.IntegerField('Periodicidad regular de mmto al año',choices=num_list,null=True)

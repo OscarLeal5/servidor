@@ -134,6 +134,9 @@ class Cotizacion_CCTV(models.Model):
     titulo = models.CharField(verbose_name="Nombre Cotizacion", null=True, blank=True,max_length=200)
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
+     # cambios para agregar area
+    area_de_mantenimiento = models.CharField('Area/Edificio donde se realizara el mantenimiento',max_length=120,blank=True,null=True)
+    # cambios 
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=datetime.now())
     periodoregular = models.IntegerField('Periodicidad regular de mmto al año',choices=num_list,null=True)
@@ -818,8 +821,14 @@ class Mantenimiento_CA(models.Model):
                             # Se igualan las variables a los valores dentro de Nombre_Servicio
                             self.encargadoTrabajo1 = titulo.encargado
                             self.tiempoejecucion = titulo.tiempodeejecucion
+
+                            #######cambios para ajustes en precio
+                            if self.periodisidadactividades == None:
+                                self.periodisidadactividades = self.cotizacion.periodoregular
+                            #######
+
                             # Se iguala el valor del mantenimiento al total de los dipositivos
-                            self.cantidaddedispositivos = totaldispositivosregular
+                            self.cantidaddedispositivos = totaldispositivosregular * self.periodisidadactividades
                             # Si el valor de dispositivos es Nulo se iguala a cero para no tener problemas al hacer operaciones numericas
                             if self.cantidaddedispositivos == None:
                                 self.cantidaddedispositivos = 0
@@ -849,9 +858,16 @@ class Mantenimiento_CA(models.Model):
                         # Se igualan variables a valores que esten en Base de datos de Nombre_Servicio
                         self.encargadoTrabajo1 = titulo.encargado
                         self.tiempoejecucion = titulo.tiempodeejecucion
+                        #######cambios para ajustes en precio
+                        if self.periodisidadactividades == None:
+                            self.periodisidadactividades = self.cotizacion.periodoregular
+                        #######
+                        if self.periodisidadadicional == None:
+                            self.periodisidadadicional = self.cotizacion.periodoadicional
+
                         # Se asigna las variables con las de la base de datos Nombre_Servicio
-                        self.cantidaddedispositivos = totaldispositivosregular
-                        self.cantidaddispositivosextras = totaldispositivosadicional
+                        self.cantidaddedispositivos = totaldispositivosregular * self.periodisidadactividades
+                        self.cantidaddispositivosextras = totaldispositivosadicional * self.periodisidadadicional
                         # Se calcular el total de horas de actividad regular
                         self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
                         # Se calcular el total de horas de actividad adicional

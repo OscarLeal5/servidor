@@ -26,9 +26,18 @@
 
             <div class="fieldWrapper">
                 {{ form.lugar_de_mantenimiento.errors }}
-                <label for="{{ form.lugar_de_mantenimiento.id_for_label }}">Ciudad donde se realiza servicio: </label>
+                <label for="{{ form.lugar_de_mantenimiento.id_for_label }}">Ciudad donde se realiza mantenimiento: </label>
                 {{ form.lugar_de_mantenimiento }}
             </div>
+
+            <!-- cambios para area/edificio donde se realiza mantenimiento-->
+            <div class="fieldWrapper">
+                {{ form.area_de_mantenimiento.errors }}
+                <label for="{{ form.area_de_mantenimiento.id_for_label }}">Area/Edificio donde se realiza mantenimiento </label>
+                {{ form.area_de_mantenimiento }}
+            </div>
+            <!-- cambios para area/edificio donde se realiza mantenimiento-->
+
 
             <div class="fieldWrapper">
                 {{ form.periodoregular.errors }}

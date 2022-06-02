@@ -1,16 +1,12 @@
-from django.utils.translation import templatize
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table, TableStyle, Indenter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak, Table, TableStyle, Indenter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.rl_config import defaultPageSize
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from django.http import FileResponse
 from django.urls import reverse
-from reportlab.pdfgen import canvas
-from django.contrib import messages
 from reportlab.lib import colors
 from datetime import datetime
 import locale
@@ -19,7 +15,6 @@ from datetime import date
 import io
 import os
 from pathlib import Path
-from operator import itemgetter
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -79,7 +74,9 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento.objects.filter(cotizacion = cat)
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
-        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio.objects.get(pk=14))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio.objects.get(pk=15))
+
         ctx['serviciosplus'] = Mantenimiento.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio.objects.get(pk=16))
 
         #ctx['']
@@ -127,7 +124,12 @@ class Detalle_Cotizacion_CCTV(LoginRequiredMixin, DetailView):
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento_CCTV.objects.filter(cotizacion = cat)
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
-        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=16))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=20))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=19))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=7))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=21))
         ctx['serviciosplus'] = Mantenimiento_CCTV.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
 
         #ctx['']
@@ -173,7 +175,9 @@ class Detalle_Cotizacion_CA(LoginRequiredMixin, DetailView):
         cat = kwargs.get("object")
         ctx['servicios'] = Mantenimiento_CA.objects.filter(cotizacion = cat)
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
-        ctx['servicios'] = ctx['servicios'].exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero'))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=2))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=3))
+
         ctx['serviciosplus'] = Mantenimiento_CA.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CA.objects.get(pk=2))
 
         #ctx['']
@@ -416,15 +420,10 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
     buf = io.BytesIO()
 
     nombre=cliente.nombre
-    encargado=cliente.encargado
-    puesto_encargado = cliente.puesto_encargado
-    numero_contacto = cliente.numero_contacto
-    correo_contacto = cliente.correo_contacto
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
-    fecha = cotizacion.fecha
 
-    locale.setlocale(locale.LC_TIME, 'es_ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%d de %B del %Y ")
 
@@ -969,16 +968,11 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
     buf = io.BytesIO()
 
     nombre=cliente.nombre
-    encargado=cliente.encargado
-    puesto_encargado = cliente.puesto_encargado
-    numero_contacto = cliente.numero_contacto
-    correo_contacto = cliente.correo_contacto
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     # cambios area de mantenimiento
     area_de_mantenimiento = cotizacion.area_de_mantenimiento
     # cambios 
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
-    fecha = cotizacion.fecha
     
     locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
@@ -1529,15 +1523,10 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
     buf = io.BytesIO()
 
     nombre=cliente.nombre
-    encargado=cliente.encargado
-    puesto_encargado = cliente.puesto_encargado
-    numero_contacto = cliente.numero_contacto
-    correo_contacto = cliente.correo_contacto
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
-    fecha = cotizacion.fecha
 
-    locale.setlocale(locale.LC_TIME, 'es_ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%d de %B del %Y ")
 

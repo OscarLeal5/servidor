@@ -14,7 +14,7 @@
         <p> Se agrego la cotizacion exitosamente! </p>
         
         {% else %}
-        <form action="" method="POST">
+        <form action="" method="POST" onsubmit="myFunction1()">
             {% csrf_token %}
             {{ form.non_field_errors }}
 
@@ -65,6 +65,11 @@
         } else {
             x.style.display = "block";
         }
+    }
+</script>
+<script>
+    function myFunction1() {
+      document.getElementById("btn-agregar").disabled = true;
     }
 </script>
 

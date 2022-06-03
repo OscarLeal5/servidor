@@ -12,7 +12,7 @@ class InformacionPersonal(models.Model):
     titulo = models.CharField("Titulo Ej: Lic., Ing.",max_length=3, blank=True)
     nombre = models.CharField("Nombre",max_length=20, blank=True)
     apellido = models.CharField("Apellido",max_length=20, blank=True)
-    
+
 
 
 class Precio(models.Model):
@@ -42,12 +42,12 @@ class Nombre_servicio(models.Model):
     dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
     def __str__(self):
         return str(self.titulo)
-    
+
     class Meta:
         ordering = ['titulo']
         verbose_name_plural = "Servicios Deteccion Fuego"
 
-        
+
 
 class Nombre_servicio_CCTV(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Titulo Mantenimiento", null=True, blank=True)
@@ -56,7 +56,7 @@ class Nombre_servicio_CCTV(models.Model):
     dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
     def __str__(self):
         return str(self.titulo)
-    
+
     class Meta:
         ordering = ['titulo']
         verbose_name_plural = "Servicios CCTV"
@@ -69,11 +69,11 @@ class Nombre_servicio_CA(models.Model):
     dispositivo = models.CharField(max_length=200, verbose_name="Dispositivo al que se le aplica el mantenimiento", null=True, blank=True)
     def __str__(self):
         return str(self.titulo)
-    
+
     class Meta:
         ordering = ['titulo']
         verbose_name_plural = "Servicios CA"
-    
+
 class Cliente(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     nombre = models.CharField('Nombre de la compañia cliente',max_length=200)
@@ -84,7 +84,7 @@ class Cliente(models.Model):
     numero_contacto=models.CharField('Numero de telefono para contactar',max_length
     =10)
     correo_contacto=models.EmailField('Correo para contactar',blank=True)
-    
+
 
     def __str__(self):
         return self.nombre
@@ -136,7 +136,7 @@ class Cotizacion_CCTV(models.Model):
     =120,blank=True)
      # cambios para agregar area
     area_de_mantenimiento = models.CharField('Area/Edificio donde se realizara el mantenimiento',max_length=120,blank=True,null=True)
-    # cambios 
+    # cambios
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
     fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=datetime.now())
     periodoregular = models.IntegerField('Periodicidad regular de mmto al año',choices=num_list,null=True)
@@ -153,8 +153,8 @@ class Cotizacion_CCTV(models.Model):
         # Ciclo para agregar automaticamente los mantenimientos por medio de los nombres que estan almacenados en Nombre_Servicio
         for opcion in opciones:
             try:
+                Mantenimiento_CCTV.objects.get(cotizacion=self,cliente=self.cliente,titulonombre=opcion)
                 print("entro al primer try")
-                cambio = Mantenimiento_CCTV.objects.get(cotizacion=self,cliente=self.cliente,titulonombre=opcion)
                 try:
                     print("entro al segundo try")
                     todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self)
@@ -165,7 +165,6 @@ class Cotizacion_CCTV(models.Model):
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=8))
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=9))
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=10))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=13))
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=16))
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
@@ -173,20 +172,24 @@ class Cotizacion_CCTV(models.Model):
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=20))
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=21))
                     print("paso por todos los servicios")
-                    totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))                    
+                    totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
                     print("paso por todos los servicios")
                     totaldispositivosregular = totaldispositivosregular['cantidad_disp']
                     print("paso por todos los servicios")
                     self.descripcion_cotizacion = "Mantenimiento preventivo y de emergencia del sistema de CCTV - {} camaras".format(totaldispositivosregular)
                     super(Cotizacion_CCTV, self).save(*args, **kwargs)
                     print("guardo la cotizacion con nueva descripcion")
+
                 except:
-                    print("entro al segundo except")
+                    print("entro al segundo except del primer try")
                     return
+
             except:
                 # Se declaran los valores que se quieren tener en todos los mantenimientos
                 Mantenimiento_CCTV.objects.create(titulonombre=opcion,cotizacion=self,cliente=self.cliente,periodisidadactividades=self.periodoregular,
                 periodisidadadicional=self.periodoadicional)
+                print("creo servicio faltante")
+
         super(Cotizacion_CCTV, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -263,8 +266,8 @@ class Mantenimiento(models.Model):
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio.objects.get(pk=13))
                     totalperiodoadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(periodo_adicional=Sum('periodisidadadicional'))
-                    # Se iguala al valor de la suma 
-                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"] 
+                    # Se iguala al valor de la suma
+                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"]
                     # Se checa si el total de la periodicidad adicional es nulo o igual a cero
                     if totalperiodoadicional is None or totalperiodoadicional == 0 :
                         # Si es igual a nulo o cero realiza esto
@@ -292,7 +295,7 @@ class Mantenimiento(models.Model):
                             # Se calcula el costo total sumando el costo regular y el costo adicional
                             self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                             # Si la periodicidad es nulo o cero se iguala a Nulo la cantidad de dispositivos adicionales
-                            if self.periodisidadadicional is None or 0:    
+                            if self.periodisidadadicional is None or 0:
                                 self.cantidaddispositivosextras = None
                             return super(Mantenimiento, self).save(*args, **kwargs)
 
@@ -321,13 +324,13 @@ class Mantenimiento(models.Model):
                         # Se calcula el costo total de mantenimientos de la periodicidad regular
                         self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                         # Se calcula el costo total de mantenimientos de la periodicidad adicional
-                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras 
+                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras
                         self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         print(totaldispositivosregular)
                         return super(Mantenimiento, self).save(*args, **kwargs)
-                    
+
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio.objects.get(pk=13) and self.titulonombre == Nombre_servicio.objects.get(pk=16):
                     print("entro al if de mantenimientos de servicio horas")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
@@ -347,7 +350,7 @@ class Mantenimiento(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -364,7 +367,7 @@ class Mantenimiento(models.Model):
                     Mantenimiento.total_cambio(self)
                     return
 
-                
+
                 # Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
                 # y tambien con que sea distinto al titulo de Cambiar Herramientas
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio.objects.get(pk=13):
@@ -385,7 +388,7 @@ class Mantenimiento(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -420,7 +423,7 @@ class Mantenimiento(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -447,10 +450,10 @@ class Mantenimiento(models.Model):
         try:
             cambio = Mantenimiento.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         except:
-            cambio = Mantenimiento.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)     
+            cambio = Mantenimiento.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         # Se manda llamar la funcion save para guardar y recalcular el total de dispositivos
         cambio.save()
-        return 
+        return
 
     def __str__(self):
         return str(self.titulonombre)
@@ -489,8 +492,8 @@ class Mantenimiento_CCTV(models.Model):
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
                     totalperiodoadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(periodo_adicional=Sum('periodisidadadicional'))
-                    # Se iguala al valor de la suma 
-                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"] 
+                    # Se iguala al valor de la suma
+                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"]
                     # Se checa si el total de la periodicidad adicional es nulo o igual a cero
                     if totalperiodoadicional is None or totalperiodoadicional == 0 :
                         # Si es igual a nulo o cero realiza esto
@@ -518,7 +521,7 @@ class Mantenimiento_CCTV(models.Model):
                             # Se calcula el costo total sumando el costo regular y el costo adicional
                             self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                             # Si la periodicidad es nulo o cero se iguala a Nulo la cantidad de dispositivos adicionales
-                            if self.periodisidadadicional is None or 0:    
+                            if self.periodisidadadicional is None or 0:
                                 self.cantidaddispositivosextras = None
                             return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
 
@@ -547,13 +550,13 @@ class Mantenimiento_CCTV(models.Model):
                         # Se calcula el costo total de mantenimientos de la periodicidad regular
                         self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                         # Se calcula el costo total de mantenimientos de la periodicidad adicional
-                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras 
+                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras
                         self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         print(totaldispositivosregular)
                         return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
-                    
+
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=6):
                     print("entro al if de mantenimientos de servicio horas")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
@@ -573,7 +576,7 @@ class Mantenimiento_CCTV(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -598,8 +601,8 @@ class Mantenimiento_CCTV(models.Model):
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
                     totalperiodoadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(periodo_adicional=Sum('periodisidadadicional'))
-                    # Se iguala al valor de la suma 
-                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"] 
+                    # Se iguala al valor de la suma
+                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"]
                     # Se checa si el total de la periodicidad adicional es nulo o igual a cero
                     if totalperiodoadicional is None or totalperiodoadicional == 0 :
                         # Si es igual a nulo o cero realiza esto
@@ -610,8 +613,6 @@ class Mantenimiento_CCTV(models.Model):
                             self.cantidaddispositivosextras = 0
                             self.costomantenimientoadicional = 0
                             # Realiza la suma de la cantidad de dispositivos regulares de todos los servicios
-                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=13))
-                            todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=14))
                             todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
                             todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
                             totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(Sum('cantidaddedispositivos'))
@@ -631,7 +632,7 @@ class Mantenimiento_CCTV(models.Model):
                             # Se calcula el costo total sumando el costo regular y el costo adicional
                             self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                             # Si la periodicidad es nulo o cero se iguala a Nulo la cantidad de dispositivos adicionales
-                            if self.periodisidadadicional is None or 0:    
+                            if self.periodisidadadicional is None or 0:
                                 self.cantidaddispositivosextras = None
                             return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
 
@@ -662,54 +663,19 @@ class Mantenimiento_CCTV(models.Model):
                         # Se calcula el costo total de mantenimientos de la periodicidad regular
                         self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                         # Se calcula el costo total de mantenimientos de la periodicidad adicional
-                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras 
+                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras
                         self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         print(totaldispositivosregular)
                         return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
-                    
 
-                
-                # Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
-                # y tambien con que sea distinto al titulo de Cambiar Herramientas
-                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5):
-                    # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
-                    if self.periodisidadadicional is None:
-                        self.cantidaddispositivosextras = 0
-                        self.periodisidadadicional = 0
-                    # Se asigna las variables con las de la base de datos Nombre_Servicio
-                    self.encargadoTrabajo1 = titulo.encargado
-                    self.tiempoejecucion = titulo.tiempodeejecucion
-                    self.dispositivo = titulo.dispositivo
-                    if self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
-                        self.cantidaddedispositivos = self.periodisidadactividades
-                        self.cantidaddispositivosextras = self.periodisidadadicional
-                    # Se calculan las horas de actividad regular multiplicando el timepo de ejecucion del servicio con la cantidad de dispositivos regulares
-                    self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
-                    # Se obtiene el costo regular multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
-                    self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
-                    # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
-                    self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
-                    # dispositivos adicionales registrados por las periodicidades adicionales registradas
-                    self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
-                    # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
-                    self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
-                    # Calcular el costo total sumando los valores del costo regular y costo adicional
-                    self.costototal = self.costomantenimientoregular + self.costomantenimientoadicional
-                    # Se regresan los valores a Null para que sigan los valores originales de la base de datos
-                    if self.periodisidadadicional == 0:
-                        self.cantidaddispositivosextras = None
-                        self.periodisidadadicional = None
-                    # Se manda llamar la funcion superior de save del modelo, es decir es el save original del modelo.
-                    super(Mantenimiento_CCTV, self).save(*args, **kwargs)
-                    # Se manda llamar la funcion total_cambio
-                    Mantenimiento_CCTV.total_cambio(self)
-                    return
-
-                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
-                    print("entro al if de mantenimientos de ingeniero")
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and \
+                    self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=16) and \
+                    self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=20) and \
+                    self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=19) and \
+                    self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=21):
+                    print("entro al if de mantenimientos con formula pre asignada y que son de ingeniero")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
                     if self.periodisidadadicional is None:
                         self.cantidaddispositivosextras = 0
@@ -726,7 +692,45 @@ class Mantenimiento_CCTV(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
+                    # dispositivos adicionales registrados por las periodicidades adicionales registradas
+                    self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
+                    # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
+                    self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
+                    # Calcular el costo total sumando los valores del costo regular y costo adicional
+                    self.costototal = self.costomantenimientoregular + self.costomantenimientoadicional
+                    # Se regresan los valores a Null para que sigan los valores originales de la base de datos
+                    if self.periodisidadadicional == 0:
+                        self.cantidaddispositivosextras = None
+                        self.periodisidadadicional = None
+                    # Se manda llamar la funcion superior de save del modelo, es decir es el save original del modelo.
+                    super(Mantenimiento_CCTV, self).save(*args, **kwargs)
+                    # Se manda llamar la funcion total_cambio
+                    Mantenimiento_CCTV.total_cambio(self)
+                    return
+
+                # Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
+                # y tambien con que sea distinto al titulo de Cambiar Herramientas
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5):
+                    # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
+                    if self.periodisidadadicional is None:
+                        self.cantidaddispositivosextras = 0
+                        self.periodisidadadicional = 0
+                    # Se asigna las variables con las de la base de datos Nombre_Servicio
+                    self.encargadoTrabajo1 = titulo.encargado
+                    self.tiempoejecucion = titulo.tiempodeejecucion
+                    self.dispositivo = titulo.dispositivo
+                    ### Cambios
+                    ### if self.encargadoTrabajo1 == Precio.objects.get(encargado='Ingeniero'):
+                    ###     self.cantidaddedispositivos = self.periodisidadactividades
+                    ###     self.cantidaddispositivosextras = self.periodisidadadicional
+                    # Se calculan las horas de actividad regular multiplicando el timepo de ejecucion del servicio con la cantidad de dispositivos regulares
+                    self.horasactividad = self.tiempoejecucion * self.cantidaddedispositivos
+                    # Se obtiene el costo regular multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
+                    self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
+                    # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
+                    self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -756,17 +760,17 @@ class Mantenimiento_CCTV(models.Model):
         try:
             cambio = Mantenimiento_CCTV.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         except:
-            cambio = Mantenimiento_CCTV.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)     
+            cambio = Mantenimiento_CCTV.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         # Se manda llamar la funcion save para guardar y recalcular el total de dispositivos
         cambio.save()
         #Tryexcept para la suma del update de firmware
         try:
             cambio2 = Mantenimiento_CCTV.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)
         except:
-            cambio2 = Mantenimiento_CCTV.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)     
+            cambio2 = Mantenimiento_CCTV.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)
         cambio2.save()
         self.cotizacion.save()
-        return 
+        return
 
     def __str__(self):
         return str(self.titulonombre)
@@ -804,8 +808,8 @@ class Mantenimiento_CA(models.Model):
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
                     totalperiodoadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(periodo_adicional=Sum('periodisidadadicional'))
-                    # Se iguala al valor de la suma 
-                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"] 
+                    # Se iguala al valor de la suma
+                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"]
                     # Se checa si el total de la periodicidad adicional es nulo o igual a cero
                     if totalperiodoadicional is None or totalperiodoadicional == 0 :
                         # Si es igual a nulo o cero realiza esto
@@ -839,7 +843,7 @@ class Mantenimiento_CA(models.Model):
                             # Se calcula el costo total sumando el costo regular y el costo adicional
                             self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                             # Si la periodicidad es nulo o cero se iguala a Nulo la cantidad de dispositivos adicionales
-                            if self.periodisidadadicional is None or 0:    
+                            if self.periodisidadadicional is None or 0:
                                 self.cantidaddispositivosextras = None
                             return super(Mantenimiento_CA, self).save(*args, **kwargs)
 
@@ -875,13 +879,13 @@ class Mantenimiento_CA(models.Model):
                         # Se calcula el costo total de mantenimientos de la periodicidad regular
                         self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                         # Se calcula el costo total de mantenimientos de la periodicidad adicional
-                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras 
+                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras
                         self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         print(totaldispositivosregular)
                         return super(Mantenimiento_CA, self).save(*args, **kwargs)
-                    
+
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CA.objects.get(pk=1) and self.titulonombre == Nombre_servicio_CA.objects.get(pk=2):
                     print("entro al if de mantenimientos de servicio horas")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
@@ -901,7 +905,7 @@ class Mantenimiento_CA(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -926,8 +930,8 @@ class Mantenimiento_CA(models.Model):
                     # Se obtienen las cantidades de dispositivos regulares y adicionales excluyendo los mantenimientos que sean de Ingeniero
                     todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CA.objects.get(pk=1))
                     totalperiodoadicional = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(periodo_adicional=Sum('periodisidadadicional'))
-                    # Se iguala al valor de la suma 
-                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"] 
+                    # Se iguala al valor de la suma
+                    totalperiodoadicional = totalperiodoadicional["periodo_adicional"]
                     # Se checa si el total de la periodicidad adicional es nulo o igual a cero
                     if totalperiodoadicional is None or totalperiodoadicional == 0 :
                         # Si es igual a nulo o cero realiza esto
@@ -958,7 +962,7 @@ class Mantenimiento_CA(models.Model):
                             # Se calcula el costo total sumando el costo regular y el costo adicional
                             self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                             # Si la periodicidad es nulo o cero se iguala a Nulo la cantidad de dispositivos adicionales
-                            if self.periodisidadadicional is None or 0:    
+                            if self.periodisidadadicional is None or 0:
                                 self.cantidaddispositivosextras = None
                             return super(Mantenimiento_CA, self).save(*args, **kwargs)
 
@@ -990,15 +994,15 @@ class Mantenimiento_CA(models.Model):
                         # Se calcula el costo total de mantenimientos de la periodicidad regular
                         self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                         # Se calcula el costo total de mantenimientos de la periodicidad adicional
-                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras 
+                        self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras
                         self.costomantenimientoadicional = self.costomantenimientoadicional * self.encargadoTrabajo1.precio
                         # Se calcula el costo total sumando el costo regular y el adicional
                         self.costototal = self.costomantenimientoadicional + self.costomantenimientoregular
                         print(totaldispositivosregular)
                         return super(Mantenimiento_CA, self).save(*args, **kwargs)
-                    
 
-                
+
+
                 # Se checa si el titulo del mantenimiento que se esta guardando con los titulos de la base de datos de Nombre_Servicio
                 # y tambien con que sea distinto al titulo de Cambiar Herramientas
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CA.objects.get(pk=1):
@@ -1019,7 +1023,7 @@ class Mantenimiento_CA(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -1054,7 +1058,7 @@ class Mantenimiento_CA(models.Model):
                     self.costomantenimientoregular = self.encargadoTrabajo1.precio * self.horasactividad
                     # Calcula las horas de actividad adicional multiplicando tiempo de ejecucion del servicio con la cantidad de dispositivos adicionales registrados
                     self.horasactividadadicional = self.tiempoejecucion * self.cantidaddispositivosextras
-                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de 
+                    # Se calcula un pre valor de costo adicional multiplicando el tiempo de ejecucion por cantidad de
                     # dispositivos adicionales registrados por las periodicidades adicionales registradas
                     self.costomantenimientoadicional = self.tiempoejecucion * self.cantidaddispositivosextras * self.periodisidadadicional
                     # Se obtiene el costo adicional multiplicando las horas de actividad obtenidas en el paso anterior con el precio del encargado de dicho mantenimiento
@@ -1083,16 +1087,16 @@ class Mantenimiento_CA(models.Model):
         try:
             cambio = Mantenimiento_CA.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         except:
-            cambio = Mantenimiento_CA.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)     
+            cambio = Mantenimiento_CA.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo)
         # Se manda llamar la funcion save para guardar y recalcular el total de dispositivos
         cambio.save()
         #Tryexcept para la suma del update de firmware
         try:
             cambio2 = Mantenimiento_CA.objects.get(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)
         except:
-            cambio2 = Mantenimiento_CA.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)     
+            cambio2 = Mantenimiento_CA.objects.create(cotizacion=self.cotizacion,cliente=self.cliente,titulonombre=titulo2)
         cambio2.save()
-        return 
+        return
 
     def __str__(self):
         return str(self.titulonombre)

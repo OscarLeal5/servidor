@@ -4,3 +4,4 @@
 .pyc
 .pycache
 /innovativenet/RPA/migrations
+/innovativenet/RPA/__pycache__

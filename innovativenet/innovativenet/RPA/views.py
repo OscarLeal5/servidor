@@ -60,7 +60,7 @@ class Agregar_Cotizacion(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
         return super(Agregar_Cotizacion, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cliente.pk, 'pk':self.object.pk})
 
@@ -81,7 +81,7 @@ class Detalle_Cotizacion(LoginRequiredMixin, DetailView):
 
         #ctx['']
         return ctx
-        
+
 class Modificar_Cotizacion(LoginRequiredMixin, UpdateView):
     model = Cotizacion
     object = "cotizacion"
@@ -104,13 +104,13 @@ class Agregar_Cotizacion_CCTV(LoginRequiredMixin, CreateView):
     model = Cotizacion_CCTV
     #cambios area de trabajo
     fields = ['titulo', 'lugar_de_mantenimiento','area_de_mantenimiento', 'descripcion_cotizacion','periodoregular','preguntaperiodoadicional','periodoadicional']
-    #cambios    
+    #cambios
     template_name = 'cotizacion_cctv/agregar_cotizacion_cctv.html'
 
     def form_valid(self, form):
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
         return super(Agregar_Cotizacion_CCTV, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion_cctv', kwargs={'cliente':self.object.cliente.pk, 'pk':self.object.pk})
 
@@ -134,7 +134,7 @@ class Detalle_Cotizacion_CCTV(LoginRequiredMixin, DetailView):
 
         #ctx['']
         return ctx
-        
+
 class Modificar_Cotizacion_CCTV(LoginRequiredMixin, UpdateView):
     model = Cotizacion_CCTV
     object = "cotizacion"
@@ -161,7 +161,7 @@ class Agregar_Cotizacion_CA(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
         return super(Agregar_Cotizacion_CA, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion_ca', kwargs={'cliente':self.object.cliente.pk, 'pk':self.object.pk})
 
@@ -182,7 +182,7 @@ class Detalle_Cotizacion_CA(LoginRequiredMixin, DetailView):
 
         #ctx['']
         return ctx
-        
+
 class Modificar_Cotizacion_CA(LoginRequiredMixin, UpdateView):
     model = Cotizacion_CA
     object = "cotizacion_ca"
@@ -217,7 +217,7 @@ class Agregar_Mantenimiento(LoginRequiredMixin, CreateView):
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
         form.instance.cotizacion = Cotizacion.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Mantenimiento, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
@@ -234,7 +234,7 @@ class EliminarMantenimiento(LoginRequiredMixin, DeleteView):
     model = Mantenimiento
     context_object_name = 'servicio'
     template_name = 'mantenimientos/eliminar_servicio.html'
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion', kwargs={'cliente':self.object.cotizacion.cliente.id,'pk':self.object.cotizacion.id})
 
@@ -261,7 +261,7 @@ class Agregar_Mantenimiento_CCTV(LoginRequiredMixin, CreateView):
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
         form.instance.cotizacion = Cotizacion_CCTV.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Mantenimiento_CCTV, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion_cctv', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
@@ -278,7 +278,7 @@ class EliminarMantenimiento_CCTV(LoginRequiredMixin, DeleteView):
     model = Mantenimiento_CCTV
     context_object_name = 'servicio'
     template_name = 'mantenimientos_cctv/eliminar_servicio.html'
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion_cctv', kwargs={'cliente':self.object.cotizacion.cliente.id,'pk':self.object.cotizacion.id})
 
@@ -305,7 +305,7 @@ class Agregar_Mantenimiento_CA(LoginRequiredMixin, CreateView):
         form.instance.cliente = Cliente.objects.get(pk=self.kwargs['cliente'])
         form.instance.cotizacion = Cotizacion_CA.objects.get(pk=self.kwargs['pk'])
         return super(Agregar_Mantenimiento_CA, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion_ca', kwargs={'pk':self.object.cotizacion.id,'cliente':self.object.cotizacion.cliente.id})
 
@@ -322,7 +322,7 @@ class EliminarMantenimiento_CA(LoginRequiredMixin, DeleteView):
     model = Mantenimiento_CA
     context_object_name = 'servicio'
     template_name = 'mantenimientos_ca/eliminar_servicio.html'
-    
+
     def get_success_url(self):
         return reverse('detalle_cotizacion_ca', kwargs={'cliente':self.object.cotizacion.cliente.id,'pk':self.object.cotizacion.id})
 
@@ -335,7 +335,7 @@ class Detalle_Servicio_CA(LoginRequiredMixin, DetailView):
 
 class Agregar_Cliente(LoginRequiredMixin, CreateView):
     model = Cliente
-    fields = ['nombre', 'encargado', 'puesto_encargado', 
+    fields = ['nombre', 'encargado', 'puesto_encargado',
             'numero_contacto', 'correo_contacto',]
     success_url = reverse_lazy('lista_clientes')
     template_name = 'cliente/agregar_cliente.html'
@@ -605,7 +605,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
                 if mantenimiento.dispositivo is not None:
                     if mantenimiento.periodisidadadicional is None:
                         info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
-                    else:    
+                    else:
                         info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
@@ -620,11 +620,11 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             if len(listdisp) == 1:
                 if mantenimiento.dispositivo is not None:
                     listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+'.'
-            
+
             elif mantenimiento.dispositivo != lastdisp:
                 if mantenimiento.dispositivo is not None:
                     listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
-                
+
             else:
                 if mantenimiento.dispositivo is not None:
                     listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
@@ -657,7 +657,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         palcances10 = Paragraph("Verificación bimestral que la pantalla LCD del panel marque la hora apropiada.",styleN,bulletText="•")
         p6extra = Paragraph("""<u>¿Que no se incluye?:</u>""",styleB)
 
-        
+
         palcances12= Paragraph("Equipos y Refacciones.",styleN,bulletText="1.")
         palcances13= Paragraph("Materiales como cables o tuberías.",styleN,bulletText="2.")
         palcances14= Paragraph("Maquinaria de elevación.",styleN,bulletText="3.")
@@ -668,7 +668,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 suma_horas = mantenimiento.tiempoejecucion
         suma_horas_palabra = num2words(suma_horas,lang='es')
-        
+
 
         ppolitica = Paragraph("2.1 Política de apoyo técnico y diagnóstico",styleHB)
         ppoliticaextra1=Paragraph("""<u>¿Que se Incluye en las horas de Servicios de soporte Técnico, pruebas y servicios de reparación consideradas en esta propuesta?:</u>""",styleB)
@@ -690,11 +690,11 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             if len(listdisp) == 1:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+'.'
-            
+
             elif mantenimiento.dispositivo != lastdisppol:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+","
-                
+
             else:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivos+" "+str(mantenimiento.dispositivo)+","
@@ -744,7 +744,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
         preciofinalincadicional = float(round(preciofinalincadicional))
         preciofinalincadicional1 = num2words(preciofinalincadicional, to="currency", lang='es', currency='USD').upper()
         preciofinalincadicional = "${:,.2f}".format(preciofinalincadicional)
-        
+
         ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,0),colors.lightsteelblue)])
         td_precio = [["Descripcion","Cantidad","Unidad","Costo"]]
@@ -922,7 +922,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
             Story.append(ppreciotextoadicional)
             Story.append(pblank)
             Story.append(pblank)
-            Story.append(p23adicional) 
+            Story.append(p23adicional)
             Story.append(p24adicional)
             Story.append(p25adicional)
             Story.append(pblank)
@@ -971,9 +971,9 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     # cambios area de mantenimiento
     area_de_mantenimiento = cotizacion.area_de_mantenimiento
-    # cambios 
+    # cambios
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
-    
+
     locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%d de %B del %Y ")
@@ -1136,7 +1136,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         p6 = Paragraph("Estimados señores, ", styleN)
         #cambios para area de mantenimiento
         p7 = Paragraph("En relación a su solicitud presentamos los costos asociados del servicio de mantenimiento preventivo del sistema de Circuito Cerrado de Televisión para "+nombre+" en el area del "+str(area_de_mantenimiento)+" ubicada en "+lugar_de_mantenimiento, styleN)
-        #cambios 
+        #cambios
         p7extra2 = Paragraph("Para aplicar el mantenimiento preventivo es importante que el sistema se encuentre en operación, sin fallas, de lo contrario se aplicaría un mantenimiento correctivo y después procedería el preventivo.", styleN)
         p7extra3 = Paragraph("Se considera una póliza de mantenimiento preventivo con duración de 12 Meses", styleN)
         pblank = Paragraph("""<para> <br/> </para>""")
@@ -1154,7 +1154,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
                 if mantenimiento.dispositivo is not None:
                     if mantenimiento.periodisidadadicional is None:
                         info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
-                    else:    
+                    else:
                         info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
@@ -1169,11 +1169,11 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
             if len(listdisp) == 1:
                 if mantenimiento.dispositivo is not None:
                     listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+'.'
-            
+
             elif mantenimiento.dispositivo != lastdisp:
                 if mantenimiento.dispositivo is not None:
                     listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
-                
+
             else:
                 if mantenimiento.dispositivo is not None:
                     listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
@@ -1189,7 +1189,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         pAntecedentes3 = Paragraph("Total de dispositivos: "+str(totaldisp.cantidaddedispositivos), styleN)
         pAntecedentes4 = Paragraph("Total de dispositivos con update de Firmware: "+str(totaldispfirmware.cantidaddedispositivos), styleN)
         pAntecedentes5 = Paragraph("Total de dispositivos con update de Licencia de Software: "+str(totaldispsoftware.cantidaddedispositivos), styleN)
-        
+
         palcances0 = Paragraph("""<u>2.0 Alcances de los trabajos</u>""",styleB)
         palcances1 = Paragraph("Alcances de trabajo del mantenimeinto preventivo:",styleN)
         palcances2 = Paragraph("""<u>¿Qué se incluye?:</u>""",styleB)
@@ -1206,13 +1206,13 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         palcances9 = Paragraph("De ser detectado un dispositivo dañado, los costos asociados serán cotizados de manera independiente e instalados previa autorización del cliente.",styleN,bulletText="7.")
         palcances10 = Paragraph("Alcances de trabajo del mantenimiento de emergencia:",styleN,bulletText="8.")
         palcances11 = Paragraph("Soporte Técnico 5 días a la semana (lunes a viernes de 8:00am a 5:00pm).",styleN,bulletText="•")
-        
+
         suma_horas = 0
         for mantenimiento in mantenimientos:
             if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 suma_horas = mantenimiento.tiempoejecucion
         suma_horas_palabra = num2words(suma_horas,lang='es')
-        
+
         palcances12 = Paragraph(str(suma_horas)+" horas de servicio técnico anual o 12 meses, lo que suceda primero para atención a fallas en sitio.",styleN,bulletText="•")
         palcances13 = Paragraph("Servicios de reparación, diagnósticos, ajustes y actualizaciones.",styleN,bulletText="•")
         palcances15 = Paragraph("Actualización de Firmware de Dispositivos de cámaras, NVR.",styleN,bulletText="•")
@@ -1221,7 +1221,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         palcances18= Paragraph("Actualización de sistemas operativos o parches en Estaciones de trabajo y servidores.",styleN,bulletText="1.")
         palcances19= Paragraph("Refacciones como cables, cámaras, fuentes, nvr. (en caso de necesitarse se cotizaran por escrito y serán instaladas previa autorización del cliente).",styleN,bulletText="2.")
         palcances20= Paragraph("Maquinaria de Elevación si no se señala que esta considerada dentro del costo.",styleN,bulletText="3.")
-        
+
         listadispositivospol = ''
         lastdisppol = listdisp[-1]
 
@@ -1229,11 +1229,11 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
             if len(listdisp) == 1:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+'.'
-            
+
             elif mantenimiento.dispositivo != lastdisppol:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+","
-                
+
             else:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivos+" "+str(mantenimiento.dispositivo)+","
@@ -1253,7 +1253,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
                 if mantenimiento.periodisidadadicional is None:
                     data_mantenimientos = [Paragraph(str(mantenimiento.titulonombre)),mantenimiento.periodisidadactividades,0,mantenimiento.tiempoejecucion]
                 else:
-                    data_mantenimientos = [Paragraph(str(mantenimiento.titulonombre)),mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]  
+                    data_mantenimientos = [Paragraph(str(mantenimiento.titulonombre)),mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.tiempoejecucion]
                     td_mantenimientos.append(data_mantenimientos)
 
             elif str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
@@ -1279,7 +1279,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         preciofinalincadicionalnum = float(round(preciofinalincadicional))
         preciofinalincadicional1 = num2words(preciofinalincadicional, to="currency", lang='es', currency='USD').upper()
         preciofinalincadicional = "${:,.2f}".format(preciofinalincadicionalnum)
-        
+
         ts_pre = TableStyle([("GRID",(0,0),(-1,-1),2,colors.black),
                              ("BACKGROUND",(0,0),(-1,0),colors.lightsteelblue)])
         td_precio = [["Descripcion","Cantidad","Unidad","Costo"]]
@@ -1295,14 +1295,14 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         table_pre = Table(td_precio)
         table_pre.setStyle(ts_pre)
         ppreciotexto = Paragraph(preciofinal1+" USD + IVA",styleNBC)
-        
+
         pprecio1 = Paragraph("""<u>3.0 Precio y forma de pago:</u>""",styleB)
         pprecio2 = Paragraph("Mantenimiento preventivo de equipos:             $ {} USD".format(preciommto),styleN)
         pprecio3 = Paragraph("Horas de Servicios de emergencia de equipos:     $ {} USD".format(costohorasservicio),styleN)
         pprecio4 = Paragraph("Precio total por mantenimiento anual",styleN)
         pprecio6 = Paragraph("""<u>Precio total por mantenimiento anual pagadero por evento          $ {} USD</u>""".format(preciofinal),styleCB)
         pprecio7 = Paragraph("El pago es cada evento, debe estar liquidado antes de efectuarse el mantenimiento.",styleNC)
-        
+
         if cotizacion.periodoregular == 1:
             preciocuatri = float(round(preciofinal))
             pprecio8 = Paragraph("Pago anual en una sola exhibicion: $ {} Dlls + IVA".format(preciocuatri),styleN)
@@ -1318,10 +1318,10 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         elif cotizacion.periodoregular == 6:
             preciocuatri = float(round(preciofinal/6))
             pprecio8 = Paragraph("Pago anual en seis exhibiciones:  $ {} Dlls + IVA".format(preciocuatri),styleN)
-        
+
         preciocuatritexto = num2words(preciocuatri, to="currency", lang='es', currency='USD')
         pprecio9 = Paragraph("({} dólares mas IVA)".format(preciocuatritexto),styleN)
-        
+
         #Precio para mantenimientos con periodicidad adicional
         listmanteniminientos = []
         for mantenimiento in mantenimientos:
@@ -1331,8 +1331,8 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
             pprecioadicional1 = Paragraph("Precio total por mantenimiento anual incluyendo periodicidades adicionales",styleN)
             pprecioadicional2 = Paragraph("""<u>Precio total por mantenimiento anual pagadero por evento incluyendo periodicidades adicionales          {} USD</u>""".format(preciofinalincadicional),styleCB)
             pprecioadicional3 = Paragraph("El pago es cada evento, debe estar liquidado antes de efectuarse el mantenimiento.",styleNC)
-            precioadicionalcuatritexto = num2words(preciofinalincadicionalnum, to="currency", lang='es', currency='USD')        
-            
+            precioadicionalcuatritexto = num2words(preciofinalincadicionalnum, to="currency", lang='es', currency='USD')
+
             if cotizacion.periodoregular == 1:
                 precioadicionalcuatri = preciofinalincadicionalnum
                 pprecioadicional14 = Paragraph("Pago anual en una sola exhibicion: $ {} Dlls + IVA".format(precioadicionalcuatri),styleN)
@@ -1348,15 +1348,15 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
             elif cotizacion.periodoregular == 6:
                 precioadicionalcuatri = preciofinalincadicionalnum/6
                 pprecioadicional14 = Paragraph("Pago anual en seis exhibiciones: $ {} Dlls + IVA".format(precioadicionalcuatri),styleN)
-            
+
             pprecioadicional15 = Paragraph("({} dólares mas IVA)".format(precioadicionalcuatritexto),styleN)
-        
+
         pprecio10 = Paragraph("""<u>Condiciones Comerciales:</u>""",styleB)
         pprecio11 = Paragraph("Los precios arriba mencionados son expresados en Dólares Americanos y no incluye IVA.",styleN,bulletText="•")
         pprecio12 = Paragraph("Para proceder con el servicio es necesario estar cubierta la póliza el primer día del mes que se realizara el mantenimiento. ",styleN,bulletText="•")
         pprecio13 = Paragraph("Si se realiza el pago en pesos su tipo de cambio será en relación a la institución bancaria de compra de banco Santander o BBVA  confirmar antes.",styleN,bulletText="•")
 
-        
+
         pterminos0 = Paragraph("""<u>4.0 Precio fuera del contrato de mantenimiento:</u>""",styleB)
         pterminos1 = Paragraph("Los costos por hora en horario de 8am a 5pm es de $65.00 DLL por hora por técnico.",styleN,bulletText="1.")
         pterminos2 = Paragraph("Los costos por hora en horario de 8:00 am a 5:00 pm es de $126.00 DLL por hora por ingeniero.",styleN,bulletText="2.")
@@ -1375,8 +1375,8 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         pregards = Paragraph("Regards",styleNC)
         pnombrecontitulo = Paragraph(nombrecontitulo,styleNC)
         ppuesto = Paragraph(puesto,styleNC)
-        
-        
+
+
         #Portada
         Story.append(p0)
         Story.append(p1)
@@ -1705,7 +1705,7 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
                 if mantenimiento.dispositivo is not None:
                     if mantenimiento.periodisidadadicional is None:
                         info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,0,0]
-                    else:    
+                    else:
                         info_disp = [Paragraph(mantenimiento.dispositivo),mantenimiento.cantidaddedispositivos,mantenimiento.periodisidadactividades,mantenimiento.periodisidadadicional,mantenimiento.cantidaddispositivosextras]
                     listdisp.append(info_disp)
             else:
@@ -1720,11 +1720,11 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
         #     if len(listdisp) == 1:
         #         if mantenimiento.dispositivo is not None:
         #             listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+'.'
-            
+
         #     elif mantenimiento.dispositivo != lastdisp:
         #         if mantenimiento.dispositivo is not None:
         #             listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
-                
+
         #     else:
         #         if mantenimiento.dispositivo is not None:
         #             listadispositivos = listadispositivos+" "+str(mantenimiento.cantidaddedispositivos)+" "+str(mantenimiento.dispositivo)+","
@@ -1737,7 +1737,7 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
         totaldispfirmware = Mantenimiento_CA.objects.get(titulonombre = titulofirmware,cotizacion=cotizacion_id,cliente=cliente_id)
         pAntecedentes3 = Paragraph("Total de dispositivos: "+str(totaldisp.cantidaddedispositivos), styleN)
         pAntecedentes4 = Paragraph("Total de dispositivos con update de firmware: "+str(totaldispfirmware.cantidaddedispositivos), styleN)
-        
+
         palcances0 = Paragraph("""<u>2.0 Alcances de los trabajos</u>""",styleB)
         palcances1 = Paragraph("Alcances de trabajo del mantenimiento preventivo:",styleN)
         palcances2 = Paragraph("""<u>¿Qué se incluye?:</u>""",styleB)
@@ -1765,13 +1765,13 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
             if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 suma_horas = mantenimiento.tiempoejecucion
         suma_horas_palabra = num2words(suma_horas,lang='es')
-        
+
         palcances17 = Paragraph(str(suma_horas)+" horas de servicio técnico anual o 12 meses, lo que suceda primero para atención a fallas en sitio.",styleN,bulletText="•")
         palcances18 = Paragraph("""<u>¿Qué se excluye?:</u>""",styleB)
         palcances19= Paragraph("No incluye maquinaria de elevación, de ser necesaria será cotizada de manera independiente.",styleN,bulletText="•")
         palcances20= Paragraph("No se Incluye refacciones.",styleN,bulletText="•")
         palcances21= Paragraph("Nota: De ser detectado un dispositivo dañado, los costos asociados serán cotizados de manera independiente e instalados previa autorización del cliente, en caso de aplicar garantía no tendrá costo más que los asociados por envió y retorno a el fabricante.",styleN)
-        
+
         listadispositivospol = ''
         lastdisppol = listdisp[-1]
 
@@ -1779,14 +1779,14 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
             if len(listdisp) == 1:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+'.'
-            
+
             elif mantenimiento.dispositivo != lastdisppol:
                 if mantenimiento.dispositivo is not None:
                     listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+","
-                
+
             else:
                 if mantenimiento.dispositivo is not None:
-                    listadispositivospol = listadispositivos+" "+str(mantenimiento.dispositivo)+","
+                    listadispositivospol = listadispositivospol+" "+str(mantenimiento.dispositivo)+","
                     listadispositivospol = listadispositivospol[:-1]
                     listadispositivospol = listadispositivospol+"."
 
@@ -1845,10 +1845,10 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
         data_precioadicional = [Paragraph("Cuota anual del contrato de  mantenimiento incluyendo periodicidad adicional"), Paragraph("1",styleNC),Paragraph("Lot",styleNC),Paragraph("{}".format(preciofinalincadicional),styleNC)]
         td_precio.append(data_precio)
 
-        costohorasservicio = float(round(costohorasservicio))  
+        costohorasservicio = float(round(costohorasservicio))
         preciommto = preciofinal - costohorasservicio
         preciommto = float(round(preciommto))
-        costohorasservicio = float(round(costohorasservicio))   
+        costohorasservicio = float(round(costohorasservicio))
         table_pre = Table(td_precio)
         table_pre.setStyle(ts_pre)
         ppreciotexto = Paragraph(preciofinal1+" USD + IVA",styleNBC)
@@ -1858,7 +1858,7 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
         pprecio4 = Paragraph("Precio total por mantenimiento anual",styleN)
         pprecio6 = Paragraph("""<u>Precio total por mantenimiento anual pagadero por evento          $ {} USD</u>""".format(preciofinal),styleCB)
         pprecio7 = Paragraph("El pago es cada evento, debe estar liquidado antes de efectuarse el mantenimiento.",styleNC)
-                
+
         if cotizacion.periodoregular == 1:
             preciocuatri = float(round(preciofinal))
             pprecio8 = Paragraph("Pago anual en una sola exhibicion: $ {} Dlls + IVA".format(preciocuatri),styleN)
@@ -1874,10 +1874,10 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
         elif cotizacion.periodoregular == 6:
             preciocuatri = float(round(preciofinal/6))
             pprecio8 = Paragraph("Pago anual en seis exhibiciones:  $ {} Dlls + IVA".format(preciocuatri),styleN)
-        
+
         preciocuatritexto = num2words(preciocuatri, to="currency", lang='es', currency='USD')
         pprecio9 = Paragraph("({} dólares mas IVA)".format(preciocuatritexto),styleN)
-        
+
         #Precio para mantenimientos con periodicidad adicional
         listmanteniminientos = []
         for mantenimiento in mantenimientos:
@@ -1887,8 +1887,8 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
             pprecioadicional1 = Paragraph("Precio total por mantenimiento anual incluyendo periodicidades adicionales",styleN)
             pprecioadicional2 = Paragraph("""<u>Precio total por mantenimiento anual pagadero por evento incluyendo periodicidades adicionales          {} USD</u>""".format(preciofinalincadicional),styleCB)
             pprecioadicional3 = Paragraph("El pago es cada evento, debe estar liquidado antes de efectuarse el mantenimiento.",styleNC)
-            precioadicionalcuatritexto = num2words(preciofinalincadicionalnum, to="currency", lang='es', currency='USD')        
-            
+            precioadicionalcuatritexto = num2words(preciofinalincadicionalnum, to="currency", lang='es', currency='USD')
+
             if cotizacion.periodoregular == 1:
                 precioadicionalcuatri = float(round(preciofinalincadicionalnum))
                 pprecioadicional14 = Paragraph("Pago anual en una sola exhibicion: $ {} Dlls + IVA".format(precioadicionalcuatri),styleN)
@@ -1904,15 +1904,15 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
             elif cotizacion.periodoregular == 6:
                 precioadicionalcuatri = float(round(preciofinalincadicionalnum/6))
                 pprecioadicional14 = Paragraph("Pago anual en seis exhibiciones: $ {} Dlls + IVA".format(precioadicionalcuatri),styleN)
-            
+
             pprecioadicional15 = Paragraph("({} dólares mas IVA)".format(precioadicionalcuatritexto),styleN)
-        
+
         pprecio10 = Paragraph("""<u>Condiciones Comerciales:</u>""",styleB)
         pprecio11 = Paragraph("Los precios arriba mencionados son expresados en Dólares Americanos y no incluye IVA.",styleN,bulletText="•")
         pprecio12 = Paragraph("Para proceder con el servicio es necesario estar cubierta la póliza el primer día del mes que se realizara el mantenimiento. ",styleN,bulletText="•")
         pprecio13 = Paragraph("Si se realiza el pago en pesos su tipo de cambio será en relación a la institución bancaria de compra de banco Santander o BBVA confirmar antes.",styleN,bulletText="•")
 
-        
+
         pterminos0 = Paragraph("""<u>4.0 Precio fuera del contrato de mantenimiento:</u>""",styleB)
         pterminos1 = Paragraph("Los costos por hora en horario de 8am a 5pm es de $66.00 DLL por hora por técnico.",styleN,bulletText="1.")
         pterminos2 = Paragraph("Los costos por hora en horario de 8:00 am a 5:00 pm es de $135.00 DLL por hora por ingeniero.",styleN,bulletText="2.")
@@ -1925,18 +1925,18 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
         pterminos9 = Paragraph("En caso de falla de los dispositivos y se tenga que reemplazar el equipo, El costo reflejado será el tiempo asociado del personal técnico involucrado, refacciones + costos de envió si aplican en garantías, devoluciones, etc.",styleN,bulletText="5.")
         pterminos10 = Paragraph("Los precios arriba mencionados son expresados en Dólares americanos y no incluye IVA.",styleN)
         pterminosatentamente = Paragraph("Atentamente",styleNC)
-        
+
         if cotizacion.periodoregular == 1:
             pextra1 = Paragraph("La facturación del mantenimiento anual se presentará en una exhibicion anual y será pagadera antes de la fecha de ejecución del evento de mantenimiento.",styleN)
         elif cotizacion.periodoregular == 2:
             pextra1 = Paragraph("La facturación del mantenimiento anual se presentará en dos exhibiciones semestrales y será pagadera antes de la fecha de ejecución del evento de  mantenimiento.",styleN)
         elif cotizacion.periodoregular == 3:
-            pextra1 = Paragraph("La facturación del mantenimiento anual se presentará en tres exhibiciones cuatrimestrales y será pagadera antes de la fecha de ejecución del evento de  mantenimiento.",styleN)        
+            pextra1 = Paragraph("La facturación del mantenimiento anual se presentará en tres exhibiciones cuatrimestrales y será pagadera antes de la fecha de ejecución del evento de  mantenimiento.",styleN)
         elif cotizacion.periodoregular == 4:
             pextra1 = Paragraph("La facturación del mantenimiento anual se presentará en cuatro exhibiciones trimestrales y será pagadera antes de la fecha de ejecución del evento de  mantenimiento.",styleN)
         elif cotizacion.periodoregular == 6:
             pextra1 = Paragraph("La facturación del mantenimiento anual se presentará en seis exhibiciones bimestrales y será pagadera antes de la fecha de ejecución del evento de  mantenimiento.",styleN)
-        
+
         pextra2 = Paragraph("La facturación en servicios fuera de póliza se presenta por evento. ",styleN)
         pextra3 = Paragraph("Sin más por el momento y en espera para cualquier aclaración al respecto, quedo de usted.",styleN)
 
@@ -1947,7 +1947,7 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
         pregards = Paragraph("Regards",styleNC)
         pnombrecontitulo = Paragraph(nombrecontitulo,styleNC)
         ppuesto = Paragraph(puesto,styleNC)
-        
+
         #Portada
         Story.append(p0)
         Story.append(p1)

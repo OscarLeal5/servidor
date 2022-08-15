@@ -1,3 +1,7 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+.pyc
+.pycache
+/innovativenet/RPA/migrations
+/innovativenet/RPA/__pycache__

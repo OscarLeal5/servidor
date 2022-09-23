@@ -203,9 +203,6 @@
     </div>
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
         <center>
-        <a href="{% url 'crear_servicio_ca' cotizacion_ca.cliente.id cotizacion_ca.id  %}">
-            <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
-        </a>
         <a href="{% url 'cotizacion_pdf_ca' cotizacion_ca.cliente.id cotizacion_ca.id cotizacion_ca.cliente.usuario.pk %}" download="cotizacion.pdf">
             <button type="button" class="btn btn-primary" style="margin:5px"><img src="https://img.icons8.com/ios/24/000000/download-2--v2.png" /></button>
         </a>

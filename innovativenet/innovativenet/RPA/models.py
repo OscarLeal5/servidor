@@ -2,6 +2,7 @@ import dateutil
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.utils import timezone
 from django.db.models import Sum
 
 from django.db.models.fields import NullBooleanField
@@ -99,7 +100,7 @@ class Cotizacion(models.Model):
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
-    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=datetime.now())
+    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=timezone.now())
     periodoregular = models.IntegerField('Periodicidad regular de mmto al año',choices=num_list,null=True)
     preguntaperiodoadicional = models.BooleanField('Quieres agregar periodicidad adicional a la regular?',default=False)
     periodoadicional=models.IntegerField('Periodicidad adicional a la regular',choices=num_list,null=True,blank=True)
@@ -138,7 +139,7 @@ class Cotizacion_CCTV(models.Model):
     area_de_mantenimiento = models.CharField('Area/Edificio donde se realizara el mantenimiento',max_length=120,blank=True,null=True)
     # cambios
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
-    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=datetime.now())
+    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=timezone.now())
     periodoregular = models.IntegerField('Periodicidad regular de mmto al año',choices=num_list,null=True)
     preguntaperiodoadicional = models.BooleanField('Quieres agregar periodicidad adicional a la regular?',default=False)
     periodoadicional=models.IntegerField('Periodicidad adicional a la regular',choices=num_list,null=True,blank=True)
@@ -157,33 +158,9 @@ class Cotizacion_CCTV(models.Model):
                 print("entro al primer try")
                 try:
                     print("entro al segundo try")
-                    todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self)
-                    print("obtuvo los mantenimientos ")
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=5))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=7))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=8))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=9))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=10))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=16))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=17))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=18))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=19))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=20))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=21))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=22))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=23))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=24))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=25))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=26))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=27))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=28))
-                    todoslosservicios = todoslosservicios.exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=29))
-                    print("paso por todos los servicios")
-                    totaldispositivosregular = todoslosservicios.exclude(encargadoTrabajo1=Precio.objects.get(encargado='Ingeniero')).aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
-                    print("paso por todos los servicios")
+                    todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self,titulonombre_id__in=[11,12,13,14,15])
+                    totaldispositivosregular = todoslosservicios.aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
                     totaldispositivosregular = totaldispositivosregular['cantidad_disp']
-                    print("paso por todos los servicios")
                     self.descripcion_cotizacion = "Mantenimiento preventivo y de emergencia del sistema de CCTV - {} camaras".format(totaldispositivosregular)
                     super(Cotizacion_CCTV, self).save(*args, **kwargs)
                     print("guardo la cotizacion con nueva descripcion")
@@ -214,7 +191,7 @@ class Cotizacion_CA(models.Model):
     lugar_de_mantenimiento = models.CharField('Lugar en que se realizara el mantenimiento',max_length
     =120,blank=True)
     descripcion_cotizacion = models.TextField('Descripcion de la cotizacion',blank=True)
-    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=datetime.now())
+    fecha = models.DateTimeField('Fecha de realizacion de la cotizacion',blank=True,null=True, default=timezone.now())
     periodoregular = models.IntegerField('Periodicidad regular de mmto al año',choices=num_list,null=True)
     preguntaperiodoadicional = models.BooleanField('Quieres agregar periodicidad adicional a la regular?',default=False)
     periodoadicional=models.IntegerField('Periodicidad adicional a la regular',choices=num_list,null=True,blank=True)

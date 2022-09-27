@@ -198,9 +198,6 @@
     </div>
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
         <center>
-        <a href="{% url 'crear_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id  %}">
-            <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
-        </a>
         <a href="{% url 'cotizacion_pdf_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id cotizacion_cctv.cliente.usuario.pk %}" download="cotizacion.pdf">
             <button type="button" class="btn btn-primary" style="margin:5px">Descargar Español</button>
         </a>

@@ -209,7 +209,10 @@
             <button type=button class="btn btn-primary" style="margin:5px">Agregar Servicio</button>
         </a>
         <a href="{% url 'cotizacion_pdf' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
-            <button type="button" class="btn btn-primary" style="margin:5px"><img src="https://img.icons8.com/ios/24/000000/download-2--v2.png" /></button>
+            <button type="button" class="btn btn-primary" style="margin:5px">Descarga Español</button>
+        </a>
+        <a href="{% url 'cotizacion_pdf_us_df' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
+            <button type="button" class="btn btn-primary" style="margin:5px">Descarga Ingles</button>
         </a>
         </center>
     </div>

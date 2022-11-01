@@ -82,17 +82,14 @@ label{
           {% else %}
           <li><a class="getstarted scrollto" href="{% url 'login'  %}" >Login</a></li>
           {% endif %}
+          {% comment %} Search Bar {% endcomment %}
+          <li id="search-bar">
+            <form class="d-flex m-1" method="POST" action="{% url 'buscar_clientes' %}">
+              {% csrf_token %}
+              <input type="search" id="form1" class="form-control" placeholder="Buscar cliente" aria-label="Buscar cliente" name="searched"/>
+            </form>
+          </li>
         </ul>
-        <form class="d-flex m-3" method="POST" action="{% url 'buscar_clientes' %}">
-          {% csrf_token %}
-
-          <input class="form-control me-2" type="search" placeholder="Buscar cliente"
-                 aria-label="Buscar cliente" name="searched">
-          <button class="btn btn-outline-success" type="submit">
-            Buscar
-          </button>
-
-        </form>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
@@ -106,24 +103,24 @@ label{
       {% endblock %}
     </div>
 
-        <footer id="footer">
-          <div class="row container py-4 ">
-            <div class="col">
-              <div class="copyright">
-                &copy; Copyright <strong><span>Innovative-net</span></strong>. All Rights Reserved
-              </div>
-            </div>
-            <div class="col container " style="text-align: right;">
-              <p>Si se encuentra algún problema contactar desarrolladores:</p>
-              <strong>
-                <p>Oscar Leal: desarrollo.it@innovative-net.mx</p>
-                <p>Daniel Jara: desarrollo.it2@innovative-net.mx</p>
-              </strong>
-            </div>
+    <footer id="footer">
+      <div class="row container py-4 ">
+        <div class="col">
+          <div class="copyright">
+            &copy; Copyright <strong><span>Innovative-net</span></strong>. All Rights Reserved
           </div>
+        </div>
+        <div class="col container " style="text-align: right;">
+          <p>Si se encuentra algún problema contactar desarrolladores:</p>
+          <strong>
+            <p>Oscar Leal: desarrollo.it@innovative-net.mx</p>
+            <p>Daniel Jara: desarrollo.it2@innovative-net.mx</p>
+          </strong>
+        </div>
+      </div>
 
 
-        </footer><!-- End Footer -->
+    </footer><!-- End Footer -->
 
           <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 

@@ -383,7 +383,7 @@ def buscar_clientes(request):
         searched = request.POST["searched"]
         clientes = Cliente.objects.filter(nombre__contains=searched)
         return render(request,
-                      'mantenimientos/buscar_clientes.html',
+                      'cliente/buscar_clientes.html',
                       {'searched':searched,
                        'clientes':clientes,
                        })

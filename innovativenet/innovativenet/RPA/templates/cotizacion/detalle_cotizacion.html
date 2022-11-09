@@ -205,12 +205,19 @@
     </div>
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
         <center>
-        <a href="{% url 'cotizacion_pdf' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
-            <button type="button" class="btn btn-primary" style="margin:5px">Descarga Español</button>
-        </a>
-        <a href="{% url 'cotizacion_pdf_us_df' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
-            <button type="button" class="btn btn-primary" style="margin:5px">Descarga Ingles</button>
-        </a>
+            <a href="{% url 'cotizacion_pdf' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
+                <button type="button" class="btn btn-primary" style="margin:5px" onclick='showspinneresp()'>Descarga Español</button>
+            </a>
+
+            <div class="spinner-border" role="status" id="showspinneresp" style='display:none;'></div>
+            
+            <a href="{% url 'cotizacion_pdf_us_df' cotizacion.cliente.id cotizacion.id cotizacion.cliente.usuario.pk %}" download="cotizacion.pdf">
+                <button type="button" class="btn btn-primary" style="margin:5px" onclick='showspinnering()'>Descarga Ingles</button>
+            </a>
+
+            <div class="spinner-border" role="status" id="showspinnering" style='display:none;'></div>
+
+
         </center>
     </div>
 </div>

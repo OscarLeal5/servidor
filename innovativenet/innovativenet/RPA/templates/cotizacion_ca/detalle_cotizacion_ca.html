@@ -203,12 +203,18 @@
     </div>
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
         <center>
-        <a href="{% url 'cotizacion_pdf_ca' cotizacion_ca.cliente.id cotizacion_ca.id cotizacion_ca.cliente.usuario.pk %}" download="cotizacion.pdf">
-            <button type="button" class="btn btn-primary" style="margin:5px">Descargar Español</button>
-        </a>
-        <a href="{% url 'cotizacion_pdf_us_ca' cotizacion_ca.cliente.id cotizacion_ca.id cotizacion_ca.cliente.usuario.pk %}" download="cotizacion.pdf">
-            <button type="button" class="btn btn-primary" style="margin:5px">Descargar Ingles</button>
-        </a>
+            <a href="{% url 'cotizacion_pdf_ca' cotizacion_ca.cliente.id cotizacion_ca.id cotizacion_ca.cliente.usuario.pk %}" download="cotizacion.pdf">
+                <button type="button" class="btn btn-primary" style="margin:5px" onclick='showspinneresp()'>Descargar Español</button>
+            </a>
+
+            <div class="spinner-border" role="status" id="showspinneresp" style='display:none;'></div>
+
+            <a href="{% url 'cotizacion_pdf_us_ca' cotizacion_ca.cliente.id cotizacion_ca.id cotizacion_ca.cliente.usuario.pk %}" download="cotizacion.pdf">
+                <button type="button" class="btn btn-primary" style="margin:5px" onclick='showspinnering()'>Descargar Ingles</button>
+            </a>
+
+            <div class="spinner-border" role="status" id="showspinnering" style='display:none;'></div>
+
         </center>
     </div>
 </div>

@@ -2,6 +2,7 @@
 
 import datetime
 from django.db import migrations, models
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -11,6 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        
         migrations.AlterField(
             model_name='cotizacion',
             name='fecha',
@@ -30,5 +32,173 @@ class Migration(migrations.Migration):
             model_name='mantenimiento',
             name='cantidaddispositivosextras',
             field=models.IntegerField(blank=True, default=0, null=True, verbose_name='Cantidad de dispositivos a considerar en periodicidad Extra'),
+        ),
+        migrations.CreateModel(
+            name='Cotizacion_CA',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('titulo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Nombre Cotizacion')),
+                ('lugar_de_mantenimiento', models.CharField(blank=True, max_length=120, verbose_name='Lugar en que se realizara el mantenimiento')),
+                ('descripcion_cotizacion', models.TextField(blank=True, verbose_name='Descripcion de la cotizacion')),
+                ('fecha', models.DateTimeField(blank=True, default=datetime.datetime(2022, 8, 15, 15, 31, 35, 970076), null=True, verbose_name='Fecha de realizacion de la cotizacion')),
+                ('periodoregular', models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6')], null=True, verbose_name='Periodicidad regular de mmto al año')),
+                ('preguntaperiodoadicional', models.BooleanField(default=False, verbose_name='Quieres agregar periodicidad adicional a la regular?')),
+                ('periodoadicional', models.IntegerField(blank=True, choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6')], null=True, verbose_name='Periodicidad adicional a la regular')),
+                ('cliente', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.cliente')),
+            ],
+            options={
+                'verbose_name_plural': 'Cotizaciones CA',
+                'ordering': ['cliente'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Cotizacion_CCTV',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('titulo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Nombre Cotizacion')),
+                ('lugar_de_mantenimiento', models.CharField(blank=True, max_length=120, verbose_name='Lugar en que se realizara el mantenimiento')),
+                ('area_de_mantenimiento', models.CharField(blank=True, max_length=120, null=True, verbose_name='Area/Edificio donde se realizara el mantenimiento')),
+                ('descripcion_cotizacion', models.TextField(blank=True, verbose_name='Descripcion de la cotizacion')),
+                ('fecha', models.DateTimeField(blank=True, default=datetime.datetime(2022, 8, 15, 15, 31, 35, 969076), null=True, verbose_name='Fecha de realizacion de la cotizacion')),
+                ('periodoregular', models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6')], null=True, verbose_name='Periodicidad regular de mmto al año')),
+                ('preguntaperiodoadicional', models.BooleanField(default=False, verbose_name='Quieres agregar periodicidad adicional a la regular?')),
+                ('periodoadicional', models.IntegerField(blank=True, choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6')], null=True, verbose_name='Periodicidad adicional a la regular')),
+                ('cliente', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.cliente')),
+            ],
+            options={
+                'verbose_name_plural': 'Cotizaciones CCTV',
+                'ordering': ['cliente'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Precio_centro',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('encargado', models.CharField(blank=True, max_length=50, null=True, verbose_name='Encargado del trabajo')),
+                ('precio', models.FloatField(blank=True, null=True, verbose_name='Precio por hora')),
+            ],
+            options={
+                'verbose_name_plural': 'Precios Centro',
+                'ordering': ['encargado'],
+            },
+        ),
+        migrations.AlterModelOptions(
+            name='cotizacion',
+            options={'ordering': ['cliente'], 'verbose_name_plural': 'Cotizaciones Deteccion Fuego'},
+        ),
+        migrations.AlterModelOptions(
+            name='mantenimiento',
+            options={'ordering': ['encargadoTrabajo1', 'cantidaddedispositivos'], 'verbose_name_plural': 'Mantenimientos Deteccion Fuego'},
+        ),
+        migrations.AlterModelOptions(
+            name='nombre_servicio',
+            options={'ordering': ['titulo'], 'verbose_name_plural': 'Servicios Deteccion Fuego'},
+        ),
+        migrations.AlterModelOptions(
+            name='precio',
+            options={'ordering': ['encargado'], 'verbose_name_plural': 'Precios Norte'},
+        ),
+        migrations.AlterField(
+            model_name='cotizacion',
+            name='fecha',
+            field=models.DateTimeField(blank=True, default=datetime.datetime(2022, 8, 15, 15, 31, 35, 968076), null=True, verbose_name='Fecha de realizacion de la cotizacion'),
+        ),
+        migrations.AlterField(
+            model_name='cotizacion',
+            name='periodoadicional',
+            field=models.IntegerField(blank=True, choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6')], null=True, verbose_name='Periodicidad adicional a la regular'),
+        ),
+        migrations.AlterField(
+            model_name='cotizacion',
+            name='periodoregular',
+            field=models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (6, '6')], null=True, verbose_name='Periodicidad regular de mmto al año'),
+        ),
+        migrations.CreateModel(
+            name='Nombre_servicio_CCTV',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('titulo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Titulo Mantenimiento')),
+                ('tiempodeejecucion', models.FloatField(null=True, verbose_name='Tiempo de Ejecucion')),
+                ('dispositivo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Dispositivo al que se le aplica el mantenimiento')),
+                ('encargado', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.precio')),
+            ],
+            options={
+                'verbose_name_plural': 'Servicios CCTV',
+                'ordering': ['titulo'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Nombre_servicio_CA',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('titulo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Titulo Mantenimiento')),
+                ('tiempodeejecucion', models.FloatField(null=True, verbose_name='Tiempo de Ejecucion')),
+                ('dispositivo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Dispositivo al que se le aplica el mantenimiento')),
+                ('encargado', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.precio')),
+            ],
+            options={
+                'verbose_name_plural': 'Servicios CA',
+                'ordering': ['titulo'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Mantenimiento_CCTV',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('periodisidadactividades', models.IntegerField(blank=True, null=True, verbose_name='Periodicidad regular de actividad de mtto por año')),
+                ('periodisidadadicional', models.IntegerField(blank=True, null=True, verbose_name='Periodicidad adicional de actividad de mtto  a la regular')),
+                ('tiempoejecucion', models.FloatField(blank=True, null=True, verbose_name='Tiempo de ejecucion del mtto')),
+                ('cantidaddedispositivos', models.IntegerField(blank=True, default=0, null=True, verbose_name='Cantidad de dispositivos a considerar en periodicidad regular')),
+                ('cantidaddispositivosextras', models.IntegerField(blank=True, default=0, null=True, verbose_name='Cantidad de dispositivos a considerar en periodicidad Extra')),
+                ('horasactividad', models.FloatField(blank=True, null=True, verbose_name='horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion')),
+                ('horasactividadadicional', models.FloatField(blank=True, null=True, verbose_name='horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion')),
+                ('costomantenimientoregular', models.FloatField(blank=True, null=True, verbose_name='Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion')),
+                ('costomantenimientoadicional', models.FloatField(blank=True, null=True, verbose_name='Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ')),
+                ('costototal', models.FloatField(blank=True, null=True, verbose_name='Costo total = Costo regular + costo adicional')),
+                ('dispositivo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Dispositivo al que se le da mantenimiento')),
+                ('cliente', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.cliente')),
+                ('cotizacion', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.cotizacion_cctv')),
+                ('encargadoTrabajo1', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.precio', verbose_name='Encargado del trabajo')),
+                ('titulonombre', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.nombre_servicio_cctv')),
+            ],
+            options={
+                'verbose_name_plural': 'Mantenimientos CCTV',
+                'ordering': ['cantidaddedispositivos'],
+            },
+        ),
+        migrations.CreateModel(
+            name='Mantenimiento_CA',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('periodisidadactividades', models.IntegerField(blank=True, null=True, verbose_name='Periodicidad regular de actividad de mtto por año')),
+                ('periodisidadadicional', models.IntegerField(blank=True, null=True, verbose_name='Periodicidad adicional de actividad de mtto  a la regular')),
+                ('tiempoejecucion', models.FloatField(blank=True, null=True, verbose_name='Tiempo de ejecucion del mtto')),
+                ('cantidaddedispositivos', models.IntegerField(blank=True, default=0, null=True, verbose_name='Cantidad de dispositivos a considerar en periodicidad regular')),
+                ('cantidaddispositivosextras', models.IntegerField(blank=True, default=0, null=True, verbose_name='Cantidad de dispositivos a considerar en periodicidad Extra')),
+                ('horasactividad', models.FloatField(blank=True, null=True, verbose_name='horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion')),
+                ('horasactividadadicional', models.FloatField(blank=True, null=True, verbose_name='horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion')),
+                ('costomantenimientoregular', models.FloatField(blank=True, null=True, verbose_name='Costo Regular = horas por actividad de mtto regular =Importe de cantidad x Tiempo de ejecucion')),
+                ('costomantenimientoadicional', models.FloatField(blank=True, null=True, verbose_name='Costo Adicional = horas por actividad de mtto adicional =Importe de cantidad x Tiempo de ejecucion ')),
+                ('costototal', models.FloatField(blank=True, null=True, verbose_name='Costo total = Costo regular + costo adicional')),
+                ('dispositivo', models.CharField(blank=True, max_length=200, null=True, verbose_name='Dispositivo al que se le da mantenimiento')),
+                ('cliente', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.cliente')),
+                ('cotizacion', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.cotizacion_ca')),
+                ('encargadoTrabajo1', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.precio', verbose_name='Encargado del trabajo')),
+                ('titulonombre', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='RPA.nombre_servicio_ca')),
+            ],
+            options={
+                'verbose_name_plural': 'Mantenimientos CA',
+                'ordering': ['cantidaddedispositivos'],
+            },
+        ),
+        migrations.AddField(
+            model_name='cotizacion_cctv',
+            name='mantenimientos',
+            field=models.ManyToManyField(through='RPA.Mantenimiento_CCTV', to='RPA.Nombre_servicio_CCTV'),
+        ),
+        migrations.AddField(
+            model_name='cotizacion_ca',
+            name='mantenimientos',
+            field=models.ManyToManyField(through='RPA.Mantenimiento_CA', to='RPA.Nombre_servicio_CA'),
         ),
     ]

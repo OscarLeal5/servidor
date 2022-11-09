@@ -424,7 +424,7 @@ def cotizacion_pdf(request, cliente_id,cotizacion_id,usuario):
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
 
-    #locale.setlocale(locale.LC_TIME, 'es-ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%d de %B del %Y ")
 
@@ -975,7 +975,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
     # cambios
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
 
-    #locale.setlocale(locale.LC_TIME, 'es-ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%d de %B del %Y ")
 
@@ -1527,7 +1527,7 @@ def cotizacion_pdf_ca(request, cliente_id,cotizacion_id,usuario):
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
 
-    #locale.setlocale(locale.LC_TIME, 'es-ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%d de %B del %Y ")
 
@@ -2097,7 +2097,8 @@ def contizacion_pdf_us_df(request, cliente_id,cotizacion_id,usuario):
     nombre = cliente.nombre
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
-
+    
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%B %d of %Y ")
 
@@ -2716,7 +2717,7 @@ def cotizacion_pdf_us_cctv(request, cliente_id, cotizacion_id, usuario):
     # cambios
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
 
-    #locale.setlocale(locale.LC_TIME, 'es-ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%B %d of %Y ")
 
@@ -3350,7 +3351,7 @@ def cotizacion_pdf_us_ca(request, cliente_id, cotizacion_id, usuario):
     lugar_de_mantenimiento = cotizacion.lugar_de_mantenimiento
     descripcion_cotizacion = cotizacion.descripcion_cotizacion
 
-    #locale.setlocale(locale.LC_TIME, 'es-ES')
+    locale.setlocale(locale.LC_TIME, 'es-ES')
     dateTimeObj = datetime.now()
     dateStr = dateTimeObj.strftime("%B %d of %Y ")
 

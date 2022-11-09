@@ -28,75 +28,66 @@
   <!-- Template Main CSS File -->
   <link href="{% static '\css\style.css' %}" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Appland - v4.3.0
-  * Template URL: https://bootstrapmade.com/free-bootstrap-app-landing-page-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body style="padding-top: 70px;">
-<style>
-input[type=text],
-input[type=number],
-input[type=email],
-textarea {
-  border: 1px solid #2a83a3;
-  border-radius: 5px;
-  padding: 10px;
-  width: 80%;
-}
+  <style>
+    input[type=text],
+    input[type=number],
+    input[type=email],
+    textarea {
+      border: 1px solid #2a83a3;
+      border-radius: 5px;
+      padding: 10px;
+      width: 80%;
+    }
 
-label{
-  padding: 10px !important;
-  display: block;
-}
+    label{
+      padding: 10px !important;
+      display: block;
+    }
+  </style>
 
+    <!-- ======= Header ======= -->
+  {% include 'mantenimientos/messages.html' %}
+    <header id="header" class="fixed-top  header-transparent ">
 
-</style>
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="logo">
+          <!-- <h1><a href="https://www.innovative-net.mx/">Innovative-net</a></h1> -->
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <a href="https://www.innovative-net.mx/"><img src="{% static '\assets\img\horizontal blanco.png' %}" alt="" class="img-fluid"></a>
+        </div>
 
-  <!-- ======= Header ======= -->
-{% include 'mantenimientos/messages.html' %}
-  <header id="header" class="fixed-top  header-transparent ">
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto active" href="{% url 'home' %}">Home</a></li>
+            <li><a class="nav-link scrollto active" href="{% url 'agregar_cliente' %}">Agregar cliente</a></li>
+            <li><a class="nav-link scrollto active" href="{% url 'lista_clientes' %}">Lista de clientes activos</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
+            {% if request.user.is_staff %}
+                <li><a class="getstarted scrollto" href="{% url 'admin:index' %}" >{{request.user}} - Admin</a></li>
+                {% else %}
+                <li><a class="getstarted scrollto" href="" >{{request.user}}</a></li>
+                {% endif %}
+            {% else %}
+            <li><a class="getstarted scrollto" href="{% url 'login'  %}" >Login</a></li>
+            {% endif %}
+            {% comment %} Search Bar {% endcomment %}
+            <li id="search-bar">
+              <form class="d-flex m-1" method="POST" action="{% url 'buscar_clientes' %}">
+                {% csrf_token %}
+                <input type="search" id="form1" class="form-control" placeholder="Buscar cliente" aria-label="Buscar cliente" name="searched"/>
+              </form>
+            </li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
 
-    <div class="container d-flex align-items-center justify-content-between">
-      <div class="logo">
-        <!-- <h1><a href="https://www.innovative-net.mx/">Innovative-net</a></h1> -->
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <a href="https://www.innovative-net.mx/"><img src="{% static '\assets\img\horizontal blanco.png' %}" alt="" class="img-fluid"></a>
       </div>
+    </header><!-- End Header -->
 
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a class="nav-link scrollto active" href="{% url 'home' %}">Home</a></li>
-          <li><a class="nav-link scrollto active" href="{% url 'agregar_cliente' %}">Agregar cliente</a></li>
-          <li><a class="nav-link scrollto active" href="{% url 'lista_clientes' %}">Lista de clientes activos</a></li>
-          {% if request.user.is_authenticated %}
-          <li><a class="nav-link scrollto" href="{% url 'logout' %}">Logout</a></li>
-          {% if request.user.is_staff %}
-              <li><a class="getstarted scrollto" href="{% url 'admin:index' %}" >{{request.user}} - Admin</a></li>
-              {% else %}
-              <li><a class="getstarted scrollto" href="" >{{request.user}}</a></li>
-              {% endif %}
-          {% else %}
-          <li><a class="getstarted scrollto" href="{% url 'login'  %}" >Login</a></li>
-          {% endif %}
-          {% comment %} Search Bar {% endcomment %}
-          <li id="search-bar">
-            <form class="d-flex m-1" method="POST" action="{% url 'buscar_clientes' %}">
-              {% csrf_token %}
-              <input type="search" id="form1" class="form-control" placeholder="Buscar cliente" aria-label="Buscar cliente" name="searched"/>
-            </form>
-          </li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
-
-    </div>
-  </header><!-- End Header -->
-
-   
     <div class="container-fluid" style="margin-top: 30px;">
       {% block body %}
 
@@ -121,21 +112,21 @@ label{
 
 
     </footer><!-- End Footer -->
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-          <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <!-- Vendor JS Files -->
+    <script src="{% static '\vendor\aos\aos.js' %}"></script>
+    <script src="{% static '\vendor\bootstrap\js\bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static '\vendor\glightbox\js\glightbox.min.js' %}"></script>
+    <script src="{% static '\vendor\php-email-form\validate.js' %}"></script>
+    <script src="{% static '\vendor\swiper\swiper-bundle.min.js' %}"></script>
 
-          <!-- Vendor JS Files -->
-          <script src="{% static '\vendor\aos\aos.js' %}"></script>
-          <script src="{% static '\vendor\bootstrap\js\bootstrap.bundle.min.js' %}"></script>
-          <script src="{% static '\vendor\glightbox\js\glightbox.min.js' %}"></script>
-          <script src="{% static '\vendor\php-email-form\validate.js' %}"></script>
-          <script src="{% static '\vendor\swiper\swiper-bundle.min.js' %}"></script>
-
-          <!-- Template Main JS File -->
-          <script src="{% static '\js\main.js' %}"></script>
-          <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-          <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- Template Main JS File -->
+    <script src="{% static '\js\main.js' %}"></script>
+    <script src="{% static '\js\pmain.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
-        </html>
+</html>

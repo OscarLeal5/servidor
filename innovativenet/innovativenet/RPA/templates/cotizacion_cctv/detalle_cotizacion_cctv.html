@@ -1,14 +1,15 @@
 {% extends "mantenimientos/base.html" %}
 {% block body %}
 <style>
-    div.tips{
-        line-height: 5px; 
-        background-color: lightgray; 
-        max-width: 35%; 
-        box-shadow: 4px 4px 1px; 
-        opacity: 0.7;
+    div.tips {
+    line-height: 5px;
+    background-color: lightgray;
+    max-width: 40%;
+    box-shadow: 3px 3px 1px;
+    opacity: 0.7;
     }
 </style>
+
 
 <div class="container">
     <div>
@@ -198,12 +199,14 @@
     </div>
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
         <center>
-        <a href="{% url 'cotizacion_pdf_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id cotizacion_cctv.cliente.usuario.pk %}" download="cotizacion.pdf">
-            <button type="button" class="btn btn-primary" style="margin:5px">Descargar Español</button>
-        </a>
-        <a href="{% url 'cotizacion_pdf_us_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id cotizacion_cctv.cliente.usuario.pk %}" download="cotizacion.pdf">
-            <button type="button" class="btn btn-primary" style="margin:5px">Descargar Ingles</button>
-        </a>
+            <a href="{% url 'cotizacion_pdf_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id cotizacion_cctv.cliente.usuario.pk %}" download="cotizacion_esp.pdf" id='downloadesp'>
+                <button type="button" class="btn btn-primary" style="margin:5px" onclick='showspinneresp()'>Descargar Español</button>
+            </a>
+            <div class="spinner-border" role="status" id="showspinneresp" style='display:none;'></div>
+            <a href="{% url 'cotizacion_pdf_us_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id cotizacion_cctv.cliente.usuario.pk %}" download="cotizacion_ing.pdf" id='downloading'>
+                <button type="button" class="btn btn-primary" style="margin:5px" onclick='showspinnering()'>Descargar Ingles</button>
+            </a>
+            <div class="spinner-border" role="status" id="showspinnering" style='display:none;'></div>
         </center>
     </div>
 </div>

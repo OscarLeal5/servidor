@@ -1249,6 +1249,7 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         td_mantenimientos = [["Mantenimiento",Paragraph("Acts. de mmnto por año"),
                             Paragraph("Acts. adicionales")
                             ,Paragraph("Tiempo de ejecucion")]]
+        check_test = 0
         for mantenimiento in mantenimientos:
             if str(mantenimiento.titulonombre) != "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 if mantenimiento.periodisidadadicional is None:
@@ -1259,6 +1260,9 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
 
             elif str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 costohorasservicio = mantenimiento.costototal
+                check_test += 1
+        if check_test != 1:
+            costohorasservicio = 0
 
         table_man = Table(td_mantenimientos,colWidths=[3*inch,1*inch,1*inch , 1*inch])
         table_man.setStyle(ts)
@@ -3034,6 +3038,7 @@ def cotizacion_pdf_us_cctv(request, cliente_id, cotizacion_id, usuario):
 
         td_mantenimientos = [["Maintenance", Paragraph("Maintenance activities per year"),
                               Paragraph("Additional activities"), Paragraph("Tiempo de ejecucion")]]
+        check_test = 0
         for mantenimiento in mantenimientos:
             if str(mantenimiento.titulonombre) != "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 if mantenimiento.periodisidadadicional is None:
@@ -3046,6 +3051,9 @@ def cotizacion_pdf_us_cctv(request, cliente_id, cotizacion_id, usuario):
 
             elif str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 costohorasservicio = mantenimiento.costototal
+                check_test += 1
+        if check_test != 1:
+            costohorasservicio = 0
 
         table_man = Table(td_mantenimientos, colWidths=[
                           3*inch, 1*inch, 1*inch, 1*inch])

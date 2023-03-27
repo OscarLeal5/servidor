@@ -1191,6 +1191,8 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         pAntecedentes4 = Paragraph("Total de dispositivos con update de Firmware: "+str(totaldispfirmware.cantidaddedispositivos), styleN)
         pAntecedentes5 = Paragraph("Total de dispositivos con update de Licencia de Software: "+str(totaldispsoftware.cantidaddedispositivos), styleN)
 
+      
+      
         palcances0 = Paragraph("""<u>2.0 Alcances de los trabajos</u>""",styleB)
         palcances1 = Paragraph("Alcances de trabajo del mantenimeinto preventivo:",styleN)
         palcances2 = Paragraph("""<u>¿Qué se incluye?:</u>""",styleB)

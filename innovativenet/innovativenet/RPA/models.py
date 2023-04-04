@@ -542,7 +542,7 @@ class Mantenimiento_CCTV(models.Model):
                         print(totaldispositivosregular)
                         return super(Mantenimiento_CCTV, self).save(*args, **kwargs)
 
-                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=6):
+                elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=6) or str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CCTV.objects.get(pk=5) and self.titulonombre == Nombre_servicio_CCTV.objects.get(pk=34) :
                     print("entro al if de mantenimientos de servicio horas")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
                     if self.periodisidadadicional is None:

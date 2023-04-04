@@ -13,7 +13,7 @@
                         <div class="card-body">
                                 <form action="" method="POST">
                                         {% csrf_token %}
-                                        {% if servicio.titulonombre.pk == 6 %}
+                                        {% if servicio.titulonombre.pk == 6 or servicio.titulonombre.pk == 34  %}
                                                 {{ form.tiempoejecucion.errors }} 
                                                 <div class="mb-3 mt-3">
                                                         {{ form.tiempoejecucion.errors }}

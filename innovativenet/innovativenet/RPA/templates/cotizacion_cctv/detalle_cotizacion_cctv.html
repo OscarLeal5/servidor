@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    <div class="container" style="max-width: 80%;">
+    <div class="container" style="max-width: 90%;">
 
         <table class="table">
             <thead>
@@ -158,8 +158,8 @@
                     </tr>
                 
             {% endfor %}
-            {% for servicio in serviciosplus %}
-                {% if servicio.titulonombre.pk == 6 %}
+
+
                         </tbody>
                         </table>
                         <table class="table">
@@ -170,7 +170,10 @@
                                     <th>Horas</th>
                                 </tr>
                             </thead>
-                            <tbody> 
+                            <tbody>
+            {% for servicio in serviciosplus %} 
+                            {% if servicio.titulonombre.pk == 6 or servicio.titulonombre.pk == 34  %}
+
                                 <tr class="table-secondary">
                                     <td style="min-width: 120px;">
                                 
@@ -189,10 +192,10 @@
                                         </a>
                                     </td>
                                 </tr>
+                            {% endif %}
+                {% endfor %}
                             </tbody>                
                         </table>
-                    {% endif %}
-                {% endfor %}
         <!-- ---------------------- End Servicio List ---------------------------------- -->    
             </tbody>
         </table>

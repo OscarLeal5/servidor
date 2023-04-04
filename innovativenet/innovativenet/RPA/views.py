@@ -24,7 +24,6 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from num2words import num2words
 from .pdfFormat import *
 
-
 class CustomLoginView(LoginView):
     # Esta clase se encarga de verificar que el usuario este autenticado antes de poder
     # entrar a cualquier parte de la pagina.
@@ -131,8 +130,16 @@ class Detalle_Cotizacion_CCTV(LoginRequiredMixin, DetailView):
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=19))
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=7))
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=21))
-        ctx['serviciosplus'] = Mantenimiento_CCTV.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=34))
 
+        #ctx['serviciosplus'] = Mantenimiento_CCTV.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
+        # get the queryset for the `Mantenimiento_CCTV` objects that match the condition
+        queryset = Mantenimiento_CCTV.objects.filter(cotizacion=cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
+        # create a new queryset for the `Mantenimiento_CCTV` objects that match another condition
+        new_queryset = Mantenimiento_CCTV.objects.filter(cotizacion=cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=34))
+        # combine the two querysets using the `|` operator
+        ctx['serviciosplus'] = queryset | new_queryset        
+        print(ctx['serviciosplus'])
         #ctx['']
         return ctx
 

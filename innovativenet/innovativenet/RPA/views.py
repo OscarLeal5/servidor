@@ -130,13 +130,13 @@ class Detalle_Cotizacion_CCTV(LoginRequiredMixin, DetailView):
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=19))
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=7))
         ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=21))
-        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=34))
+        ctx['servicios'] = ctx['servicios'].exclude(titulonombre=Nombre_servicio_CCTV.objects.get(pk=33))
 
         #ctx['serviciosplus'] = Mantenimiento_CCTV.objects.filter(cotizacion = cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
         # get the queryset for the `Mantenimiento_CCTV` objects that match the condition
         queryset = Mantenimiento_CCTV.objects.filter(cotizacion=cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=6))
         # create a new queryset for the `Mantenimiento_CCTV` objects that match another condition
-        new_queryset = Mantenimiento_CCTV.objects.filter(cotizacion=cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=34))
+        new_queryset = Mantenimiento_CCTV.objects.filter(cotizacion=cat,titulonombre=Nombre_servicio_CCTV.objects.get(pk=33))
         # combine the two querysets using the `|` operator
         ctx['serviciosplus'] = queryset | new_queryset        
         print(ctx['serviciosplus'])

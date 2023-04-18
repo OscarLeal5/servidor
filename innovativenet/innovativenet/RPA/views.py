@@ -1215,46 +1215,59 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         palcances8 = Paragraph("Revisión de las fuentes de poder y su funcionamiento.",styleN,bulletText="6.")
         palcances9 = Paragraph("De ser detectado un dispositivo dañado, los costos asociados serán cotizados de manera independiente e instalados previa autorización del cliente.",styleN,bulletText="7.")
         
+        # Loop para establecer si los servicios de mantenimiento se incluyen.
         for mantenimiento in mantenimientos:
             suma_horas = 0
             if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 horas_ad = mantenimiento.tiempoejecucion
                 if int(horas_ad) != 0.0:
-                    palcances10 = Paragraph(
-                        "Alcances de trabajo del mantenimiento de emergencia:", styleN, bulletText="8.")
-                    palcances11 = Paragraph("Soporte Técnico 5 días a la semana (lunes a viernes de 8:00am a 5:00pm).",styleN,bulletText="•")
-
-                    
-                    for mantenimiento in mantenimientos:
-                        if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
-                            suma_horas = mantenimiento.tiempoejecucion
+                    palcances10 = Paragraph("Alcances de trabajo del mantenimiento de emergencia:", styleN, bulletText="8.")
+                    p_alcance_titulo = Paragraph(f'Horario Regular 5 días x 8 horas x SDH (siguiente día hábil)  ', styleB)
+                    palcances11 = Paragraph(f"Soporte Técnico 5 días a la semana (lunes a viernes de 8:00am a 5:00pm), con un total de {str(suma_horas)} horas como máximo en un periodo de 12 meses , lo que suceda primero para atención a fallas en sitio con un tiempo de respuesta de siguiente día hábil.")
+                    suma_horas = mantenimiento.tiempoejecucion
                     suma_horas_palabra = num2words(suma_horas,lang='es')
+                    palcances12 = Paragraph("Servicios de reparación, diagnósticos, ajustes y actualizaciones.",styleN,bulletText="a)")
+                    palcances15 = Paragraph("Actualización de Firmware de Dispositivos de cámaras, NVR.",styleN,bulletText="b)")
+                    palcances16 = Paragraph("En su caso Limpieza de estación de trabajo (PC) Cliente y servidor de visualización.",styleN,bulletText="c)")
+            if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas inhabil y fin de semana":
+                horas_inad = mantenimiento.tiempoejecucion
+                if int(horas_inad) != 0.0:
+                    if int(horas_ad) == 0.0:
+                        palcances10 = Paragraph("Alcances de trabajo del mantenimiento de emergencia:", styleN, bulletText="8.")
+                    p_alcance_24htitulo = Paragraph(f'Horario de emergencias 7 días x 8 horas x 4 horas ', styleB)
+                    p_alcance_24halcance = Paragraph(f'Soporte Técnico de emergencia 7 días a la semana (lunes a viernes de 5:00pm a 7:59am, sábados y domingos de 00:00hrs a 11:59am), con un total de {str(horas_inad)} horas como máximo en un periodo de 12 meses , lo que suceda primero para atención a fallas en sitio con un tiempo de respuesta de 4 horas.')
+                    p_alcance_24halcance1 = Paragraph(f" Se entiende por servicios de emergencia cuando ",styleN,bulletText="•")
+                    p_alcance_24halcance2 = Paragraph(f" Cuando servidores o estaciones de trabajo esta inoperables. ",styleN,bulletText="a)")
+                    p_alcance_24halcance3 = Paragraph(f" Mas del 15% de las señales de video estan siendo afectadas de manera simultanea. ",styleN,bulletText="b)")
+                    p_alcance_24halcance4 = Paragraph(f" Casos extraordinarios en lo que se ve comprometida mas del 30% de la operación del sistema. ",styleN,bulletText="c)")
+                    p_alcance_24halcance4 = Paragraph(f" Cuando una señal de video se pierde y por su alta jerarquía por el valor que observa es esencial que este operando en todo momento. El cliente final definirá la lista de estos canales de video prioritarios las cuales no puede pasar mas del 10% del numero total de cámaras. ",styleN,bulletText="d)")
 
-                    palcances12 = Paragraph(str(suma_horas)+" horas de servicio técnico anual o 12 meses, lo que suceda primero para atención a fallas en sitio.",styleN,bulletText="•")
-                    palcances13 = Paragraph("Servicios de reparación, diagnósticos, ajustes y actualizaciones.",styleN,bulletText="•")
-                    palcances15 = Paragraph("Actualización de Firmware de Dispositivos de cámaras, NVR.",styleN,bulletText="•")
-                    palcances16 = Paragraph("En su caso Limpieza de estación de trabajo (PC) Cliente y servidor de visualización.",styleN,bulletText="•")
-         
         
 
         palcances17 = Paragraph("""<u>¿Qué se excluye?:</u>""",styleB)
         palcances18= Paragraph("Actualización de sistemas operativos o parches en Estaciones de trabajo y servidores.",styleN,bulletText="1.")
         palcances19= Paragraph("Refacciones como cables, cámaras, fuentes, nvr. (en caso de necesitarse se cotizaran por escrito y serán instaladas previa autorización del cliente).",styleN,bulletText="2.")
         palcances20= Paragraph("Maquinaria de Elevación si no se señala que esta considerada dentro del costo.",styleN,bulletText="3.")
+        
+        # Loop para establecer si los servicios de mantenimiento se excluyen.
         for mantenimiento in mantenimientos:
             if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas de servicios generales adicionales":
                 horas_excluye = int(mantenimiento.tiempoejecucion)
                 print(horas_excluye)
-                if horas_excluye == 0.0:
-                    print('entro exluye if')
-                    palcances21 = Paragraph(
-                        "Alcances de trabajo del mantenimiento de emergencia:", styleN, bulletText="4.")
-                    palcances22 = Paragraph(
-                        "Soporte Técnico 5 días a la semana (lunes a viernes de 8:00am a 5:00pm).", styleN, bulletText="•")
-                    palcances23 = Paragraph("0 horas de servicio técnico anual o 12 meses, lo que suceda primero para atención a fallas en sitio.",styleN,bulletText="•")
-                    palcances24 = Paragraph("Servicios de reparación, diagnósticos, ajustes y actualizaciones.",styleN,bulletText="•")
-                    palcances25 = Paragraph("Actualización de Firmware de Dispositivos de cámaras, NVR.",styleN,bulletText="•")
-                    palcances26 = Paragraph("En su caso Limpieza de estación de trabajo (PC) Cliente y servidor de visualización.",styleN,bulletText="•")
+                # if horas_excluye == 0.0:
+                #     palcances21 = Paragraph("Alcances de trabajo de paquete de horas de soporte técnico.", styleN, bulletText="4.")
+            if str(mantenimiento.titulonombre) == "Servicio de soporte técnico -Horas inhabil y fin de semana":
+                horas_inad = mantenimiento.tiempoejecucion
+                if int(horas_inad) == 0.0:
+                    if horas_excluye != 0.0:
+                        palcances21 = Paragraph("Alcances de trabajo del mantenimiento de emergencia:", styleN, bulletText="4.")
+                        palcances_extra = Paragraph(f'Horario de emergencias 7 días x 8 horas x 4 horas ', styleN, bulletText="a)")
+                    else:
+                        palcances21 = Paragraph("Alcances de trabajo del mantenimiento de emergencia:", styleN, bulletText="4.")
+                        palcances_normal = Paragraph(f'Horario de emergencias 7 días x 8 horas x 4 horas ', styleN, bulletText="a)")
+                        palcances_extra = Paragraph(f'Horario de emergencias 7 días x 8 horas x 4 horas ',styleN, bulletText="b)")
+            
+
 
         listadispositivospol = ''
         lastdisppol = listdisp[-1]
@@ -1467,12 +1480,18 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         Story.append(palcances7)
         Story.append(palcances8)
         Story.append(palcances9)
+        
+        # Agrega toda la informacion de servicios de soporte tecnico normales
         if 'palcances10' in locals():
             Story.append(palcances10)
             Story.append(Indenter("1cm")) 
         else: pass
+        if 'p_alcance_titulo' in locals():
+            Story.append(p_alcance_titulo)
+        else: pass
         if 'palcances11' in locals():
             Story.append(palcances11) 
+            Story.append(Indenter("1cm")) 
         else: pass
         if 'palcances12' in locals():
             Story.append(palcances12) 
@@ -1486,33 +1505,56 @@ def cotizacion_pdf_cctv(request, cliente_id,cotizacion_id,usuario):
         if 'palcances16' in locals():
             Story.append(palcances16) 
         else: pass
-        Story.append(pblank)
-        Story.append(pblank)
         Story.append(Indenter("-1cm"))
+        if 'p_alcance_24htitulo' in locals():
+            Story.append(p_alcance_24htitulo)
+        else: pass        
+        if 'p_alcance_24halcance' in locals():
+            Story.append(p_alcance_24halcance)
+            Story.append(Indenter("1cm"))  
+        else: pass
+        if 'p_alcance_24halcance1' in locals():
+            Story.append(p_alcance_24halcance1) 
+            Story.append(Indenter("1cm"))  
+        else: pass
+        if 'p_alcance_24halcance2' in locals():
+            Story.append(p_alcance_24halcance2) 
+        else: pass
+        if 'p_alcance_24halcance3' in locals():
+            Story.append(p_alcance_24halcance3) 
+        else: pass
+        if 'p_alcance_24halcance4' in locals():
+            Story.append(p_alcance_24halcance4) 
+        else: pass
+        if 'p_alcance_24halcance5' in locals():
+            Story.append(p_alcance_24halcance5) 
+        else: pass
+
+
+        Story.append(pblank)
+        Story.append(pblank)
+        if 'palcances10' in locals():
+            for i in range(3):
+                Story.append(Indenter("-1cm"))
+        else: Story.append(Indenter("1cm"))
         Story.append(palcances17)
         Story.append(pblank)
         Story.append(palcances18)
         Story.append(palcances19)
         Story.append(palcances20)
+
+        # Agrega toda la informacion de servicios de soporte tecnico fuera de la normal
         if 'palcances21' in locals():
             Story.append(palcances21)
             Story.append(Indenter("1cm")) 
         else: pass
-        if 'palcances22' in locals():
-            Story.append(palcances22) 
+        if 'palcances_normal' in locals():
+            Story.append(palcances_normal) 
         else: pass
-        if 'palcances23' in locals():
-            Story.append(palcances23) 
+        if 'palcances_extra' in locals():
+            Story.append(palcances_extra) 
         else: pass
-        if 'palcances24' in locals():
-            Story.append(palcances24) 
-        else: pass
-        if 'palcances25' in locals():
-            Story.append(palcances25) 
-        else: pass
-        if 'palcances26' in locals():
-            Story.append(palcances26) 
-        else: pass
+        Story.append(Indenter("-1cm"))
         Story.append(pblank)
         Story.append(PageBreak())
 

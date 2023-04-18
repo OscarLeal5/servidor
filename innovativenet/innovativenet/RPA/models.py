@@ -155,18 +155,14 @@ class Cotizacion_CCTV(models.Model):
         for opcion in opciones:
             try:
                 Mantenimiento_CCTV.objects.get(cotizacion=self,cliente=self.cliente,titulonombre=opcion)
-                print("entro al primer try")
                 try:
-                    print("entro al segundo try")
                     todoslosservicios = Mantenimiento_CCTV.objects.filter(cliente=self.cliente,cotizacion=self,titulonombre_id__in=[11,12,13,14,15])
                     totaldispositivosregular = todoslosservicios.aggregate(cantidad_disp=Sum('cantidaddedispositivos'))
                     totaldispositivosregular = totaldispositivosregular['cantidad_disp']
                     self.descripcion_cotizacion = "Mantenimiento preventivo y de emergencia del sistema de CCTV - {} camaras".format(totaldispositivosregular)
                     super(Cotizacion_CCTV, self).save(*args, **kwargs)
-                    print("guardo la cotizacion con nueva descripcion")
 
                 except:
-                    print("entro al segundo except del primer try")
                     return
 
             except:
@@ -872,7 +868,6 @@ class Mantenimiento_CA(models.Model):
                         return super(Mantenimiento_CA, self).save(*args, **kwargs)
 
                 elif str(self.titulonombre) == titulo.titulo and self.titulonombre != Nombre_servicio_CA.objects.get(pk=1) and self.titulonombre == Nombre_servicio_CA.objects.get(pk=2):
-                    print("entro al if de mantenimientos de servicio horas")
                     # Si la vairbale es igual a Null va a igualar las siguientes variables a cero para hacer calculos con valores numericos
                     if self.periodisidadadicional is None:
                         self.cantidaddispositivosextras = 0

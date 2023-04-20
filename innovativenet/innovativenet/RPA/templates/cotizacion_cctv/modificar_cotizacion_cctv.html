@@ -12,6 +12,15 @@
                     <input type="submit" value="Actualizar" class="btn btn-secondary">
 
             </form>
+            <button id="close-btn">Close</button>
             <br/>
     </center>
 {% endblock %}
+
+<script>
+  // Add JavaScript code to close the pop-up window when the close button is clicked.
+  var closeBtn = document.getElementById("close-btn");
+  closeBtn.addEventListener("click", function() {
+    document.getElementById("popup").style.display = "none";
+  });
+</script>

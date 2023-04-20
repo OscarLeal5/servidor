@@ -1,12 +1,16 @@
 {% extends "mantenimientos/base.html" %}
 {% block body %}
 <style>
-    div.tips{
-        line-height: 5px; 
-        background-color: lightgray; 
-        max-width: 35%; 
-        box-shadow: 4px 4px 1px; 
-        opacity: 0.7;
+    div.tips {
+        padding: 30px;
+        border-radius: 22px;
+        background: #d3d3d3;
+        box-shadow:  10px 10px 20px #afafaf,
+                    -10px -10px 20px #f7f7f7;
+        line-height: 5px;
+        background-color: lightgray;
+        width: 500px;
+        margin: 0 auto;
     }
 </style>
 
@@ -23,7 +27,7 @@
             <h1> Cotizacion para {{cotizacion_ca.cliente}} </h1>
             <h2> {{cotizacion_ca.titulo}} </h2>
         </center>
-        <div class="tips card container p-2">
+        <div class="tips">
             <div class="text-align">
                 <p>PR: Periodicidad Regular</p>
                 <p>CD: Cantidad de Dispositivos en periodicidad regular</p>

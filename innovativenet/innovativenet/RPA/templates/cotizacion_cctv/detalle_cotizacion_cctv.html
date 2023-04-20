@@ -1,15 +1,41 @@
+<meta http-equiv="refresh" content="10">
 {% extends "mantenimientos/base.html" %}
 {% block body %}
 <style>
     div.tips {
-    line-height: 5px;
-    background-color: lightgray;
-    max-width: 40%;
-    box-shadow: 3px 3px 1px;
-    opacity: 0.7;
+        padding: 30px;
+        border-radius: 22px;
+        background: #d3d3d3;
+        box-shadow:  10px 10px 20px #afafaf,
+                    -10px -10px 20px #f7f7f7;
+        line-height: 5px;
+        background-color: lightgray;
+        width: 500px;
+        margin: 0 auto;
+    }
+    div.tabla {
+        border-radius: 37px;
+        background: #b1b8c4;
+        box-shadow:  10px 10px 20px #9399a3,
+                    -10px -10px 20px #cfd7e5;
     }
 </style>
+<script>
+    function openPopup(url) {
+        // Open a new browser window and set its properties.
+        var popup = window.open('', '_blank', 'width=800,height=600,resizable=yes,scrollbars=yes');
+        
+        // Load the URL of the view in the new window.
+        popup.location.href = url;
+        
+        // Focus the new window.
+        popup.focus();
+    }
 
+    setTimeout(function() {
+    location.reload();
+    }, 10000);
+</script>
 
 <div class="container">
     <div>
@@ -24,7 +50,7 @@
             <h1> Cotizacion para {{cotizacion_cctv.cliente}} </h1>
             <h2> {{cotizacion_cctv.titulo}} </h2>
         </center>
-        <div class="tips card container p-2">
+        <div class="tips  continer">
             <div class="text-align">
                 <p>PR: Periodicidad Regular</p>
                 <p>CD: Cantidad de Dispositivos en periodicidad regular</p>
@@ -33,7 +59,7 @@
             </div>
         </div>
     </div>
-    <div class="container" style="max-width: 90%;">
+    <div class="tabla">
 
         <table class="table">
             <thead>
@@ -49,7 +75,7 @@
             
                 <!-- ---------------------- Servicio List ---------------------------------- -->
             <tbody>
-            {% for servicio in servicios %}
+                {% for servicio in servicios %}
                     {% if servicio.cantidaddedispositivos is not 0 %}
                         <tr class="table-success">
                             <td style="min-width: 120px;">
@@ -157,49 +183,49 @@
                         <td style="text-align: center;"> NO SE ENCUENTRA NINGUN SERVICIO </td>
                     </tr>
                 
-            {% endfor %}
-
-
-                        </tbody>
-                        </table>
-                        <table class="table">
-                            <thead>
-                                <tr style="text-align: center;">
-                                    <th></th>
-                                    <th></th>
-                                    <th>Horas</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-            {% for servicio in serviciosplus %} 
-                            {% if servicio.titulonombre.pk == 6 or servicio.titulonombre.pk == 33  %}
-
-                                <tr class="table-secondary">
-                                    <td style="min-width: 120px;">
-                                
-                                        <a href="{% url 'modificar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
-                                            <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a>
-                                
-                                        <a href="{% url 'eliminar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
-                                            <button type=button class="btn btn-outline-danger" > &#9747; </button></a>
-                                    </td>
-                                    <td>
-                                        <a href="{% url 'detalle_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">{{ servicio }}</a>
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <a>
-                                            {{ servicio.tiempoejecucion }}
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endif %}
                 {% endfor %}
-                            </tbody>                
-                        </table>
-        <!-- ---------------------- End Servicio List ---------------------------------- -->    
+
+
             </tbody>
         </table>
+            <table class="table">
+                <thead>
+                    <tr style="text-align: center;">
+                        <th></th>
+                        <th></th>
+                        <th>Horas</th>
+                    </tr>
+                </thead>
+                <tbody>
+            {% for servicio in serviciosplus %} 
+                {% if servicio.titulonombre.pk == 6 or servicio.titulonombre.pk == 33  %}
+
+                    <tr class="table-secondary">
+                        <td style="min-width: 120px;">
+                    
+                            {% comment %} <a href="{% url 'modificar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
+                                <button type=button class="btn btn-outline-secondary" style="margin:5px"> &#9997; </button></a> {% endcomment %}
+                            <button type="button" class="btn btn-outline-secondary" style="margin: 5px" onclick="openPopup('{% url 'modificar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}')">Editar</button>
+
+                            <a href="{% url 'eliminar_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">
+                                <button type=button class="btn btn-outline-danger" > &#9747; </button></a>
+                        </td>
+                        <td>
+                            <a href="{% url 'detalle_servicio_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id servicio.id %}">{{ servicio }}</a>
+                        </td>
+                        <td style="text-align: center;">
+                            <a>
+                                {{ servicio.tiempoejecucion }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+                </tbody>                
+            </table>
     </div>
+    <div id="popup-modal"></div>
+        <!-- ---------------------- End Servicio List ---------------------------------- -->    
     <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
         <center>
             <a href="{% url 'cotizacion_pdf_cctv' cotizacion_cctv.cliente.id cotizacion_cctv.id cotizacion_cctv.cliente.usuario.pk %}" download="cotizacion_esp.pdf" id='downloadesp'>
@@ -213,4 +239,5 @@
         </center>
     </div>
 </div>
+
 {% endblock %}
